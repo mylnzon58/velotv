@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">搜索</string>
+    <string name="nav_app_hub">应用目录</string>
+    <string name="nav_system">系统</string>
+    <string name="nav_settings">设置</string>
+    <string name="nav_support_short">支持</string>
+    <string name="hint_context_cue">确定 打开  ·  长按 选项</string>
+    <string name="cat_favorites">收藏</string>
+    <string name="cat_tv_inputs">电视与 HDMI</string>
+    <string name="cat_streaming">影音流媒体</string>
+    <string name="cat_media_web">浏览器与媒体</string>
+    <string name="cat_games">游戏</string>
+    <string name="cat_tools">工具</string>
+    <string name="cat_all_apps">全部应用</string>
+    <string name="sys_drawer_title">系统与开发者</string>
+    <string name="tab_developer">开发者</string>
+    <string name="tab_system_tools">系统</string>
+    <string name="tab_engineering">硬件信息</string>
+    <string name="settings_title">VeloTV 设置</string>
+    <string name="tab_appearance">外观</string>
+    <string name="tab_rows">行管理</string>
+    <string name="tab_parental">家长控制</string>
+    <string name="tab_general">通用</string>
+    <string name="hub_title">区域应用目录</string>
+    <string name="support_title">支持 VeloTV</string>
+    <string name="onboarding_start">开始</string>
+</resources>

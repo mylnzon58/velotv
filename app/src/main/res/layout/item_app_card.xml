@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardRoot"
+    android:layout_width="196dp"
+    android:layout_height="112dp"
+    android:layout_marginEnd="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="2.5dp">
+
+    <!-- Clean Full-Bleed TV Banner -->
+    <ImageView
+        android:id="@+id/ivBanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <!-- Clean Centered Icon Surface (mobile / utility apps) -->
+    <LinearLayout
+        android:id="@+id/iconContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/tvIconLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/barlow_medium"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/hm_ink"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Optional solid banner footer label (only when enabled by user) -->
+    <TextView
+        android:id="@+id/tvBannerLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:fontFamily="@font/barlow_medium"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <!-- Subtle solid editorial corner indicator (no emojis) -->
+    <TextView
+        android:id="@+id/tvBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="5dp"
+        android:fontFamily="@font/barlow_condensed_semibold"
+        android:letterSpacing="0.06"
+        android:paddingStart="6dp"
+        android:paddingTop="1dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="2dp"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+</FrameLayout>

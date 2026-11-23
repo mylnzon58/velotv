@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">Cerca</string>
+    <string name="nav_app_hub">Catalogo</string>
+    <string name="nav_system">Sistema</string>
+    <string name="nav_settings">Opzioni</string>
+    <string name="nav_support_short">Supporta</string>
+    <string name="hint_context_cue">OK Apri  ·  Tieni premuto Opzioni</string>
+    <string name="cat_favorites">Preferiti</string>
+    <string name="cat_tv_inputs">TV e HDMI</string>
+    <string name="cat_streaming">Streaming</string>
+    <string name="cat_media_web">Web e media</string>
+    <string name="cat_games">Giochi</string>
+    <string name="cat_tools">Strumenti</string>
+    <string name="cat_all_apps">Tutte le app</string>
+    <string name="sys_drawer_title">Sistema e sviluppatore</string>
+    <string name="tab_developer">Sviluppatore</string>
+    <string name="tab_system_tools">Sistema</string>
+    <string name="tab_engineering">Hardware</string>
+    <string name="settings_title">Impostazioni VeloTV</string>
+    <string name="tab_appearance">Aspetto</string>
+    <string name="tab_rows">Righe</string>
+    <string name="tab_parental">Genitori</string>
+    <string name="tab_general">Generale</string>
+    <string name="hub_title">Catalogo regionale</string>
+    <string name="support_title">Supporta VeloTV</string>
+    <string name="onboarding_start">Inizia</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">검색</string>
+    <string name="nav_app_hub">카탈로그</string>
+    <string name="nav_system">시스템</string>
+    <string name="nav_settings">설정</string>
+    <string name="nav_support_short">후원</string>
+    <string name="hint_context_cue">확인 열기  ·  길게 누르기 옵션</string>
+    <string name="cat_favorites">즐겨찾기</string>
+    <string name="cat_tv_inputs">TV 및 HDMI</string>
+    <string name="cat_streaming">스트리밍</string>
+    <string name="cat_media_web">웹 및 미디어</string>
+    <string name="cat_games">게임</string>
+    <string name="cat_tools">도구</string>
+    <string name="cat_all_apps">모든 앱</string>
+    <string name="sys_drawer_title">시스템 및 개발자</string>
+    <string name="tab_developer">개발자</string>
+    <string name="tab_system_tools">시스템</string>
+    <string name="tab_engineering">하드웨어</string>
+    <string name="settings_title">VeloTV 설정</string>
+    <string name="tab_appearance">디자인</string>
+    <string name="tab_rows">행 관리</string>
+    <string name="tab_parental">자녀 보호</string>
+    <string name="tab_general">일반</string>
+    <string name="hub_title">지역 카탈로그</string>
+    <string name="support_title">VeloTV 후원</string>
+    <string name="onboarding_start">시작</string>
+</resources>

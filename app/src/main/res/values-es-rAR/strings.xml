@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_hint">Escribí el nombre de una app o entrada</string>
+    <string name="support_body">Software libre mantenido de forma independiente en Argentina, sin anuncios ni funciones bloqueadas. Si VeloTV revivió tu tele, podés hacer un aporte voluntario escaneando el QR con tu celu.</string>
+    <string name="support_scan_qr">Escaneá con tu celular</string>
+    <string name="hub_qr_instruction">Escaneá el código QR con tu celular para bajar el paquete oficial desde el repositorio del autor.</string>
+    <string name="pin_enter_title">Ingresá el PIN</string>
+    <string name="pin_create_title">Creá un PIN de 4 dígitos</string>
+</resources>

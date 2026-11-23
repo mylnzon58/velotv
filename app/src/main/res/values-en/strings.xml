@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VeloTV</string>
+    <string name="brand_wordmark">VELOTV</string>
+
+    <string name="nav_search">Search</string>
+    <string name="nav_app_hub">Catalog</string>
+    <string name="nav_system">System</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_support_short">Support</string>
+
+    <string name="hint_context_cue">OK Open  ·  Hold OK Options</string>
+    <string name="hint_controls">OK Open · Menu Options · Back Home</string>
+    <string name="creator_subtle_footer">VeloTV · Juan José Monzón</string>
+    <string name="creator_settings_footer">VeloTV 1.0 · Open Source by Juan José Monzón (@mylnzon58)</string>
+    <string name="creator_full_credit">Built in Argentina by Juan José Monzón (@mylnzon58) · MIT License</string>
+
+    <string name="cat_favorites">Favorites</string>
+    <string name="cat_tv_inputs">TV &amp; HDMI</string>
+    <string name="cat_streaming">Streaming</string>
+    <string name="cat_media_web">Web &amp; Media</string>
+    <string name="cat_games">Games</string>
+    <string name="cat_tools">Utilities</string>
+    <string name="cat_all_apps">All Apps</string>
+
+    <string name="input_connected">Connected</string>
+    <string name="input_ready">Standby</string>
+
+    <string name="search_title">Search</string>
+    <string name="search_subtitle">Installed apps and HDMI inputs</string>
+    <string name="search_hint">Type an app or input name</string>
+    <string name="search_empty">No matches</string>
+
+    <string name="action_open">Open</string>
+    <string name="action_open_short">Open</string>
+    <string name="action_close">Close</string>
+    <string name="action_save">Save</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_add_fav">Pin to Favorites</string>
+    <string name="action_remove_fav">Remove from Favorites</string>
+    <string name="action_move_left">Move left</string>
+    <string name="action_move_right">Move right</string>
+    <string name="action_rename">Rename label</string>
+    <string name="action_hide">Hide from Home</string>
+    <string name="action_unhide">Show again</string>
+    <string name="action_lock_pin">Lock with PIN</string>
+    <string name="action_unlock_pin">Unlock</string>
+    <string name="action_auto_launch_on">Launch on TV boot</string>
+    <string name="action_auto_launch_off">Disable auto-launch</string>
+    <string name="action_app_info">App info &amp; cache</string>
+    <string name="action_app_info_sub">Force stop, permissions and storage</string>
+    <string name="action_uninstall">Uninstall</string>
+
+    <string name="section_category">Category</string>
+    <string name="section_control">Control</string>
+    <string name="section_dev_live">Live status</string>
+    <string name="section_native_dev">Native developer options</string>
+    <string name="section_oem_hw">Hardware OEM menus</string>
+    <string name="section_pro_tools">Display tools</string>
+    <string name="section_native_system">Native Android TV settings</string>
+    <string name="section_hw_profile">Hardware &amp; firmware</string>
+    <string name="section_resources">Resources &amp; network</string>
+    <string name="section_row_order">Order &amp; visibility</string>
+
+    <string name="sys_drawer_title">System &amp; Developer</string>
+    <string name="sys_drawer_subtitle">Native shortcuts, diagnostics and hardware profile</string>
+    <string name="tab_developer">Developer</string>
+    <string name="tab_system_tools">System</string>
+    <string name="tab_engineering">Engineering</string>
+
+    <string name="diag_adb">ADB Debugging</string>
+    <string name="diag_dev_mode">Developer mode</string>
+    <string name="diag_unknown_sources">Unknown sources</string>
+    <string name="diag_animations">Animation scales</string>
+    <string name="diag_device">Device</string>
+    <string name="diag_platform">Platform / board</string>
+    <string name="diag_android">Operating system</string>
+    <string name="diag_build">Build</string>
+    <string name="diag_patch">Security patch</string>
+    <string name="diag_kernel">Kernel / ABI</string>
+    <string name="diag_webview">WebView engine</string>
+    <string name="diag_display">Display</string>
+    <string name="diag_network">Local network</string>
+    <string name="diag_uptime">Uptime</string>
+    <string name="diag_privacy">VeloTV privacy</string>
+    <string name="privacy_zero_net_short">Zero INTERNET permission</string>
+
+    <string name="dev_native_options">Developer options</string>
+    <string name="dev_native_options_sub">ADB, animation scales, GPU render and process limits</string>
+    <string name="dev_unknown_sources">Unknown app sources</string>
+    <string name="dev_unknown_sources_sub">External APK install permissions per app</string>
+    <string name="dev_about_device">About device</string>
+    <string name="dev_about_device_sub">Model, Android version and build number</string>
+    <string name="dev_device_status">Network &amp; serial status</string>
+    <string name="dev_device_status_sub">IP address, Wi-Fi MAC and serial number</string>
+    <string name="dev_apps_manage">Installed apps</string>
+    <string name="dev_apps_manage_sub">Permissions, cache, notifications and force stop</string>
+    <string name="dev_storage">Storage &amp; reset</string>
+    <string name="dev_storage_sub">Internal space, USB storage and factory reset</string>
+    <string name="dev_privacy">Privacy &amp; diagnostics</string>
+    <string name="dev_privacy_sub">Usage reporting, crash logs and ad settings</string>
+    <string name="dev_security">Security &amp; restrictions</string>
+    <string name="dev_security_sub">Restricted profiles and app verification</string>
+    <string name="dev_location">Location</string>
+    <string name="dev_location_sub">Wi-Fi scanning and geolocation services</string>
+
+    <string name="sys_network">Network &amp; Wi-Fi</string>
+    <string name="sys_network_sub">Wireless, Ethernet, DNS and IP settings</string>
+    <string name="sys_bluetooth">Bluetooth &amp; remotes</string>
+    <string name="sys_bluetooth_sub">Remotes, audio gear and controllers</string>
+    <string name="sys_sound">Sound &amp; audio</string>
+    <string name="sys_sound_sub">Optical output, HDMI ARC and digital formats</string>
+    <string name="sys_language">System language</string>
+    <string name="sys_language_sub">Android TV system locale</string>
+    <string name="sys_keyboard">Keyboard &amp; input</string>
+    <string name="sys_keyboard_sub">Active keyboards and spell checker</string>
+    <string name="sys_datetime">Date &amp; time</string>
+    <string name="sys_datetime_sub">Timezone and clock format</string>
+    <string name="sys_captions">Captions</string>
+    <string name="sys_captions_sub">Subtitle style, size and contrast</string>
+    <string name="sys_accessibility">Accessibility</string>
+    <string name="sys_accessibility_sub">System services and shortcuts</string>
+    <string name="sys_accounts">Accounts &amp; sync</string>
+    <string name="sys_accounts_sub">Accounts signed into this TV</string>
+    <string name="sys_device_name">Device name</string>
+    <string name="sys_device_name_sub">Visible name for Cast and local network</string>
+    <string name="sys_all_settings">All Android TV settings</string>
+    <string name="sys_all_settings_sub">Full native system preferences</string>
+
+    <string name="hw_live_tv_settings">Live TV &amp; tuner settings</string>
+    <string name="hw_live_tv_settings_sub">Digital channels, antenna and tuner picture</string>
+    <string name="hw_factory_menu">Factory service menu</string>
+    <string name="hw_factory_menu_sub">Technical use only. Do not alter panel parameters.</string>
+
+    <string name="tool_calibration">4K / HDR Calibration patterns</string>
+    <string name="tool_calibration_sub">PLUGE grayscale, SMPTE bars, overscan and dead pixels</string>
+    <string name="tool_ambient_clock">OLED ambient clock</string>
+    <string name="tool_ambient_clock_sub">Minimal screensaver with anti-burn-in pixel shift</string>
+    <string name="health_clear_cache">Clear icon cache</string>
+    <string name="health_clear_cache_sub">Release local thumbnail cache from RAM</string>
+
+    <string name="settings_title">VeloTV Settings</string>
+    <string name="settings_subtitle">Full customization without locked features</string>
+    <string name="tab_appearance">Appearance</string>
+    <string name="tab_rows">Rows</string>
+    <string name="tab_parental">Parental</string>
+    <string name="tab_general">General</string>
+
+    <string name="setting_theme">Visual palette</string>
+    <string name="setting_corners">Card corners</string>
+    <string name="setting_density">Card size</string>
+    <string name="setting_banner_labels">Labels on banners</string>
+    <string name="setting_hero_bar">Context header</string>
+    <string name="setting_clock_show">Show clock</string>
+    <string name="setting_clock_24h">24-hour format</string>
+    <string name="setting_clock_seconds">Show seconds</string>
+    <string name="setting_show_stats">RAM &amp; network indicator</string>
+    <string name="setting_show_hints">Bottom shortcut bar</string>
+    <string name="setting_show_inputs">TV &amp; HDMI row</string>
+    <string name="setting_show_hidden">Show hidden items</string>
+    <string name="setting_language">VeloTV language</string>
+    <string name="setting_language_sub">Applies immediately without rebooting</string>
+    <string name="setting_clear_autolaunch">Clear auto-launch</string>
+    <string name="setting_pin_set">Set 4-digit PIN</string>
+    <string name="setting_pin_clear">Remove parental PIN</string>
+    <string name="setting_lock_settings">Lock Settings with PIN</string>
+    <string name="setting_lock_dev">Lock System &amp; Developer</string>
+    <string name="setting_parental_schedule">Scheduled game lock</string>
+    <string name="setting_parental_start">Restriction start hour</string>
+    <string name="setting_parental_end">Restriction end hour</string>
+    <string name="setting_backup_export">Export local backup</string>
+    <string name="setting_backup_restore">Restore local backup</string>
+    <string name="setting_support">Support creator (QR)</string>
+
+    <string name="theme_darkroom_amber">Darkroom · Amber</string>
+    <string name="theme_darkroom_red">Darkroom · Red</string>
+    <string name="theme_midnight">Midnight · Cool Blue</string>
+    <string name="theme_studio_light">Studio · Daylight Paper</string>
+    <string name="theme_forest">Mineral · Forest</string>
+    <string name="theme_graphite">Graphite · Monochrome</string>
+
+    <string name="corner_sharp">Sharp (0 dp)</string>
+    <string name="corner_editorial">Editorial (6 dp)</string>
+    <string name="corner_soft">Soft (12 dp)</string>
+
+    <string name="density_compact">Compact</string>
+    <string name="density_normal">Normal</string>
+    <string name="density_large">Large</string>
+
+    <string name="row_create_custom">Create custom category</string>
+    <string name="row_create_custom_sub">Group apps into your own row</string>
+    <string name="row_actions_hint">Press OK to reorder or hide</string>
+    <string name="row_move_up">Move row up</string>
+    <string name="row_move_down">Move row down</string>
+    <string name="row_hide">Hide row</string>
+    <string name="row_show">Show row</string>
+    <string name="row_delete_custom">Delete category</string>
+
+    <string name="state_on">On</string>
+    <string name="state_off">Off</string>
+    <string name="state_active">Current</string>
+    <string name="state_visible">Visible</string>
+    <string name="state_hidden">Hidden</string>
+
+    <string name="hub_title">Regional Catalog</string>
+    <string name="hub_subtitle">Official and open-source apps filtered by region and Android API</string>
+    <string name="hub_installed">Installed</string>
+    <string name="hub_install_play">Play Store</string>
+    <string name="hub_open_source_qr">Official QR</string>
+    <string name="hub_needs_newer">Requires Android 10+</string>
+    <string name="hub_qr_instruction">Scan the QR code with your phone to download the official release from the author repository.</string>
+
+    <string name="support_title">Support VeloTV</string>
+    <string name="support_body">Independently maintained free software with no ads and no locked features. If VeloTV improved your TV, scan the QR with your phone to make a voluntary contribution.</string>
+    <string name="support_scan_qr">Scan with your phone</string>
+    <string name="support_repo_title">GitHub Repository</string>
+    <string name="support_repo_sub">Open-source code (MIT)</string>
+
+    <string name="onboarding_title">VELOTV</string>
+    <string name="onboarding_body">Native 60 fps interface engineered for 1–2 GB RAM televisions.\n\nNo ads, no telemetry, and zero network permission. Includes HDMI inputs, 4K calibration, native developer shortcuts, and regional app catalog.</string>
+    <string name="onboarding_start">Start</string>
+    <string name="onboarding_qr_caption">Optional voluntary support</string>
+
+    <string name="pin_enter_title">Enter PIN</string>
+    <string name="pin_create_title">Create 4-digit PIN</string>
+    <string name="pin_wrong">Wrong PIN</string>
+    <string name="pin_saved">PIN saved</string>
+    <string name="toast_backup_ok">Backup saved</string>
+    <string name="toast_restore_ok">Settings restored</string>
+    <string name="toast_no_backup">No backup found</string>
+    <string name="toast_cache_cleared">Icon cache cleared</string>
+</resources>
+

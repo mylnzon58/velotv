@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">Chercher</string>
+    <string name="nav_app_hub">Catalogue</string>
+    <string name="nav_system">Système</string>
+    <string name="nav_settings">Réglages</string>
+    <string name="nav_support_short">Soutenir</string>
+    <string name="hint_context_cue">OK Ouvrir  ·  Maintenir OK Options</string>
+    <string name="cat_favorites">Favoris</string>
+    <string name="cat_tv_inputs">TV et HDMI</string>
+    <string name="cat_streaming">Streaming</string>
+    <string name="cat_media_web">Web et médias</string>
+    <string name="cat_games">Jeux</string>
+    <string name="cat_tools">Outils</string>
+    <string name="cat_all_apps">Toutes les apps</string>
+    <string name="sys_drawer_title">Système et développeur</string>
+    <string name="tab_developer">Développeur</string>
+    <string name="tab_system_tools">Système</string>
+    <string name="tab_engineering">Ingénierie</string>
+    <string name="settings_title">Réglages VeloTV</string>
+    <string name="tab_appearance">Apparence</string>
+    <string name="tab_rows">Lignes</string>
+    <string name="tab_parental">Parental</string>
+    <string name="tab_general">Général</string>
+    <string name="hub_title">Catalogue régional</string>
+    <string name="support_title">Soutenir VeloTV</string>
+    <string name="onboarding_start">Démarrer</string>
+</resources>

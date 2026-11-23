@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">Suche</string>
+    <string name="nav_app_hub">Katalog</string>
+    <string name="nav_system">System</string>
+    <string name="nav_settings">Optionen</string>
+    <string name="nav_support_short">Spenden</string>
+    <string name="hint_context_cue">OK Öffnen  ·  Halten Optionen</string>
+    <string name="cat_favorites">Favoriten</string>
+    <string name="cat_tv_inputs">TV &amp; HDMI</string>
+    <string name="cat_streaming">Streaming</string>
+    <string name="cat_media_web">Web &amp; Medien</string>
+    <string name="cat_games">Spiele</string>
+    <string name="cat_tools">Werkzeuge</string>
+    <string name="cat_all_apps">Alle Apps</string>
+    <string name="sys_drawer_title">System &amp; Entwickler</string>
+    <string name="tab_developer">Entwickler</string>
+    <string name="tab_system_tools">System</string>
+    <string name="tab_engineering">Hardware</string>
+    <string name="settings_title">VeloTV Einstellungen</string>
+    <string name="tab_appearance">Design</string>
+    <string name="tab_rows">Zeilen</string>
+    <string name="tab_parental">Kinderschutz</string>
+    <string name="tab_general">Allgemein</string>
+    <string name="hub_title">Regionaler Katalog</string>
+    <string name="support_title">VeloTV unterstützen</string>
+    <string name="onboarding_start">Starten</string>
+</resources>

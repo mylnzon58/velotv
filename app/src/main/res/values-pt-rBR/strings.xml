@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">Buscar</string>
+    <string name="nav_app_hub">Catálogo</string>
+    <string name="nav_system">Sistema</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="nav_support_short">Apoiar</string>
+    <string name="hint_context_cue">OK Abrir  ·  Segurar OK Opções</string>
+    <string name="hint_controls">OK Abrir · Menu Opções · Voltar Início</string>
+    <string name="cat_favorites">Favoritos</string>
+    <string name="cat_tv_inputs">TV e HDMI</string>
+    <string name="cat_streaming">Streaming</string>
+    <string name="cat_media_web">Web e mídia</string>
+    <string name="cat_games">Jogos</string>
+    <string name="cat_tools">Utilitários</string>
+    <string name="cat_all_apps">Todos os apps</string>
+    <string name="sys_drawer_title">Sistema e desenvolvedor</string>
+    <string name="tab_developer">Desenvolvedor</string>
+    <string name="tab_system_tools">Sistema</string>
+    <string name="tab_engineering">Engenharia</string>
+    <string name="settings_title">Ajustes do VeloTV</string>
+    <string name="tab_appearance">Visual</string>
+    <string name="tab_rows">Fileiras</string>
+    <string name="tab_parental">Parental</string>
+    <string name="tab_general">Geral</string>
+    <string name="hub_title">Catálogo regional</string>
+    <string name="support_title">Apoiar o VeloTV</string>
+    <string name="support_body">Software livre mantido de forma independente, sem anúncios nem recursos bloqueados. Escaneie o QR com seu celular para contribuir.</string>
+    <string name="onboarding_start">Começar</string>
+</resources>

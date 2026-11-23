@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_search">検索</string>
+    <string name="nav_app_hub">カタログ</string>
+    <string name="nav_system">システム</string>
+    <string name="nav_settings">設定</string>
+    <string name="nav_support_short">支援</string>
+    <string name="hint_context_cue">決定 開く  ·  長押し オプション</string>
+    <string name="cat_favorites">お気に入り</string>
+    <string name="cat_tv_inputs">TV・HDMI</string>
+    <string name="cat_streaming">動画配信</string>
+    <string name="cat_media_web">Web・メディア</string>
+    <string name="cat_games">ゲーム</string>
+    <string name="cat_tools">ツール</string>
+    <string name="cat_all_apps">すべてのアプリ</string>
+    <string name="sys_drawer_title">システムと開発者向け</string>
+    <string name="tab_developer">開発者</string>
+    <string name="tab_system_tools">システム</string>
+    <string name="tab_engineering">ハードウェア</string>
+    <string name="settings_title">VeloTV 設定</string>
+    <string name="tab_appearance">外観</string>
+    <string name="tab_rows">行の管理</string>
+    <string name="tab_parental">制限</string>
+    <string name="tab_general">一般</string>
+    <string name="hub_title">地域カタログ</string>
+    <string name="support_title">VeloTV を支援</string>
+    <string name="onboarding_start">はじめる</string>
+</resources>
