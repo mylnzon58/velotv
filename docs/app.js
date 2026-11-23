@@ -75,11 +75,30 @@
       g4_t: "Ajustes completos por pestañas",
       g4_m: "6 paletas · Filas · Parental · Idiomas",
       inst_eyebrow: "INSTALACIÓN Y VERIFICACIÓN",
-      inst_title: "Instálalo en menos de un minuto por USB, LocalSend o ADB.",
-      inst_sub: "Compatible con Android TV 7.0 a 15 (ARMv7, ARM64 y x86). Incluye scripts modulares reversibles para optimizar televisores con poca RAM.",
-      c1_t: "1. Instalar APK por ADB",
-      c2_t: "2. Verificar integridad SHA-256",
-      c3_t: "3. Toolkit de optimización (100% reversible)",
+      inst_title: "Tres formas rápidas de instalarlo, sin complicaciones.",
+      inst_sub: "Compatible con Android TV 7.0 a 15 (ARMv7, ARM64 y x86). Elegí agente IA guiado, instalador gráfico en 3 clics o instalación manual por USB/ADB.",
+      m1_tag: "RECOMENDADO · AUTOMÁTICO",
+      m1_t: "Con Antigravity u OpenCode",
+      m1_s1: "En el TV: activá Modo Desarrollador y Depuración ADB.",
+      m1_s2: "Reiniciá el TV y dejalo en el mismo Wi-Fi que tu PC.",
+      m1_s3: "Pegá el prompt en Antigravity (u OpenCode) y tocá Permitir siempre en el TV.",
+      m1_copy: "Copiar prompt para Antigravity",
+      m2_tag: "SIN CONSOLA · 3 CLICS",
+      m2_t: "Instalador gráfico (PC)",
+      m2_s1: "Escanea el Wi-Fi y detecta el televisor automáticamente.",
+      m2_s2: "Descarga ADB oficial si falta, baja VeloTV y verifica su SHA-256.",
+      m2_s3: "Instala, optimiza o restaura fábrica en Windows, Linux y macOS.",
+      m2_dl: "Descargar instalador (.py)",
+      m2_guide: "Ver accesos Win/Mac/Linux",
+      m3_tag: "DIRECTO · MANUAL",
+      m3_t: "USB, LocalSend o ADB",
+      m3_s1: "Descargá el APK universal firmado (2.1 MB).",
+      m3_s2: "Envialo al televisor con LocalSend, pendrive o ADB.",
+      m3_s3: "Verificá el hash SHA-256 antes de instalar.",
+      c1_t: "Prompt directo para Antigravity / OpenCode",
+      ai_prompt_text: "Conéctate a mi Android TV en mi red Wi-Fi (escanea puerto 5555), descarga la última release de https://github.com/mylnzon58/velotv verificando SHA-256, instala VeloTV y aplica optimización segura y reversible (--user 0, animaciones 0.5x) sin tocar DRM ni Play Store. Guíame paso a paso solo con lo necesario.",
+      c2_t: "Verificar integridad SHA-256",
+      c3_t: "ADB manual y toolkit reversible",
       c3_note: "Desactiva bloatware únicamente en --user 0, ajusta escalas de animación a 0.5x y compila apps clave con perfil ART. Nunca toca DRM, Play Store ni sintonizador.",
       copy: "Copiar",
       copied: "Copiado",
@@ -170,11 +189,30 @@
       g4_t: "Complete tabbed settings",
       g4_m: "6 palettes · Rows · Parental · Languages",
       inst_eyebrow: "INSTALL & VERIFY",
-      inst_title: "Install in under a minute over USB, LocalSend, or ADB.",
-      inst_sub: "Compatible with Android TV 7.0 through 15 (ARMv7, ARM64, x86). Ships with modular reversible ADB scripts to optimize low-RAM TVs.",
-      c1_t: "1. Install APK over ADB",
-      c2_t: "2. Verify SHA-256 checksum",
-      c3_t: "3. Reversible TV optimization toolkit",
+      inst_title: "Three fast ways to install, zero friction.",
+      inst_sub: "Compatible with Android TV 7.0 through 15 (ARMv7, ARM64, x86). Use an AI coding agent, the 3-click desktop installer, or manual USB/ADB.",
+      m1_tag: "RECOMMENDED · AUTOMATIC",
+      m1_t: "With Antigravity or OpenCode",
+      m1_s1: "On TV: enable Developer Mode and ADB Debugging.",
+      m1_s2: "Reboot the TV and keep it on the same Wi-Fi as your PC.",
+      m1_s3: "Paste the prompt into Antigravity (or OpenCode) and accept Always allow on TV.",
+      m1_copy: "Copy prompt for Antigravity",
+      m2_tag: "NO TERMINAL · 3 CLICKS",
+      m2_t: "Desktop GUI Installer",
+      m2_s1: "Scans local Wi-Fi and detects your Android TV automatically.",
+      m2_s2: "Downloads official Google ADB if missing and verifies APK SHA-256.",
+      m2_s3: "Installs, optimizes, or restores stock apps on Windows, Linux, and macOS.",
+      m2_dl: "Download installer (.py)",
+      m2_guide: "Win/Mac/Linux launchers",
+      m3_tag: "DIRECT · MANUAL",
+      m3_t: "USB, LocalSend, or ADB",
+      m3_s1: "Download the signed universal APK (2.1 MB).",
+      m3_s2: "Send it to your TV using LocalSend, USB drive, or ADB.",
+      m3_s3: "Verify the SHA-256 checksum before installing.",
+      c1_t: "Ready-to-paste prompt for Antigravity / OpenCode",
+      ai_prompt_text: "Connect to my Android TV on my local Wi-Fi (scan port 5555), download the latest release from https://github.com/mylnzon58/velotv verifying its SHA-256, install VeloTV, and apply safe reversible optimization (--user 0, 0.5x animations) without touching DRM or Play Store. Guide me concisely only when TV confirmation is needed.",
+      c2_t: "Verify SHA-256 checksum",
+      c3_t: "Manual ADB & reversible toolkit",
       c3_note: "Disables bloatware strictly under --user 0, sets 0.5x animation scales, and runs ART speed-profile compilation. Never touches DRM, Play Store, or live TV tuners.",
       copy: "Copy",
       copied: "Copied",
@@ -211,6 +249,14 @@
       if (dict[capKey]) stageCaption.textContent = dict[capKey];
     }
     langBtn.textContent = lang === "es" ? "EN" : "ES";
+    const aiCopyBtn = document.getElementById("copyAiPromptBtn");
+    if (aiCopyBtn && dict.ai_prompt_text) {
+      aiCopyBtn.setAttribute("data-copy", dict.ai_prompt_text);
+    }
+    const aiPreCopy = document.querySelector('#aiPromptCode')?.closest('.code-panel')?.querySelector('.copy-btn');
+    if (aiPreCopy && dict.ai_prompt_text) {
+      aiPreCopy.setAttribute("data-copy", dict.ai_prompt_text);
+    }
   }
 
   langBtn.addEventListener("click", () => {
@@ -261,3 +307,4 @@
     });
   });
 })();
+

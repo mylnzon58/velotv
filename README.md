@@ -71,9 +71,22 @@ Valores obtenidos con `adb shell dumpsys meminfo` en el mismo televisor físico:
 
 ---
 
-## Instalación
+## Instalación (3 formas simples)
 
-### 1. Instalar el APK
+### Opción 1 — Con agente IA: Antigravity u OpenCode *(recomendado)*
+La forma más simple y guiada para conectar, auditar, instalar y optimizar tu TV en minutos:
+1. En tu televisor: `Ajustes → Acerca de → Compilación` (7 clics) → activar **Depuración USB / ADB**.
+2. **Reiniciá el televisor** (abre ADB Wi-Fi en puerto `5555`) y dejalo en el **mismo Wi-Fi** que tu PC.
+3. Abrí **Antigravity** (u **OpenCode**), pegá este prompt y aceptá **Permitir siempre** en la pantalla del TV:
+
+```text
+Conéctate a mi Android TV en mi red Wi-Fi (escanea puerto 5555), descarga la última release de https://github.com/mylnzon58/velotv verificando SHA-256, instala VeloTV y aplica optimización segura y reversible (--user 0, animaciones 0.5x) sin tocar DRM ni Play Store. Guíame paso a paso solo con lo necesario.
+```
+
+### Opción 2 — Instalador gráfico en 3 clics (Windows / Linux / macOS)
+Sin usar consola: ejecutá [tools/installer/velotv_installer.py](tools/installer/velotv_installer.py) (o doble clic en `install-windows.bat` / `install-linux.sh` / `install-macos.command`). Escanea tu Wi-Fi, descarga ADB oficial si falta, verifica el SHA-256, instala VeloTV, optimiza o restaura todo en 1 clic.
+
+### Opción 3 — Manual (USB, LocalSend o ADB)
 Descarga `release/VeloTV-v1.0.0-universal.apk` (verifica su hash en `release/SHA256SUMS.txt`) e instálalo por USB, LocalSend o ADB:
 
 ```bash
@@ -81,8 +94,7 @@ adb connect <IP_DEL_TV>:5555
 adb install -r release/VeloTV-v1.0.0-universal.apk
 ```
 
-### 2. Optimización completa del televisor (opcional, 100% reversible)
-El directorio `tools/tv-toolkit/` incluye scripts modulares para desactivar bloatware en `--user 0`, reducir escalas de animación a `0.5x`, compilar con ART `speed-profile` y revertir todo si hace falta:
+Toolkit opcional de optimización 100% reversible (`tools/tv-toolkit/`):
 
 ```bash
 ./tools/tv-toolkit/optimize_tv.sh <IP_DEL_TV>:5555 release/VeloTV-v1.0.0-universal.apk

@@ -295,21 +295,63 @@
         <div class="section-head">
           <div>
             <p class="eyebrow" data-i18n="inst_eyebrow">INSTALACIÓN Y VERIFICACIÓN</p>
-            <h2 class="section-title" data-i18n="inst_title">Instálalo en menos de un minuto por USB, LocalSend o ADB.</h2>
-            <p class="section-sub" data-i18n="inst_sub">Compatible con Android TV 7.0 a 15 (ARMv7, ARM64 y x86). Incluye scripts modulares reversibles para optimizar televisores con poca RAM.</p>
+            <h2 class="section-title" data-i18n="inst_title">Tres formas rápidas de instalarlo, sin complicaciones.</h2>
+            <p class="section-sub" data-i18n="inst_sub">Compatible con Android TV 7.0 a 15 (ARMv7, ARM64 y x86). Elegí agente IA guiado, instalador gráfico en 3 clics o instalación manual por USB/ADB.</p>
           </div>
+        </div>
+
+        <div class="install-modes">
+          <article class="mode-card featured">
+            <span class="mode-tag" data-i18n="m1_tag">RECOMENDADO · AUTOMÁTICO</span>
+            <h3 data-i18n="m1_t">Con Antigravity u OpenCode</h3>
+            <ol class="mode-steps">
+              <li data-i18n="m1_s1">En el TV: activá <strong>Modo Desarrollador</strong> y <strong>Depuración ADB</strong>.</li>
+              <li data-i18n="m1_s2"><strong>Reiniciá el TV</strong> y dejalo en el mismo Wi-Fi que tu PC.</li>
+              <li data-i18n="m1_s3">Pegá el prompt en <strong>Antigravity</strong> (u OpenCode) y tocá <em>Permitir siempre</em> en el TV.</li>
+            </ol>
+            <div class="mode-foot">
+              <button class="btn btn-primary btn-compact copy-btn" type="button" id="copyAiPromptBtn" data-copy="Conéctate a mi Android TV en mi red Wi-Fi (escanea puerto 5555), descarga la última release de https://github.com/mylnzon58/velotv verificando SHA-256, instala VeloTV y aplica optimización segura y reversible (--user 0, animaciones 0.5x) sin tocar DRM ni Play Store. Guíame paso a paso solo con lo necesario." data-i18n="m1_copy">Copiar prompt para Antigravity</button>
+            </div>
+          </article>
+
+          <article class="mode-card">
+            <span class="mode-tag" data-i18n="m2_tag">SIN CONSOLA · 3 CLICS</span>
+            <h3 data-i18n="m2_t">Instalador gráfico (PC)</h3>
+            <ol class="mode-steps">
+              <li data-i18n="m2_s1">Escanea el Wi-Fi y detecta el televisor automáticamente.</li>
+              <li data-i18n="m2_s2">Descarga ADB oficial si falta, baja VeloTV y verifica su SHA-256.</li>
+              <li data-i18n="m2_s3">Instala, optimiza o restaura fábrica en Windows, Linux y macOS.</li>
+            </ol>
+            <div class="mode-foot">
+              <a class="btn btn-secondary btn-compact" href="https://github.com/mylnzon58/velotv/releases/download/v1.0.0/velotv_installer.py" data-i18n="m2_dl">Descargar instalador (.py)</a>
+              <a class="btn btn-secondary btn-compact" href="https://github.com/mylnzon58/velotv/tree/main/tools/installer" target="_blank" rel="noopener noreferrer" data-i18n="m2_guide">Ver accesos Win/Mac/Linux</a>
+            </div>
+          </article>
+
+          <article class="mode-card">
+            <span class="mode-tag" data-i18n="m3_tag">DIRECTO · MANUAL</span>
+            <h3 data-i18n="m3_t">USB, LocalSend o ADB</h3>
+            <ol class="mode-steps">
+              <li data-i18n="m3_s1">Descargá el APK universal firmado (2.1 MB).</li>
+              <li data-i18n="m3_s2">Envialo al televisor con LocalSend, pendrive o ADB.</li>
+              <li data-i18n="m3_s3">Verificá el hash SHA-256 antes de instalar.</li>
+            </ol>
+            <div class="mode-foot">
+              <a class="btn btn-secondary btn-compact" href="https://github.com/mylnzon58/velotv/releases/download/v1.0.0/VeloTV-v1.0.0-universal.apk" data-i18n="cta_apk_short">Descargar APK</a>
+              <a class="btn btn-secondary btn-compact" href="https://github.com/mylnzon58/velotv/releases/tag/v1.0.0" target="_blank" rel="noopener noreferrer">Release v1.0.0</a>
+            </div>
+          </article>
         </div>
 
         <div class="install-grid">
           <div class="code-panel">
             <div class="code-panel-head">
-              <h3 data-i18n="c1_t">1. Instalar APK por ADB</h3>
-              <button class="copy-btn" type="button" data-copy="adb connect <IP_DEL_TV>:5555&#10;adb install -r VeloTV-v1.0.0-universal.apk" data-i18n="copy">Copiar</button>
+              <h3 data-i18n="c1_t">Prompt directo para Antigravity / OpenCode</h3>
+              <button class="copy-btn" type="button" data-copy="Conéctate a mi Android TV en mi red Wi-Fi (escanea puerto 5555), descarga la última release de https://github.com/mylnzon58/velotv verificando SHA-256, instala VeloTV y aplica optimización segura y reversible (--user 0, animaciones 0.5x) sin tocar DRM ni Play Store. Guíame paso a paso solo con lo necesario." data-i18n="copy">Copiar</button>
             </div>
-            <pre><code>adb connect &lt;IP_DEL_TV&gt;:5555
-adb install -r VeloTV-v1.0.0-universal.apk</code></pre>
+            <pre><code id="aiPromptCode" data-i18n="ai_prompt_text">Conéctate a mi Android TV en mi red Wi-Fi (escanea puerto 5555), descarga la última release de https://github.com/mylnzon58/velotv verificando SHA-256, instala VeloTV y aplica optimización segura y reversible (--user 0, animaciones 0.5x) sin tocar DRM ni Play Store. Guíame paso a paso solo con lo necesario.</code></pre>
             <div class="code-panel-head">
-              <h3 data-i18n="c2_t">2. Verificar integridad SHA-256</h3>
+              <h3 data-i18n="c2_t">Verificar integridad SHA-256</h3>
               <button class="copy-btn" type="button" data-copy="906312ff50c3f9e2612c8b0cf85cd602a08476e5c07d8b835004ebbbfad72ab9" data-i18n="copy">Copiar</button>
             </div>
             <pre><code>906312ff50c3f9e2612c8b0cf85cd602a08476e5c07d8b835004ebbbfad72ab9  VeloTV-v1.0.0-universal.apk</code></pre>
@@ -317,12 +359,13 @@ adb install -r VeloTV-v1.0.0-universal.apk</code></pre>
 
           <div class="code-panel">
             <div class="code-panel-head">
-              <h3 data-i18n="c3_t">3. Toolkit de optimización (100% reversible)</h3>
-              <button class="copy-btn" type="button" data-copy="./tools/tv-toolkit/optimize_tv.sh <IP_DEL_TV>:5555 release/VeloTV-v1.0.0-universal.apk&#10;./tools/tv-toolkit/restore_tv.sh <IP_DEL_TV>:5555&#10;./tools/tv-toolkit/harden_close_adb.sh <IP_DEL_TV>:5555" data-i18n="copy">Copiar</button>
+              <h3 data-i18n="c3_t">ADB manual y toolkit reversible</h3>
+              <button class="copy-btn" type="button" data-copy="adb connect <IP_DEL_TV>:5555&#10;adb install -r VeloTV-v1.0.0-universal.apk&#10;./tools/tv-toolkit/optimize_tv.sh <IP_DEL_TV>:5555 release/VeloTV-v1.0.0-universal.apk&#10;./tools/tv-toolkit/restore_tv.sh <IP_DEL_TV>:5555" data-i18n="copy">Copiar</button>
             </div>
-            <pre><code>./tools/tv-toolkit/optimize_tv.sh &lt;IP_DEL_TV&gt;:5555 release/VeloTV-v1.0.0-universal.apk
-./tools/tv-toolkit/restore_tv.sh &lt;IP_DEL_TV&gt;:5555
-./tools/tv-toolkit/harden_close_adb.sh &lt;IP_DEL_TV&gt;:5555</code></pre>
+            <pre><code>adb connect &lt;IP_DEL_TV&gt;:5555
+adb install -r VeloTV-v1.0.0-universal.apk
+./tools/tv-toolkit/optimize_tv.sh &lt;IP_DEL_TV&gt;:5555 release/VeloTV-v1.0.0-universal.apk
+./tools/tv-toolkit/restore_tv.sh &lt;IP_DEL_TV&gt;:5555</code></pre>
             <p class="bench-note" data-i18n="c3_note">
               Desactiva bloatware únicamente en <code>--user 0</code>, ajusta escalas de animación a 0.5x y compila apps clave con perfil ART. Nunca toca DRM, Play Store ni sintonizador.
             </p>
@@ -411,3 +454,4 @@ adb install -r VeloTV-v1.0.0-universal.apk</code></pre>
   <script src="app.js"></script>
 </body>
 </html>
+

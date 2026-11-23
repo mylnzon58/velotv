@@ -663,6 +663,62 @@ td.hl {
 }
 
 /* Install & Code */
+.install-modes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.mode-card {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-card.featured {
+  border-color: var(--accent);
+}
+
+.mode-tag {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.mode-card h3 {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  margin: 0;
+  color: var(--ink);
+}
+
+.mode-steps {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mode-card .mode-foot {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 6px;
+}
+
 .install-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -818,6 +874,7 @@ pre {
   .bench-grid,
   .ledger-grid,
   .gallery-grid,
+  .install-modes,
   .install-grid {
     grid-template-columns: 1fr;
   }
@@ -843,3 +900,4 @@ pre {
     display: none;
   }
 }
+

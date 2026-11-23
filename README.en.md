@@ -71,7 +71,21 @@ Measured via `adb shell dumpsys meminfo` on the same physical television:
 
 ---
 
-## Build & Install
+## Install (3 Easy Options)
+
+### Option 1 — With an AI Agent: Antigravity or OpenCode *(Recommended)*
+1. On your TV: `Settings → About → Build` (7 clicks) → enable **USB / ADB Debugging**.
+2. **Reboot your TV** (opens ADB Wi-Fi port `5555`) and connect it to the **same Wi-Fi** as your PC.
+3. Paste this prompt into **Antigravity** (or **OpenCode**) and accept **Always allow** on the TV screen:
+
+```text
+Connect to my Android TV on my local Wi-Fi (scan port 5555), download the latest release from https://github.com/mylnzon58/velotv verifying its SHA-256, install VeloTV, and apply safe reversible optimization (--user 0, 0.5x animations) without touching DRM or Play Store. Guide me concisely only when TV confirmation is needed.
+```
+
+### Option 2 — 3-Click Desktop GUI Installer (Windows / Linux / macOS)
+Run [tools/installer/velotv_installer.py](tools/installer/velotv_installer.py) (or double-click `install-windows.bat`, `install-linux.sh`, or `install-macos.command`). Auto-scans your Wi-Fi, fetches official Google ADB if missing, verifies SHA-256, installs, optimizes, or restores stock apps.
+
+### Option 3 — Manual Build, USB, LocalSend, or ADB
 
 ```bash
 # Run unit tests & build release APK (JDK 17 + Android SDK 35)
