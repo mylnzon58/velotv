@@ -4,6 +4,7 @@
     <string name="app_name">VeloTV</string>
     <string name="brand_wordmark">VELOTV</string>
 
+    <string name="nav_clean">Limpiar</string>
     <string name="nav_search">Buscar</string>
     <string name="nav_wallpapers">Fondos</string>
     <string name="nav_app_hub">Catálogo</string>
@@ -257,6 +258,22 @@
     <string name="wp_int_manual">Manual (fijo)</string>
     <string name="ambient_photo_hint">◀▶ Foto · OK Negro OLED · Atrás Salir</string>
     <string name="ambient_oled_hint">Modo negro puro OLED · OK Volver a fotos · Atrás Salir</string>
+
+    <string name="clean_running_short">Limpiando…</string>
+    <string name="clean_hero_title">Limpieza rápida</string>
+    <string name="clean_hero_sub">OK Liberar RAM y procesos en segundo plano · Mantener OK Almacenamiento y caché</string>
+    <string name="clean_toast_freed">RAM libre: %1$d MB (+%2$d MB) · %3$d apps optimizadas</string>
+    <string name="clean_toast_ready">Memoria optimizada: %1$d MB libres · %2$d apps revisadas</string>
+    <string name="clean_drawer_title">Limpieza y rendimiento</string>
+    <string name="clean_drawer_subtitle">Libera procesos en segundo plano y accede a la caché del sistema</string>
+    <string name="clean_section_actions">Acciones rápidas</string>
+    <string name="clean_last_result">Última limpieza</string>
+    <string name="clean_action_ram">Liberar RAM y procesos ahora</string>
+    <string name="clean_action_ram_sub">Cierra apps inactivas en segundo plano sin afectar TV ni sesión</string>
+    <string name="clean_action_sys_cache">Vaciar caché global de apps</string>
+    <string name="clean_action_sys_cache_sub">Abre Almacenamiento nativo → Datos almacenados en caché</string>
+    <string name="clean_action_apps_stop">Detener apps pesadas manualmente</string>
+    <string name="clean_action_apps_stop_sub">Abre la lista de aplicaciones para forzar detención o borrar caché</string>
 
     <string name="pin_enter_title">Ingresa el PIN</string>
     <string name="pin_create_title">Crea un PIN de 4 dígitos</string>

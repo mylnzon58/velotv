@@ -31,4 +31,6 @@
     <string name="wp_tab_settings">来源与动效</string>
     <string name="wp_next_now">立即切换下一张</string>
     <string name="wp_resume_auto">恢复自动轮换</string>
+    <string name="nav_clean">清理</string>
+    <string name="clean_drawer_title">内存加速与缓存清理</string>
 </resources>

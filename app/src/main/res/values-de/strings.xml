@@ -31,4 +31,6 @@
     <string name="wp_tab_settings">Quellen &amp; Bewegung</string>
     <string name="wp_next_now">Nächstes Bild anzeigen</string>
     <string name="wp_resume_auto">Automatischen Wechsel aktivieren</string>
+    <string name="nav_clean">Bereinigen</string>
+    <string name="clean_drawer_title">Bereinigung &amp; Leistung</string>
 </resources>

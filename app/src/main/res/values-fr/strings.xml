@@ -31,4 +31,6 @@
     <string name="wp_tab_settings">Sources et mouvement</string>
     <string name="wp_next_now">Changer de fond maintenant</string>
     <string name="wp_resume_auto">Reprendre la rotation auto</string>
+    <string name="nav_clean">Nettoyer</string>
+    <string name="clean_drawer_title">Nettoyage et performances</string>
 </resources>

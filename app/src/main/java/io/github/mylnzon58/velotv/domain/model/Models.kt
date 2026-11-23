@@ -399,3 +399,11 @@ data class DonationChannel(
     val badge: String,
     val isPrimaryForRegion: Boolean
 )
+
+data class QuickCleanResult(
+    val ramBeforeMb: Long,
+    val ramAfterMb: Long,
+    val reclaimedMb: Long,
+    val processedPackages: Int,
+    val clearedCacheKb: Long
+)

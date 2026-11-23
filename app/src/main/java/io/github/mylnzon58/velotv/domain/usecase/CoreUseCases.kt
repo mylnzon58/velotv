@@ -384,3 +384,45 @@ class WallpaperPolicyUseCase {
         )
     }
 }
+
+class SystemCleanPolicyUseCase {
+
+    /**
+     * Filters safe background kill targets, strictly excluding OS, TV tuner/HDMI, DRM, input,
+     * and launcher self packages so cleanup never disrupts live TV or system stability.
+     */
+    fun filterSafeKillTargets(apps: List<TvApp>, selfPackage: String): List<String> {
+        return apps.mapNotNull { app ->
+            val pkg = app.packageName
+            if (pkg == selfPackage) return@mapNotNull null
+            if (PROTECTED_PREFIXES.any { pkg == it || pkg.startsWith("$it.") }) return@mapNotNull null
+            if (!app.isSystemApp || pkg in HEAVY_PREINSTALLED_MEDIA) pkg else null
+        }.distinct()
+    }
+
+    companion object {
+        private val PROTECTED_PREFIXES = listOf(
+            "android",
+            "com.android.systemui",
+            "com.android.tv",
+            "com.android.settings",
+            "com.android.providers",
+            "com.android.bluetooth",
+            "com.android.inputmethod",
+            "com.google.android.gms",
+            "com.google.android.gsf",
+            "com.google.android.inputmethod",
+            "com.mediatek",
+            "com.mtk",
+            "com.skyworth"
+        )
+
+        private val HEAVY_PREINSTALLED_MEDIA = setOf(
+            "com.netflix.ninja",
+            "com.google.android.youtube.tv",
+            "com.android.vending",
+            "com.amazon.amazonvideo.livingroom",
+            "com.spotify.tv.android"
+        )
+    }
+}

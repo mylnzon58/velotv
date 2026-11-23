@@ -242,4 +242,20 @@ No ads, no telemetry. Includes rotating free-license wallpapers, ambient app glo
     <string name="wp_int_manual">Manual (fixed)</string>
     <string name="ambient_photo_hint">◀▶ Photo · OK Pure OLED · Back Exit</string>
     <string name="ambient_oled_hint">Pure OLED Black · OK Back to photos · Back Exit</string>
+    <string name="nav_clean">Clean</string>
+    <string name="clean_running_short">Cleaning…</string>
+    <string name="clean_hero_title">Quick Clean</string>
+    <string name="clean_hero_sub">OK Free RAM &amp; idle apps · Hold OK Storage &amp; cache options</string>
+    <string name="clean_toast_freed">Free RAM: %1$d MB (+%2$d MB) · %3$d apps optimized</string>
+    <string name="clean_toast_ready">Memory clean: %1$d MB free · %2$d apps checked</string>
+    <string name="clean_drawer_title">Clean &amp; Performance</string>
+    <string name="clean_drawer_subtitle">Release background apps and jump to system app cache</string>
+    <string name="clean_section_actions">Quick actions</string>
+    <string name="clean_last_result">Last clean</string>
+    <string name="clean_action_ram">Free RAM &amp; idle apps now</string>
+    <string name="clean_action_ram_sub">Closes idle background apps without affecting live TV or logins</string>
+    <string name="clean_action_sys_cache">Clear global app cache</string>
+    <string name="clean_action_sys_cache_sub">Opens native Storage → Cached data</string>
+    <string name="clean_action_apps_stop">Manage heavy apps</string>
+    <string name="clean_action_apps_stop_sub">Opens Installed Apps to force-stop or clear individual cache</string>
 </resources>

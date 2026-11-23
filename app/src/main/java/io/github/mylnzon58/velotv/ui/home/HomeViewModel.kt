@@ -12,6 +12,7 @@ import io.github.mylnzon58.velotv.domain.model.DonationChannel
 import io.github.mylnzon58.velotv.domain.model.HomeRow
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.NativeSettingShortcut
+import io.github.mylnzon58.velotv.domain.model.QuickCleanResult
 import io.github.mylnzon58.velotv.domain.model.RegionalAppEntry
 import io.github.mylnzon58.velotv.domain.model.SystemDiagnostics
 import io.github.mylnzon58.velotv.domain.model.TvApp
@@ -495,6 +496,12 @@ class HomeViewModel(private val container: AppContainer) {
         container.iconCache.clear()
         container.wallpaperRepository.trimMemory()
         refreshDiagnostics()
+    }
+
+    suspend fun runQuickClean(): QuickCleanResult {
+        val result = container.systemCleanerRepository.runQuickClean(cachedApps)
+        refreshDiagnostics()
+        return result
     }
 
     private fun emitState(settings: LauncherSettings, diag: SystemDiagnostics?) {

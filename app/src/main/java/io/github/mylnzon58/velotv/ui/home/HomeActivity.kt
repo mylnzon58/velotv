@@ -8,7 +8,9 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +54,7 @@ class HomeActivity : AppCompatActivity() {
     private var lastDisplayedWallpaperId: String? = null
     private var lastFocusedHeroKey: String? = null
     private var wallpaperLoadJob: Job? = null
+    private var cleaningInProgress = false
 
     private val clockTicker = object : Runnable {
         override fun run() {
@@ -197,9 +200,32 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupTopBar(container: AppContainer) {
-        val navButtons = listOf(b.btnSearch, b.btnWallpapers, b.btnAppHub, b.btnSystem, b.btnSettings, b.btnSupport)
+        val navButtons = listOf(b.btnClean, b.btnSearch, b.btnWallpapers, b.btnAppHub, b.btnSystem, b.btnSettings, b.btnSupport)
         navButtons.forEach { btn ->
-            btn.setOnFocusChangeListener { v, hasFocus -> FocusAnimator.applyNavFocus(v, hasFocus) }
+            btn.setOnFocusChangeListener { v, hasFocus ->
+                FocusAnimator.applyNavFocus(v, hasFocus)
+                if (hasFocus && v.id == b.btnClean.id) {
+                    val key = "action:clean"
+                    if (lastFocusedHeroKey != key) {
+                        lastFocusedHeroKey = key
+                        b.tvFocusTitle.text = getString(R.string.clean_hero_title)
+                        b.tvFocusMeta.text = getString(R.string.clean_hero_sub)
+                        FocusAnimator.animateHeroChange(b.tvFocusTitle, b.tvFocusMeta)
+                    }
+                }
+            }
+        }
+
+        b.btnClean.setOnClickListener { triggerInstantQuickClean() }
+        b.btnClean.setOnLongClickListener {
+            VeloDialogs.showQuickCleanDrawer(this, vm, lifecycleScope)
+            true
+        }
+        b.btnClean.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_MENU) {
+                VeloDialogs.showQuickCleanDrawer(this, vm, lifecycleScope)
+                true
+            } else false
         }
 
         b.btnSearch.setOnClickListener { VeloDialogs.showSearchDrawer(this, vm, container) }
@@ -219,10 +245,10 @@ class HomeActivity : AppCompatActivity() {
             val s = vm.state.value.settings
             if (s.lockDeveloperWithPin && vm.hasPin()) {
                 VeloDialogs.showPinDialog(this, false, vm) {
-                    VeloDialogs.showSystemDeveloperDrawer(this, vm)
+                    VeloDialogs.showSystemDeveloperDrawer(this, vm, lifecycleScope)
                 }
             } else {
-                VeloDialogs.showSystemDeveloperDrawer(this, vm)
+                VeloDialogs.showSystemDeveloperDrawer(this, vm, lifecycleScope)
             }
         }
 
@@ -358,9 +384,30 @@ class HomeActivity : AppCompatActivity() {
         b.tvCreatorFooter.setTextColor(theme.muted)
 
         val tabColors = HallmarkSurfaceFactory.navTabTextColors(theme)
-        listOf(b.btnSearch, b.btnWallpapers, b.btnAppHub, b.btnSystem, b.btnSettings, b.btnSupport).forEach { tab ->
+        listOf(b.btnClean, b.btnSearch, b.btnWallpapers, b.btnAppHub, b.btnSystem, b.btnSettings, b.btnSupport).forEach { tab ->
             tab.background = HallmarkSurfaceFactory.navTabBackground(this, theme, corner)
             tab.setTextColor(tabColors)
+        }
+    }
+
+    private fun triggerInstantQuickClean() {
+        if (cleaningInProgress) return
+        cleaningInProgress = true
+        b.btnClean.text = getString(R.string.clean_running_short)
+        lifecycleScope.launch {
+            val res = vm.runQuickClean()
+            b.btnClean.text = getString(R.string.nav_clean)
+            cleaningInProgress = false
+            b.tvStatsBadge.animate().cancel()
+            b.tvStatsBadge.scaleX = 1.12f
+            b.tvStatsBadge.scaleY = 1.12f
+            b.tvStatsBadge.animate().scaleX(1f).scaleY(1f).setDuration(240L).start()
+            val msg = if (res.reclaimedMb > 0L) {
+                getString(R.string.clean_toast_freed, res.ramAfterMb, res.reclaimedMb, res.processedPackages)
+            } else {
+                getString(R.string.clean_toast_ready, res.ramAfterMb, res.processedPackages)
+            }
+            Toast.makeText(this@HomeActivity, msg, Toast.LENGTH_LONG).show()
         }
     }
 

@@ -5,7 +5,7 @@
 <p align="center">
   <a href="README.en.md"><img src="https://img.shields.io/badge/English-Documentation-DF9D3E?style=flat-square&labelColor=1B1815" alt="English Documentation" /></a>
   <img src="https://img.shields.io/badge/APK_Release-2.1_MB-EDE8E1?style=flat-square&labelColor=1B1815" alt="APK 2.1 MB" />
-  <img src="https://img.shields.io/badge/RAM_en_vivo-33.0_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 33.0 MB con fondo HD" />
+  <img src="https://img.shields.io/badge/RAM_en_vivo-27.3_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 27.3 MB con fondo HD" />
   <img src="https://img.shields.io/badge/Telemetr%C3%ADa-Cero-DF9D3E?style=flat-square&labelColor=1B1815" alt="Cero telemetría" />
   <img src="https://img.shields.io/badge/Android_TV-7.0_%E2%80%93_15-C9C1B7?style=flat-square&labelColor=1B1815" alt="Android TV 7 a 15" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-DF9D3E?style=flat-square&labelColor=1B1815" alt="Licencia MIT" /></a>
@@ -26,7 +26,7 @@ Valores obtenidos con `adb shell dumpsys meminfo` en el mismo televisor físico:
 | Métrica | Google TV Launcher + Recs | Projectivy Launcher 4.74 | **VeloTV 1.0** |
 |---|---:|---:|---:|
 | **Tamaño del APK** | ~82 MB | 11.0 MB | **2.1 MB** *(5 fuentes Barlow OFL + 8 fondos HD WebP)* |
-| **Memoria RAM (PSS)** | 92.6 MB | 36.8 MB | **33.0 MB** *(con fondo HD + brillo ambiental · 21.1 MB modo sólido)* |
+| **Memoria RAM (PSS)** | 92.6 MB | 36.8 MB | **27.3 MB** *(con fondo HD + brillo ambiental · 21.1 MB modo sólido)* |
 | **Fondos libres rotativos** | No | Parcial (Pro pago) | **Sí, 100% gratis (Wikimedia + Unsplash + Local)** |
 | **Publicidad / Filas patrocinadas** | Sí | No | **No** |
 | **Funciones de pago** | N/A | Freemium | **Ninguna (MIT)** |
@@ -62,7 +62,7 @@ Valores obtenidos con `adb shell dumpsys meminfo` en el mismo televisor físico:
 - **Seis paletas calibradas sin pagos:** Cuarto oscuro Ámbar, Cuarto oscuro Rojo, Noche, Estudio (claro para salas luminosas), Mineral Bosque y Grafito Monocromo; tres radios de esquina (`0 dp`, `10 dp`, `16 dp`) y tres densidades de tarjeta.
 - **Gestión total de aplicaciones y filas:** detecta apps Android TV (con sus banners oficiales de actividad) y apps móviles instaladas, búsqueda instantánea, creación y eliminación de categorías personalizadas, reordenamiento y ocultamiento de filas, renombrado de apps y entradas HDMI, e inicio automático al encender.
 - **Entradas físicas TV y HDMI (`TvInputManager`):** detecta `HDMI 1/2/3`, sintonizador digital/analógico y `AV`, con estado en vivo, renombrado y bloqueo por PIN.
-- **Sistema y Opciones Nativas de Desarrollador:** lectura en vivo de ADB, modo desarrollador, orígenes desconocidos, escalas de animación, SoC, kernel, WebView, IP local y RAM; más accesos directos verificados dinámicamente a las actividades nativas de Android TV y menús de hardware del fabricante.
+- **Sistema, Limpieza rápida y Desarrollador:** botón **Limpiar** de 1 clic en la barra superior (libera apps inactivas en segundo plano con `ActivityManager`, vacía cachés internas y abre el caché global de Almacenamiento nativo al mantener `OK`); lectura en vivo de ADB, modo desarrollador, orígenes desconocidos, escalas de animación, SoC, kernel, WebView, IP local y RAM; más accesos directos verificados dinámicamente a las actividades nativas de Android TV y menús de hardware del fabricante.
 - **Herramientas de pantalla integradas:** 10 patrones nativos de calibración 4K/HDR (grises PLUGE, barras SMPTE, overscan 5%/10%, uniformidad y píxeles muertos, nitidez a 3 m) y **Galería ambiente + reloj OLED** con desplazamiento anti-quemado cada 60 s y cambio instantáneo a negro puro OLED con `OK`.
 - **Control parental con horario:** PIN de 4 dígitos almacenado con SHA-256 + salt (comparación en tiempo constante) para proteger Ajustes, Desarrollador, apps o entradas HDMI, con horario configurable.
 - **Global desde el inicio:** español como idioma predeterminado + 10 idiomas seleccionables al instante (`es-AR`, `es`, `en`, `pt-BR`, `fr`, `de`, `it`, `ja`, `ko`, `zh-CN`) y catálogo regional (AR, LATAM, USA, EU, ASIA) filtrado por `SDK_INT`.

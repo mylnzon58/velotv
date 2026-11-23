@@ -508,7 +508,100 @@ object VeloDialogs {
         b.drawerContent.getChildAt(0)?.requestFocus()
     }
 
-    fun showSystemDeveloperDrawer(context: Context, vm: HomeViewModel) {
+    fun showQuickCleanDrawer(context: Context, vm: HomeViewModel, scope: CoroutineScope) {
+        vm.refreshDiagnostics()
+        val s = vm.state.value.settings
+        val theme = s.theme
+        val (dialog, b) = createRightDrawer(context, theme, 560)
+        b.tvDrawerTitle.text = context.getString(R.string.clean_drawer_title)
+        b.tvDrawerSubtitle.text = context.getString(R.string.clean_drawer_subtitle)
+
+        var lastResultMsg: String? = null
+
+        fun render() {
+            b.drawerContent.removeAllViews()
+            val d = vm.state.value.diagnostics
+            if (d != null) {
+                b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.section_resources)))
+                b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, "RAM", "${d.availableRamMb} MB libre / ${d.totalRamMb} MB (${d.usedRamPercent}%)"))
+                b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, "/data", String.format(Locale.US, "%.1f GB libre / %.1f GB", d.dataFreeGb, d.dataTotalGb)))
+            }
+            if (!lastResultMsg.isNullOrBlank()) {
+                b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, context.getString(R.string.clean_last_result), lastResultMsg!!))
+            }
+
+            b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.clean_section_actions)))
+            b.drawerContent.addView(
+                HallmarkSurfaceFactory.createDrawerRow(
+                    context = context,
+                    theme = theme,
+                    title = context.getString(R.string.clean_action_ram),
+                    subtitle = context.getString(R.string.clean_action_ram_sub),
+                    trailing = "1 CLIC",
+                    accentTrailing = true
+                ) {
+                    scope.launch {
+                        val res = vm.runQuickClean()
+                        lastResultMsg = if (res.reclaimedMb > 0L) {
+                            "+${res.reclaimedMb} MB (${res.ramAfterMb} MB)"
+                        } else {
+                            "${res.ramAfterMb} MB libres"
+                        }
+                        render()
+                    }
+                }
+            )
+            b.drawerContent.addView(
+                HallmarkSurfaceFactory.createDrawerRow(
+                    context = context,
+                    theme = theme,
+                    title = context.getString(R.string.clean_action_sys_cache),
+                    subtitle = context.getString(R.string.clean_action_sys_cache_sub),
+                    trailing = context.getString(R.string.action_open_short),
+                    accentTrailing = true
+                ) {
+                    dialog.dismiss()
+                    vm.openNativeShortcut("storage_reset")
+                }
+            )
+            b.drawerContent.addView(
+                HallmarkSurfaceFactory.createDrawerRow(
+                    context = context,
+                    theme = theme,
+                    title = context.getString(R.string.clean_action_apps_stop),
+                    subtitle = context.getString(R.string.clean_action_apps_stop_sub),
+                    trailing = context.getString(R.string.action_open_short),
+                    accentTrailing = false
+                ) {
+                    dialog.dismiss()
+                    vm.openNativeShortcut("apps_manage")
+                }
+            )
+            b.drawerContent.addView(
+                HallmarkSurfaceFactory.createDrawerRow(
+                    context = context,
+                    theme = theme,
+                    title = context.getString(R.string.health_clear_cache),
+                    subtitle = context.getString(R.string.health_clear_cache_sub),
+                    trailing = null,
+                    accentTrailing = false
+                ) {
+                    vm.clearIconCache()
+                    Toast.makeText(context, R.string.toast_cache_cleared, Toast.LENGTH_SHORT).show()
+                    render()
+                }
+            )
+
+            // Focus the primary action row cleanly
+            val actionIdx = (0 until b.drawerContent.childCount).firstOrNull { b.drawerContent.getChildAt(it).isFocusable }
+            if (actionIdx != null) b.drawerContent.getChildAt(actionIdx)?.requestFocus()
+        }
+
+        render()
+        dialog.show()
+    }
+
+    fun showSystemDeveloperDrawer(context: Context, vm: HomeViewModel, scope: CoroutineScope) {
         vm.refreshDiagnostics()
         val s = vm.state.value.settings
         val theme = s.theme
@@ -586,6 +679,17 @@ object VeloDialogs {
 
                 1 -> {
                     b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.section_pro_tools)))
+                    b.drawerContent.addView(
+                        HallmarkSurfaceFactory.createDrawerRow(
+                            context, theme,
+                            context.getString(R.string.clean_drawer_title),
+                            context.getString(R.string.clean_drawer_subtitle),
+                            "RAM / CACHÉ", true
+                        ) {
+                            dialog.dismiss()
+                            showQuickCleanDrawer(context, vm, scope)
+                        }
+                    )
                     b.drawerContent.addView(
                         HallmarkSurfaceFactory.createDrawerRow(
                             context, theme,

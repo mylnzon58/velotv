@@ -18,6 +18,7 @@ import io.github.mylnzon58.velotv.domain.usecase.FilterRegionalHubUseCase
 import io.github.mylnzon58.velotv.domain.usecase.ParentalScheduleUseCase
 import io.github.mylnzon58.velotv.domain.usecase.PinSecurityUseCase
 import io.github.mylnzon58.velotv.domain.usecase.SearchLauncherUseCase
+import io.github.mylnzon58.velotv.domain.usecase.SystemCleanPolicyUseCase
 import io.github.mylnzon58.velotv.domain.usecase.WallpaperPolicyUseCase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -193,5 +194,22 @@ class CoreUseCasesTest {
         val crimson = 0xFFE50914.toInt()
         val extracted = policy.extractAmbientAccentColor(intArrayOf(crimson, crimson, 0xFF000000.toInt(), 0xFFFFFFFF.toInt()), 0xFF111111.toInt())
         assertEquals(crimson, extracted)
+    }
+
+    @Test
+    fun systemCleanPolicy_protectsCriticalTvAndOsPackages() {
+        val policy = SystemCleanPolicyUseCase()
+        val apps = listOf(
+            TvApp("io.github.mylnzon58.velotv", "VeloTV", "VeloTV", AppCategory.TOOLS.id, true, false),
+            TvApp("com.mediatek.wwtv.tvcenter", "Live TV", "Live TV", AppCategory.TOOLS.id, true, true),
+            TvApp("com.android.tv.settings", "Settings", "Settings", AppCategory.TOOLS.id, true, true),
+            TvApp("com.google.android.gms", "GMS", "GMS", AppCategory.TOOLS.id, false, true),
+            TvApp("com.netflix.ninja", "Netflix", "Netflix", AppCategory.STREAMING.id, true, true),
+            TvApp("com.stremio.one", "Stremio", "Stremio", AppCategory.MEDIA_WEB.id, true, false),
+            TvApp("com.phlox.tvwebbrowser", "TV Bro", "TV Bro", AppCategory.MEDIA_WEB.id, true, false)
+        )
+
+        val targets = policy.filterSafeKillTargets(apps, "io.github.mylnzon58.velotv")
+        assertEquals(listOf("com.netflix.ninja", "com.stremio.one", "com.phlox.tvwebbrowser"), targets)
     }
 }

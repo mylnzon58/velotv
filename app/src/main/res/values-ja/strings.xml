@@ -31,4 +31,6 @@
     <string name="wp_tab_settings">ソースと動き</string>
     <string name="wp_next_now">今すぐ次の壁紙へ</string>
     <string name="wp_resume_auto">自動切替を再開</string>
+    <string name="nav_clean">最適化</string>
+    <string name="clean_drawer_title">メモリ最適化とキャッシュ</string>
 </resources>

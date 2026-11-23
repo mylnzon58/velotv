@@ -31,4 +31,6 @@
     <string name="wp_tab_settings">소스 및 모션</string>
     <string name="wp_next_now">지금 다음 배경으로 변경</string>
     <string name="wp_resume_auto">자동 전환 다시 시작</string>
+    <string name="nav_clean">정리</string>
+    <string name="clean_drawer_title">메모리 정리 및 캐시</string>
 </resources>

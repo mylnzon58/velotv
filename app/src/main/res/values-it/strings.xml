@@ -31,4 +31,6 @@
     <string name="wp_tab_settings">Fonti e movimento</string>
     <string name="wp_next_now">Cambia sfondo ora</string>
     <string name="wp_resume_auto">Riprendi rotazione automatica</string>
+    <string name="nav_clean">Pulisci</string>
+    <string name="clean_drawer_title">Pulizia e prestazioni</string>
 </resources>

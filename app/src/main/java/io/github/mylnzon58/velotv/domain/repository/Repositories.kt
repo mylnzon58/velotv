@@ -2,6 +2,7 @@ package io.github.mylnzon58.velotv.domain.repository
 
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.NativeSettingShortcut
+import io.github.mylnzon58.velotv.domain.model.QuickCleanResult
 import io.github.mylnzon58.velotv.domain.model.RegionalAppEntry
 import io.github.mylnzon58.velotv.domain.model.SystemDiagnostics
 import io.github.mylnzon58.velotv.domain.model.TvApp
@@ -46,4 +47,8 @@ interface WallpaperCatalogRepository {
     fun getBundledWallpapers(): List<WallpaperItem>
     fun getCachedOnlineWallpapers(): List<WallpaperItem>
     suspend fun refreshOnlineWallpapers(source: WallpaperSource, offlineOnly: Boolean): List<WallpaperItem>
+}
+
+interface SystemCleanerRepository {
+    suspend fun runQuickClean(installedApps: List<TvApp>): QuickCleanResult
 }
