@@ -10,8 +10,10 @@ import android.provider.Settings
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.repository.AppRepository
 import io.github.mylnzon58.velotv.domain.usecase.ClassifyAppUseCase
+import io.github.mylnzon58.velotv.domain.usecase.WallpaperPolicyUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 
 class PackageManagerAppRepository(
     private val context: Context,
@@ -20,6 +22,35 @@ class PackageManagerAppRepository(
 ) : AppRepository {
 
     private val pm: PackageManager = context.packageManager
+    private val accentColorCache = ConcurrentHashMap<String, Int>()
+
+    fun getCachedBannerOrIcon(packageName: String): Pair<Bitmap, Boolean>? {
+        iconCache.get("b:$packageName")?.let { return it to true }
+        iconCache.get("i:$packageName")?.let { return it to false }
+        return null
+    }
+
+    fun getAmbientColorForApp(packageName: String, policy: WallpaperPolicyUseCase, fallbackColor: Int): Int {
+        accentColorCache[packageName]?.let { return it }
+        val bmp = getCachedBannerOrIcon(packageName)?.first ?: return fallbackColor
+        val w = bmp.width
+        val h = bmp.height
+        if (w <= 0 || h <= 0) return fallbackColor
+        val cols = 8
+        val rows = 6
+        val samples = IntArray(cols * rows)
+        var idx = 0
+        for (ry in 0 until rows) {
+            val py = ((ry + 0.5f) * h / rows).toInt().coerceIn(0, h - 1)
+            for (cx in 0 until cols) {
+                val px = ((cx + 0.5f) * w / cols).toInt().coerceIn(0, w - 1)
+                samples[idx++] = bmp.getPixel(px, py)
+            }
+        }
+        val color = policy.extractAmbientAccentColor(samples, fallbackColor)
+        accentColorCache[packageName] = color
+        return color
+    }
 
     override suspend fun loadInstalledApps(): List<TvApp> = withContext(Dispatchers.IO) {
         val selfPkg = context.packageName

@@ -5,13 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -25,18 +28,25 @@ import io.github.mylnzon58.velotv.databinding.DialogSupportCreatorBinding
 import io.github.mylnzon58.velotv.databinding.DrawerSidePanelBinding
 import io.github.mylnzon58.velotv.domain.model.AppCategory
 import io.github.mylnzon58.velotv.domain.model.AppSourceType
+import io.github.mylnzon58.velotv.domain.model.CornerStyle
 import io.github.mylnzon58.velotv.domain.model.DonationChannel
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.SettingShortcutGroup
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
 import io.github.mylnzon58.velotv.domain.model.VisualTheme
+import io.github.mylnzon58.velotv.domain.model.WallpaperInterval
+import io.github.mylnzon58.velotv.domain.model.WallpaperItem
+import io.github.mylnzon58.velotv.domain.model.WallpaperSource
 import io.github.mylnzon58.velotv.domain.model.WorldRegion
 import io.github.mylnzon58.velotv.domain.usecase.BuildDonationPlanUseCase
+import io.github.mylnzon58.velotv.ui.common.FocusAnimator
 import io.github.mylnzon58.velotv.ui.common.HallmarkSurfaceFactory
 import io.github.mylnzon58.velotv.ui.home.HomeViewModel
 import io.github.mylnzon58.velotv.ui.tools.AmbientClockActivity
 import io.github.mylnzon58.velotv.ui.tools.CalibrationActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 object VeloDialogs {
@@ -54,8 +64,8 @@ object VeloDialogs {
             HallmarkSurfaceFactory.dp(context, widthDp),
             LinearLayout.LayoutParams.MATCH_PARENT
         )
-        b.drawerSurface.setBackgroundColor(theme.paper2)
-        b.drawerLeftRule.setBackgroundColor(theme.rule)
+        b.drawerSurface.setBackgroundColor(HallmarkSurfaceFactory.drawerSurfaceColor(theme))
+        b.drawerLeftRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.ink, 42))
         b.drawerHeaderRule.setBackgroundColor(theme.rule)
         b.drawerFooterRule.setBackgroundColor(theme.rule)
         b.tvDrawerTitle.setTextColor(theme.ink)
@@ -72,6 +82,242 @@ object VeloDialogs {
             )
         }
         return dialog to b
+    }
+
+    /**
+     * Visual Wallpaper Gallery & Open Image Bank Controls Drawer.
+     * Focusing any thumbnail previews that wallpaper live on the TV canvas behind the drawer.
+     */
+    fun showWallpaperDrawer(
+        context: Context,
+        vm: HomeViewModel,
+        container: AppContainer,
+        scope: CoroutineScope,
+        onPreviewWallpaper: (WallpaperItem) -> Unit
+    ) {
+        var activeTab = 0 // 0=Gallery, 1=Sources & Motion
+        val initTheme = vm.state.value.settings.theme
+        val (dialog, b) = createRightDrawer(context, initTheme, 620)
+        b.tvDrawerTitle.text = context.getString(R.string.wp_drawer_title)
+        b.tvDrawerSubtitle.text = context.getString(R.string.wp_drawer_subtitle)
+        b.drawerTopSlot.visibility = View.VISIBLE
+
+        fun render(tab: Int, focusIdx: Int = 0) {
+            activeTab = tab
+            val state = vm.state.value
+            val s = state.settings
+            val theme = s.theme
+            val on = context.getString(R.string.state_on)
+            val off = context.getString(R.string.state_off)
+
+            b.drawerTopSlot.removeAllViews()
+            val tabRow = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL }
+            listOf(
+                0 to context.getString(R.string.wp_tab_gallery),
+                1 to context.getString(R.string.wp_tab_settings)
+            ).forEach { (idx, label) ->
+                tabRow.addView(HallmarkSurfaceFactory.createTabButton(context, theme, s.cornerStyle, label, idx == activeTab) {
+                    render(idx, 0)
+                })
+            }
+            b.drawerTopSlot.addView(tabRow)
+            b.drawerContent.removeAllViews()
+
+            if (activeTab == 0) {
+                val isAuto = s.pinnedWallpaperId == null && s.wallpaperInterval != WallpaperInterval.MANUAL
+                b.drawerContent.addView(
+                    HallmarkSurfaceFactory.createDrawerRow(
+                        context = context,
+                        theme = theme,
+                        title = if (isAuto) context.getString(R.string.wp_next_now) else context.getString(R.string.wp_resume_auto),
+                        subtitle = if (isAuto) {
+                            "${wallpaperSourceName(context, s.wallpaperSource)} · ${wallpaperIntervalName(context, s.wallpaperInterval)}"
+                        } else {
+                            context.getString(R.string.wp_manual_active)
+                        },
+                        trailing = if (isAuto) context.getString(R.string.wp_auto_badge) else context.getString(R.string.wp_pin_badge),
+                        accentTrailing = true
+                    ) {
+                        if (isAuto) vm.advanceWallpaper() else vm.enableAutoRotateWallpaper()
+                        render(0, 0)
+                    }
+                )
+
+                val pool = state.wallpaperPool.ifEmpty { container.wallpaperRepository.getBundledWallpapers() }
+                b.drawerContent.addView(
+                    HallmarkSurfaceFactory.createSectionLabel(
+                        context,
+                        theme,
+                        "${context.getString(R.string.wp_section_pick)} (${pool.size})"
+                    )
+                )
+
+                val grid = GridLayout(context).apply {
+                    columnCount = 2
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                }
+
+                val cardW = HallmarkSurfaceFactory.dp(context, 266)
+                val cardH = HallmarkSurfaceFactory.dp(context, 146)
+                val gap = HallmarkSurfaceFactory.dp(context, 8)
+
+                pool.forEach { item ->
+                    val isPinned = s.pinnedWallpaperId == item.id
+                    val isCurrent = state.activeWallpaper?.id == item.id
+
+                    val card = FrameLayout(context).apply {
+                        isFocusable = true
+                        isClickable = true
+                        clipToOutline = true
+                        elevation = HallmarkSurfaceFactory.dpFloat(context, 2f)
+                        background = HallmarkSurfaceFactory.cardSurfaceBackground(context, theme, s.cornerStyle)
+                        foreground = HallmarkSurfaceFactory.cardForegroundRing(context, theme, s.cornerStyle)
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            width = cardW
+                            height = cardH
+                            setMargins(0, 0, gap, gap)
+                        }
+                    }
+
+                    val iv = ImageView(context).apply {
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                        )
+                    }
+                    card.addView(iv)
+
+                    // Subtle bottom caption bar for thumbnail metadata
+                    val captionBox = LinearLayout(context).apply {
+                        orientation = LinearLayout.VERTICAL
+                        setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.paper, 206))
+                        val ph = HallmarkSurfaceFactory.dp(context, 10)
+                        val pv = HallmarkSurfaceFactory.dp(context, 6)
+                        setPadding(ph, pv, ph, pv)
+                        layoutParams = FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            Gravity.BOTTOM
+                        )
+                    }
+                    captionBox.addView(TextView(context).apply {
+                        text = item.title
+                        textSize = 12.5f
+                        maxLines = 1
+                        ellipsize = TextUtils.TruncateAt.END
+                        typeface = ResourcesCompat.getFont(context, R.font.barlow_medium)
+                        setTextColor(theme.ink)
+                    })
+                    captionBox.addView(TextView(context).apply {
+                        text = "${item.author} · ${item.license}"
+                        textSize = 10f
+                        maxLines = 1
+                        ellipsize = TextUtils.TruncateAt.END
+                        typeface = ResourcesCompat.getFont(context, R.font.barlow_regular)
+                        setTextColor(theme.muted)
+                    })
+                    card.addView(captionBox)
+
+                    if (isPinned || isCurrent) {
+                        card.addView(TextView(context).apply {
+                            text = if (isPinned) context.getString(R.string.wp_pin_badge) else context.getString(R.string.state_active)
+                            textSize = 10f
+                            typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
+                            setTextColor(theme.accentInk)
+                            setBackgroundColor(theme.accent)
+                            val ph = HallmarkSurfaceFactory.dp(context, 6)
+                            val pv = HallmarkSurfaceFactory.dp(context, 2)
+                            setPadding(ph, pv, ph, pv)
+                            layoutParams = FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.WRAP_CONTENT,
+                                FrameLayout.LayoutParams.WRAP_CONTENT,
+                                Gravity.TOP or Gravity.END
+                            ).apply {
+                                val m = HallmarkSurfaceFactory.dp(context, 6)
+                                setMargins(m, m, m, m)
+                            }
+                        })
+                    }
+
+                    val cachedThumb = container.wallpaperRepository.getCachedThumbnail(item.id)
+                    if (cachedThumb != null) {
+                        iv.setImageBitmap(cachedThumb)
+                    } else {
+                        scope.launch {
+                            val bmp = container.wallpaperRepository.loadThumbnail(item)
+                            if (bmp != null) iv.setImageBitmap(bmp)
+                        }
+                    }
+
+                    card.setOnFocusChangeListener { v, hasFocus ->
+                        FocusAnimator.apply(v, hasFocus, 1.035f, 8f)
+                        if (hasFocus) onPreviewWallpaper(item)
+                    }
+                    card.setOnClickListener {
+                        vm.pinWallpaper(item)
+                        Toast.makeText(context, context.getString(R.string.wp_pinned_toast, item.title), Toast.LENGTH_SHORT).show()
+                        render(0, 0)
+                    }
+                    grid.addView(card)
+                }
+
+                b.drawerContent.addView(grid)
+            } else {
+                val items = listOf<Triple<String, String, () -> Unit>>(
+                    Triple(context.getString(R.string.wp_setting_source), wallpaperSourceName(context, s.wallpaperSource)) {
+                        vm.cycleWallpaperSource(); render(1, 0)
+                    },
+                    Triple(context.getString(R.string.wp_setting_interval), wallpaperIntervalName(context, s.wallpaperInterval)) {
+                        vm.cycleWallpaperInterval(); render(1, 1)
+                    },
+                    Triple(context.getString(R.string.wp_setting_dim), "${s.wallpaperDimPercent}%") {
+                        vm.cycleWallpaperDim(); render(1, 2)
+                    },
+                    Triple(context.getString(R.string.wp_setting_kenburns), if (s.wallpaperKenBurns) on else off) {
+                        vm.updateSettings { it.copy(wallpaperKenBurns = !it.wallpaperKenBurns) }; render(1, 3)
+                    },
+                    Triple(context.getString(R.string.wp_setting_ambient_glow), if (s.ambientAppColorGlow) on else off) {
+                        vm.updateSettings { it.copy(ambientAppColorGlow = !it.ambientAppColorGlow) }; render(1, 4)
+                    },
+                    Triple(context.getString(R.string.wp_setting_offline), if (s.wallpaperOfflineOnly) on else off) {
+                        vm.updateSettings { it.copy(wallpaperOfflineOnly = !it.wallpaperOfflineOnly) }; render(1, 5)
+                    }
+                )
+                items.forEach { (title, trail, act) ->
+                    b.drawerContent.addView(
+                        HallmarkSurfaceFactory.createDrawerRow(context, theme, title, null, trail, true, onClick = act)
+                    )
+                }
+
+                if (!s.wallpaperOfflineOnly) {
+                    b.drawerContent.addView(
+                        HallmarkSurfaceFactory.createDrawerRow(
+                            context = context,
+                            theme = theme,
+                            title = context.getString(R.string.wp_refresh_online),
+                            subtitle = context.getString(R.string.wp_refresh_online_sub),
+                            trailing = "HTTPS",
+                            accentTrailing = true
+                        ) {
+                            vm.refreshOnlineWallpapers()
+                            Toast.makeText(context, R.string.wp_refreshing_toast, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+            }
+
+            if (b.drawerContent.childCount > 0) {
+                b.drawerContent.getChildAt(focusIdx.coerceIn(0, b.drawerContent.childCount - 1))?.requestFocus()
+            }
+        }
+
+        dialog.setOnDismissListener { container.wallpaperRepository.trimMemory() }
+        render(0, 0)
+        dialog.show()
     }
 
     fun showSearchDrawer(context: Context, vm: HomeViewModel, container: AppContainer) {
@@ -95,7 +341,7 @@ object VeloDialogs {
             background = GradientDrawable().apply {
                 setColor(theme.paper)
                 setStroke(HallmarkSurfaceFactory.dp(context, 1), theme.rule)
-                cornerRadius = HallmarkSurfaceFactory.dpFloat(context, s.cornerStyle.radiusDp.coerceAtMost(4).toFloat())
+                cornerRadius = HallmarkSurfaceFactory.dpFloat(context, s.cornerStyle.radiusDp.coerceAtMost(8).toFloat())
             }
         }
         b.drawerTopSlot.addView(input)
@@ -262,9 +508,6 @@ object VeloDialogs {
         b.drawerContent.getChildAt(0)?.requestFocus()
     }
 
-    /**
-     * Complete System, Native Developer Options & Engineering Diagnostics Drawer.
-     */
     fun showSystemDeveloperDrawer(context: Context, vm: HomeViewModel) {
         vm.refreshDiagnostics()
         val s = vm.state.value.settings
@@ -274,7 +517,7 @@ object VeloDialogs {
         b.tvDrawerSubtitle.text = context.getString(R.string.sys_drawer_subtitle)
         b.drawerTopSlot.visibility = View.VISIBLE
 
-        var activeTab = 0 // 0=Developer, 1=System & Tools, 2=Engineering Specs
+        var activeTab = 0
         val shortcuts = vm.getAvailableNativeShortcuts()
 
         fun renderTab(tab: Int) {
@@ -421,13 +664,11 @@ object VeloDialogs {
         b.drawerContent.getChildAt(1)?.requestFocus() ?: b.drawerTopSlot.requestFocus()
     }
 
-    /**
-     * Full Tabbed Settings Drawer (Aspecto · Filas · Parental · General).
-     */
     fun showSettingsDrawer(
         context: Context,
         vm: HomeViewModel,
         onLanguageChanged: () -> Unit,
+        onOpenWallpapers: () -> Unit,
         onOpenSupport: () -> Unit
     ) {
         var activeTab = 0
@@ -438,8 +679,8 @@ object VeloDialogs {
         b.drawerTopSlot.visibility = View.VISIBLE
 
         fun rethemeDrawer(t: VisualTheme) {
-            b.drawerSurface.setBackgroundColor(t.paper2)
-            b.drawerLeftRule.setBackgroundColor(t.rule)
+            b.drawerSurface.setBackgroundColor(HallmarkSurfaceFactory.drawerSurfaceColor(t))
+            b.drawerLeftRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(t.ink, 42))
             b.drawerHeaderRule.setBackgroundColor(t.rule)
             b.drawerFooterRule.setBackgroundColor(t.rule)
             b.tvDrawerTitle.setTextColor(t.ink)
@@ -474,36 +715,49 @@ object VeloDialogs {
 
             when (activeTab) {
                 0 -> {
+                    b.drawerContent.addView(
+                        HallmarkSurfaceFactory.createDrawerRow(
+                            context = context,
+                            theme = theme,
+                            title = context.getString(R.string.wp_drawer_title),
+                            subtitle = "${wallpaperSourceName(context, s.wallpaperSource)} · ${wallpaperIntervalName(context, s.wallpaperInterval)}",
+                            trailing = context.getString(R.string.action_open_short),
+                            accentTrailing = true
+                        ) {
+                            dialog.dismiss()
+                            onOpenWallpapers()
+                        }
+                    )
                     val items = listOf<Triple<String, String, () -> Unit>>(
                         Triple(context.getString(R.string.setting_theme), themeDisplayName(context, s.theme)) {
-                            vm.cycleTheme(); render(0, 0)
+                            vm.cycleTheme(); render(0, 1)
                         },
                         Triple(context.getString(R.string.setting_corners), cornerDisplayName(context, s.cornerStyle.id)) {
-                            vm.cycleCornerStyle(); render(0, 1)
+                            vm.cycleCornerStyle(); render(0, 2)
                         },
                         Triple(context.getString(R.string.setting_density), densityDisplayName(context, s.cardDensity.id)) {
-                            vm.cycleCardDensity(); render(0, 2)
+                            vm.cycleCardDensity(); render(0, 3)
                         },
                         Triple(context.getString(R.string.setting_banner_labels), if (s.showBannerLabels) on else off) {
-                            vm.updateSettings { it.copy(showBannerLabels = !it.showBannerLabels) }; render(0, 3)
+                            vm.updateSettings { it.copy(showBannerLabels = !it.showBannerLabels) }; render(0, 4)
                         },
                         Triple(context.getString(R.string.setting_hero_bar), if (s.showHeroFocusBar) on else off) {
-                            vm.updateSettings { it.copy(showHeroFocusBar = !it.showHeroFocusBar) }; render(0, 4)
+                            vm.updateSettings { it.copy(showHeroFocusBar = !it.showHeroFocusBar) }; render(0, 5)
                         },
                         Triple(context.getString(R.string.setting_clock_show), if (s.showClock) on else off) {
-                            vm.updateSettings { it.copy(showClock = !it.showClock) }; render(0, 5)
+                            vm.updateSettings { it.copy(showClock = !it.showClock) }; render(0, 6)
                         },
                         Triple(context.getString(R.string.setting_clock_24h), if (s.use24HourClock) on else off) {
-                            vm.updateSettings { it.copy(use24HourClock = !it.use24HourClock) }; render(0, 6)
+                            vm.updateSettings { it.copy(use24HourClock = !it.use24HourClock) }; render(0, 7)
                         },
                         Triple(context.getString(R.string.setting_clock_seconds), if (s.showSeconds) on else off) {
-                            vm.updateSettings { it.copy(showSeconds = !it.showSeconds) }; render(0, 7)
+                            vm.updateSettings { it.copy(showSeconds = !it.showSeconds) }; render(0, 8)
                         },
                         Triple(context.getString(R.string.setting_show_stats), if (s.showSystemStats) on else off) {
-                            vm.updateSettings { it.copy(showSystemStats = !it.showSystemStats) }; render(0, 8)
+                            vm.updateSettings { it.copy(showSystemStats = !it.showSystemStats) }; render(0, 9)
                         },
                         Triple(context.getString(R.string.setting_show_hints), if (s.showBottomHints) on else off) {
-                            vm.updateSettings { it.copy(showBottomHints = !it.showBottomHints) }; render(0, 9)
+                            vm.updateSettings { it.copy(showBottomHints = !it.showBottomHints) }; render(0, 10)
                         }
                     )
                     items.forEach { (title, trail, click) ->
@@ -544,7 +798,7 @@ object VeloDialogs {
                                 if (hidden) context.getString(R.string.state_hidden) else context.getString(R.string.state_visible),
                                 !hidden
                             ) {
-                                showRowItemMenu(context, theme, s.cornerStyle, title, rowId, customMap.containsKey(rowId), hidden, vm) {
+                                showRowItemMenu(context, theme, title, rowId, customMap.containsKey(rowId), hidden, vm) {
                                     render(1, idx + 2)
                                 }
                             }
@@ -691,7 +945,6 @@ object VeloDialogs {
     private fun showRowItemMenu(
         context: Context,
         theme: VisualTheme,
-        corner: io.github.mylnzon58.velotv.domain.model.CornerStyle,
         title: String,
         rowId: String,
         isCustom: Boolean,
@@ -810,7 +1063,7 @@ object VeloDialogs {
     fun showSupportCreator(context: Context, vm: HomeViewModel) {
         val s = vm.state.value.settings
         val theme = s.theme
-        val dialog = Dialog(context, R.style.VeloDrawerDialog)
+        val dialog = Dialog(context, R.style.VeloModalDialog)
         val b = DialogSupportCreatorBinding.inflate(LayoutInflater.from(context))
         b.supportRoot.background = HallmarkSurfaceFactory.studioFrameBackground(context, theme, s.cornerStyle)
         b.supportVerticalRule.setBackgroundColor(theme.rule)
@@ -831,11 +1084,18 @@ object VeloDialogs {
             isPrimaryForRegion = false
         )
 
-        fun selectChannel(ch: DonationChannel) {
+        var selectedChannelId: String? = null
+        fun selectChannel(ch: DonationChannel, animate: Boolean = true) {
+            if (selectedChannelId == ch.id) return
+            selectedChannelId = ch.id
             b.tvQrTitle.text = ch.title
             b.tvQrSubtitle.text = ch.subtitle
             b.tvQrUrl.text = ch.url
             b.ivQrCode.setImageBitmap(OfflineQrGenerator.generate(ch.url, 400))
+            if (animate) {
+                b.ivQrCode.alpha = 0.45f
+                b.ivQrCode.animate().alpha(1f).setDuration(180L).start()
+            }
         }
 
         channels.forEach { ch ->
@@ -847,12 +1107,12 @@ object VeloDialogs {
                     subtitle = null,
                     trailing = ch.badge,
                     accentTrailing = ch.isPrimaryForRegion,
-                    onFocus = { selectChannel(ch) }
-                ) { selectChannel(ch) }
+                    onFocus = { selectChannel(ch, animate = true) }
+                ) { selectChannel(ch, animate = true) }
             )
         }
 
-        selectChannel(channels.first())
+        selectChannel(channels.first(), animate = false)
         dialog.show()
         dialog.window?.setLayout(
             HallmarkSurfaceFactory.dp(context, 780),
@@ -866,7 +1126,7 @@ object VeloDialogs {
         onboardingShowing = true
         val s = vm.state.value.settings
         val theme = s.theme
-        val dialog = Dialog(context, R.style.VeloDrawerDialog)
+        val dialog = Dialog(context, R.style.VeloModalDialog)
         dialog.setCancelable(true)
         val b = DialogOnboardingBinding.inflate(LayoutInflater.from(context))
         b.onboardingRoot.background = HallmarkSurfaceFactory.studioFrameBackground(context, theme, s.cornerStyle)
@@ -877,6 +1137,7 @@ object VeloDialogs {
         b.tvOnboardingQrCaption.setTextColor(theme.muted)
         b.btnStartVelo.background = HallmarkSurfaceFactory.primaryButtonBackground(context, theme, s.cornerStyle)
         b.btnStartVelo.setTextColor(theme.accentInk)
+        b.btnStartVelo.setOnFocusChangeListener { v, hasFocus -> FocusAnimator.applyNavFocus(v, hasFocus) }
         dialog.setContentView(b.root)
 
         val primaryChannel = vm.getDonationChannels().first()
@@ -895,7 +1156,7 @@ object VeloDialogs {
         dialog.setOnDismissListener { onboardingShowing = false }
         dialog.show()
         dialog.window?.setLayout(
-            HallmarkSurfaceFactory.dp(context, 720),
+            HallmarkSurfaceFactory.dp(context, 740),
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         b.btnStartVelo.requestFocus()
@@ -904,7 +1165,7 @@ object VeloDialogs {
     fun showPinDialog(context: Context, createMode: Boolean, vm: HomeViewModel, onVerified: () -> Unit) {
         val s = vm.state.value.settings
         val theme = s.theme
-        val dialog = Dialog(context, R.style.VeloDrawerDialog)
+        val dialog = Dialog(context, R.style.VeloModalDialog)
         val b = DialogPinBinding.inflate(LayoutInflater.from(context))
         b.pinRoot.background = HallmarkSurfaceFactory.studioFrameBackground(context, theme, s.cornerStyle)
         b.tvPinTitle.setTextColor(theme.ink)
@@ -940,6 +1201,7 @@ object VeloDialogs {
                                 onVerified()
                             } else {
                                 digits.clear()
+                                FocusAnimator.shakeError(b.tvPinDots)
                                 Toast.makeText(context, R.string.pin_wrong, Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -967,12 +1229,12 @@ object VeloDialogs {
     private fun showTextInputDialog(
         context: Context,
         theme: VisualTheme,
-        corner: io.github.mylnzon58.velotv.domain.model.CornerStyle,
+        corner: CornerStyle,
         title: String,
         initial: String,
         onSave: (String) -> Unit
     ) {
-        val dialog = Dialog(context, R.style.VeloDrawerDialog)
+        val dialog = Dialog(context, R.style.VeloModalDialog)
         val pad = HallmarkSurfaceFactory.dp(context, 28)
         val root = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -999,7 +1261,7 @@ object VeloDialogs {
             background = GradientDrawable().apply {
                 setColor(theme.paper)
                 setStroke(HallmarkSurfaceFactory.dp(context, 1), theme.rule)
-                cornerRadius = HallmarkSurfaceFactory.dpFloat(context, corner.radiusDp.coerceAtMost(4).toFloat())
+                cornerRadius = HallmarkSurfaceFactory.dpFloat(context, corner.radiusDp.coerceAtMost(8).toFloat())
             }
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 topMargin = HallmarkSurfaceFactory.dp(context, 16)
@@ -1018,6 +1280,7 @@ object VeloDialogs {
             background = HallmarkSurfaceFactory.primaryButtonBackground(context, theme, corner)
             setTextColor(theme.accentInk)
             setPadding(HallmarkSurfaceFactory.dp(context, 24), HallmarkSurfaceFactory.dp(context, 10), HallmarkSurfaceFactory.dp(context, 24), HallmarkSurfaceFactory.dp(context, 10))
+            setOnFocusChangeListener { v, hasFocus -> FocusAnimator.applyNavFocus(v, hasFocus) }
             setOnClickListener {
                 onSave(edit.text.toString())
                 dialog.dismiss()
@@ -1032,11 +1295,11 @@ object VeloDialogs {
     private fun showSingleQrDialog(
         context: Context,
         theme: VisualTheme,
-        corner: io.github.mylnzon58.velotv.domain.model.CornerStyle,
+        corner: CornerStyle,
         title: String,
         url: String
     ) {
-        val dialog = Dialog(context, R.style.VeloDrawerDialog)
+        val dialog = Dialog(context, R.style.VeloModalDialog)
         val b = DialogSupportCreatorBinding.inflate(LayoutInflater.from(context))
         b.supportRoot.background = HallmarkSurfaceFactory.studioFrameBackground(context, theme, corner)
         b.supportVerticalRule.setBackgroundColor(theme.rule)
@@ -1059,7 +1322,29 @@ object VeloDialogs {
         )
         dialog.setContentView(b.root)
         dialog.show()
+        dialog.window?.setLayout(
+            HallmarkSurfaceFactory.dp(context, 780),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
         b.channelsContainer.getChildAt(0)?.requestFocus()
+    }
+
+    private fun wallpaperSourceName(ctx: Context, src: WallpaperSource): String = when (src) {
+        WallpaperSource.AUTO_MIX -> ctx.getString(R.string.wp_src_automix)
+        WallpaperSource.WIKIMEDIA -> ctx.getString(R.string.wp_src_wikimedia)
+        WallpaperSource.PICSUM_UNSPLASH -> ctx.getString(R.string.wp_src_picsum)
+        WallpaperSource.BUNDLED_OFFLINE -> ctx.getString(R.string.wp_src_bundled)
+        WallpaperSource.DYNAMIC_AMBIENT -> ctx.getString(R.string.wp_src_dynamic)
+        WallpaperSource.SOLID_MINIMAL -> ctx.getString(R.string.wp_src_solid)
+    }
+
+    private fun wallpaperIntervalName(ctx: Context, interval: WallpaperInterval): String = when (interval) {
+        WallpaperInterval.ONE_MIN -> ctx.getString(R.string.wp_int_1m)
+        WallpaperInterval.FIVE_MIN -> ctx.getString(R.string.wp_int_5m)
+        WallpaperInterval.FIFTEEN_MIN -> ctx.getString(R.string.wp_int_15m)
+        WallpaperInterval.THIRTY_MIN -> ctx.getString(R.string.wp_int_30m)
+        WallpaperInterval.ON_RESUME -> ctx.getString(R.string.wp_int_resume)
+        WallpaperInterval.MANUAL -> ctx.getString(R.string.wp_int_manual)
     }
 
     private fun themeDisplayName(ctx: Context, theme: VisualTheme): String = when (theme) {

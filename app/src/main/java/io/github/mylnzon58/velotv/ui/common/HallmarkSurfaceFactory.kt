@@ -17,9 +17,9 @@ import io.github.mylnzon58.velotv.domain.model.CornerStyle
 import io.github.mylnzon58.velotv.domain.model.VisualTheme
 
 /**
- * Dynamic Hallmark design-system surface factory.
- * Enforces solid stepped surfaces (paper -> paper2 -> paper3), 1dp structural hairlines,
- * restrained accent signals, and zero translucent glass or neon glow.
+ * Cinema-grade surface & control factory blending Google TV depth with Hallmark typographic rigor.
+ * - Foreground focus frames so full-bleed artwork never hides the active border.
+ * - Calibrated solid & high-opacity surfaces (zero muddy blur or neon glow).
  */
 object HallmarkSurfaceFactory {
 
@@ -28,6 +28,59 @@ object HallmarkSurfaceFactory {
 
     fun dpFloat(context: Context, value: Float): Float =
         value * context.resources.displayMetrics.density
+
+    fun withAlpha(color: Int, alpha: Int): Int =
+        (alpha.coerceIn(0, 255) shl 24) or (color and 0x00FFFFFF)
+
+    /**
+     * Rounded card body surface (also defines ViewOutlineProvider for crisp rounded banner clipping).
+     */
+    fun cardSurfaceBackground(context: Context, theme: VisualTheme, corner: CornerStyle): Drawable {
+        val radius = dpFloat(context, corner.radiusDp.toFloat())
+        val focused = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
+            setColor(theme.paper3)
+        }
+        val idle = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
+            setColor(withAlpha(theme.paper2, 232))
+        }
+        return StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_focused), focused)
+            addState(intArrayOf(android.R.attr.state_selected), focused)
+            addState(intArrayOf(), idle)
+        }
+    }
+
+    /**
+     * Drawn in View.foreground so edge-to-edge TV banners stay crisp under a razor-sharp focus frame.
+     */
+    fun cardForegroundRing(context: Context, theme: VisualTheme, corner: CornerStyle): StateListDrawable {
+        val radius = dpFloat(context, corner.radiusDp.toFloat())
+        val strokeIdle = dp(context, 1).coerceAtLeast(1)
+        val strokeFocused = dpFloat(context, 2.5f).toInt().coerceAtLeast(3)
+
+        val focusedRing = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
+            setColor(0x00000000)
+            setStroke(strokeFocused, theme.accent)
+        }
+        val idleRim = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
+            setColor(0x00000000)
+            val subtleRim = if (theme.isLight) withAlpha(theme.ink, 42) else withAlpha(theme.ink, 36)
+            setStroke(strokeIdle, subtleRim)
+        }
+        return StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_focused), focusedRing)
+            addState(intArrayOf(android.R.attr.state_selected), focusedRing)
+            addState(intArrayOf(), idleRim)
+        }
+    }
 
     fun cardBackground(context: Context, theme: VisualTheme, corner: CornerStyle): StateListDrawable {
         val radius = dpFloat(context, corner.radiusDp.toFloat())
@@ -43,8 +96,8 @@ object HallmarkSurfaceFactory {
         val idle = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = radius
-            setColor(theme.paper2)
-            setStroke(strokeIdle, theme.rule)
+            setColor(withAlpha(theme.paper2, 224))
+            setStroke(strokeIdle, withAlpha(theme.ink, 34))
         }
         return StateListDrawable().apply {
             addState(intArrayOf(android.R.attr.state_focused), focused)
@@ -54,7 +107,7 @@ object HallmarkSurfaceFactory {
     }
 
     fun navTabBackground(context: Context, theme: VisualTheme, corner: CornerStyle): StateListDrawable {
-        val radius = dpFloat(context, corner.radiusDp.coerceAtMost(4).toFloat())
+        val radius = dpFloat(context, corner.radiusDp.coerceAtMost(20).toFloat())
         val focused = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = radius
@@ -64,7 +117,8 @@ object HallmarkSurfaceFactory {
             arrayOf(
                 GradientDrawable().apply {
                     shape = GradientDrawable.RECTANGLE
-                    setColor(theme.paper2)
+                    cornerRadius = radius
+                    setColor(withAlpha(theme.paper3, 210))
                 },
                 GradientDrawable().apply {
                     shape = GradientDrawable.RECTANGLE
@@ -77,6 +131,7 @@ object HallmarkSurfaceFactory {
         }
         val idle = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
             setColor(0x00000000)
         }
         return StateListDrawable().apply {
@@ -98,7 +153,7 @@ object HallmarkSurfaceFactory {
     }
 
     fun primaryButtonBackground(context: Context, theme: VisualTheme, corner: CornerStyle): StateListDrawable {
-        val radius = dpFloat(context, corner.radiusDp.coerceAtMost(4).toFloat())
+        val radius = dpFloat(context, corner.radiusDp.coerceAtMost(8).toFloat())
         val focused = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = radius
@@ -119,11 +174,13 @@ object HallmarkSurfaceFactory {
     fun studioFrameBackground(context: Context, theme: VisualTheme, corner: CornerStyle): Drawable {
         return GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
-            cornerRadius = dpFloat(context, corner.radiusDp.coerceAtMost(6).toFloat())
+            cornerRadius = dpFloat(context, corner.radiusDp.coerceAtMost(12).toFloat())
             setColor(theme.paper2)
-            setStroke(dp(context, 1), theme.rule)
+            setStroke(dp(context, 1), withAlpha(theme.ink, 46))
         }
     }
+
+    fun drawerSurfaceColor(theme: VisualTheme): Int = theme.paper2
 
     fun createSectionLabel(context: Context, theme: VisualTheme, title: String): LinearLayout {
         return LinearLayout(context).apply {
@@ -137,7 +194,7 @@ object HallmarkSurfaceFactory {
             }
             addView(TextView(context).apply {
                 text = title.uppercase()
-                textSize = 13f
+                textSize = 12.5f
                 letterSpacing = 0.08f
                 typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
                 setTextColor(theme.muted)
@@ -154,7 +211,7 @@ object HallmarkSurfaceFactory {
     }
 
     /**
-     * Clean editorial list row: flat hairline separation, solid paper3 step + 3dp left accent rail on focus.
+     * Refined architectural drawer row with smooth focus rail and crisp separation.
      */
     fun createDrawerRow(
         context: Context,
@@ -218,11 +275,13 @@ object HallmarkSurfaceFactory {
             })
         }
 
+        val idleBg = 0x00000000
+        val focusedBg = withAlpha(theme.paper3, 240)
         val container = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             isFocusable = true
             isClickable = true
-            setBackgroundColor(theme.paper2)
+            setBackgroundColor(idleBg)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -238,7 +297,7 @@ object HallmarkSurfaceFactory {
             }
             addView(rowH)
             addView(View(context).apply {
-                setBackgroundColor(theme.rule)
+                setBackgroundColor(withAlpha(theme.rule, 160))
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dp(context, 1)
@@ -246,7 +305,7 @@ object HallmarkSurfaceFactory {
             })
 
             setOnFocusChangeListener { v, hasFocus ->
-                v.setBackgroundColor(if (hasFocus) theme.paper3 else theme.paper2)
+                v.setBackgroundColor(if (hasFocus) focusedBg else idleBg)
                 accentBar.visibility = if (hasFocus) View.VISIBLE else View.INVISIBLE
                 if (hasFocus) onFocus?.invoke()
             }
@@ -283,6 +342,7 @@ object HallmarkSurfaceFactory {
             ).apply {
                 marginEnd = dp(context, 4)
             }
+            setOnFocusChangeListener { v, hasFocus -> FocusAnimator.applyNavFocus(v, hasFocus) }
             setOnClickListener { onClick() }
         }
     }
@@ -312,10 +372,9 @@ object HallmarkSurfaceFactory {
             }
             addView(row)
             addView(View(context).apply {
-                setBackgroundColor(theme.rule)
+                setBackgroundColor(withAlpha(theme.rule, 160))
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(context, 1))
             })
         }
     }
 }
-

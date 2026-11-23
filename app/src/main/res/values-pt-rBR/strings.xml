@@ -27,4 +27,17 @@
     <string name="support_title">Apoiar o VeloTV</string>
     <string name="support_body">Software livre mantido de forma independente, sem anúncios nem recursos bloqueados. Escaneie o QR com seu celular para contribuir.</string>
     <string name="onboarding_start">Começar</string>
+    <string name="nav_wallpapers">Fundos</string>
+    <string name="wp_drawer_title">Papéis de parede</string>
+    <string name="wp_drawer_subtitle">Bancos gratuitos · Troca automática ou manual</string>
+    <string name="wp_tab_gallery">Galeria</string>
+    <string name="wp_tab_settings">Fontes e movimento</string>
+    <string name="wp_next_now">Trocar para o próximo fundo agora</string>
+    <string name="wp_resume_auto">Retomar troca automática</string>
+    <string name="wp_setting_source">Fonte dos fundos</string>
+    <string name="wp_setting_interval">Frequência de troca</string>
+    <string name="wp_setting_dim">Contraste do véu</string>
+    <string name="wp_setting_kenburns">Movimento suave</string>
+    <string name="wp_setting_ambient_glow">Brilho ambiental do app</string>
+    <string name="wp_setting_offline">Modo 100% offline</string>
 </resources>

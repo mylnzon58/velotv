@@ -16,6 +16,7 @@ import io.github.mylnzon58.velotv.domain.model.HomeRow
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
 import io.github.mylnzon58.velotv.domain.model.VisualTheme
+import io.github.mylnzon58.velotv.ui.common.SmoothTvLayoutManager
 import kotlinx.coroutines.CoroutineScope
 
 class CategoryRowAdapter(
@@ -28,6 +29,11 @@ class CategoryRowAdapter(
     private val onInputClick: (TvInputSource) -> Unit,
     private val onInputLongClick: (TvInputSource) -> Unit
 ) : ListAdapter<HomeRow, CategoryRowAdapter.RowVH>(DIFF) {
+
+    // Shared RecycledViewPool across all horizontal app rows minimizes GC & inflation lag on 2 GB TVs
+    private val sharedAppPool = RecyclerView.RecycledViewPool().apply {
+        setMaxRecycledViews(0, 24)
+    }
 
     private var theme: VisualTheme = VisualTheme.DARKROOM_AMBER
     private var corner: CornerStyle = CornerStyle.EDITORIAL
@@ -52,48 +58,70 @@ class CategoryRowAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowVH {
         val binding = ItemCategoryRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.itemsRecyclerView.layoutManager =
-            LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
+            SmoothTvLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, 88)
         binding.itemsRecyclerView.itemAnimator = null
+        binding.itemsRecyclerView.setHasFixedSize(true)
+        binding.itemsRecyclerView.setItemViewCacheSize(6)
         return RowVH(binding)
     }
 
     override fun onBindViewHolder(holder: RowVH, position: Int) = holder.bind(getItem(position))
 
     inner class RowVH(private val b: ItemCategoryRowBinding) : RecyclerView.ViewHolder(b.root) {
+        private var appAdapter: AppCardAdapter? = null
+        private var inputAdapter: TvInputCardAdapter? = null
+
         fun bind(row: HomeRow) {
             val ctx = b.root.context
-            b.tvCategoryTitle.setTextColor(theme.ink2)
+            b.tvCategoryTitle.setTextColor(theme.ink)
             b.tvCategoryCount.setTextColor(theme.muted)
             b.tvCategoryTitle.text = row.customTitle ?: ctx.getString(categoryTitleRes(row.rowId))
 
             when (row) {
                 is HomeRow.AppsRow -> {
                     b.tvCategoryCount.text = row.apps.size.toString()
-                    val adapter = AppCardAdapter(
-                        appRepository = appRepository,
-                        scope = scope,
-                        theme = theme,
-                        cornerStyle = corner,
-                        density = density,
-                        showBannerLabels = showBannerLabels,
-                        onAppFocused = onAppFocused,
-                        onAppClick = onAppClick,
-                        onAppLongClick = onAppLongClick
-                    )
-                    b.itemsRecyclerView.adapter = adapter
+                    b.itemsRecyclerView.setRecycledViewPool(sharedAppPool)
+                    val existing = appAdapter
+                    val adapter = if (existing != null) {
+                        existing.updateStyle(theme, corner, density, showBannerLabels)
+                        existing
+                    } else {
+                        AppCardAdapter(
+                            appRepository = appRepository,
+                            scope = scope,
+                            theme = theme,
+                            cornerStyle = corner,
+                            density = density,
+                            showBannerLabels = showBannerLabels,
+                            onAppFocused = onAppFocused,
+                            onAppClick = onAppClick,
+                            onAppLongClick = onAppLongClick
+                        ).also { appAdapter = it }
+                    }
+                    if (b.itemsRecyclerView.adapter !== adapter) {
+                        b.itemsRecyclerView.adapter = adapter
+                    }
                     adapter.submitList(row.apps)
                 }
 
                 is HomeRow.InputsRow -> {
                     b.tvCategoryCount.text = row.inputs.size.toString()
-                    val adapter = TvInputCardAdapter(
-                        theme = theme,
-                        cornerStyle = corner,
-                        onInputFocused = onInputFocused,
-                        onInputClick = onInputClick,
-                        onInputLongClick = onInputLongClick
-                    )
-                    b.itemsRecyclerView.adapter = adapter
+                    val existing = inputAdapter
+                    val adapter = if (existing != null) {
+                        existing.updateStyle(theme, corner)
+                        existing
+                    } else {
+                        TvInputCardAdapter(
+                            theme = theme,
+                            cornerStyle = corner,
+                            onInputFocused = onInputFocused,
+                            onInputClick = onInputClick,
+                            onInputLongClick = onInputLongClick
+                        ).also { inputAdapter = it }
+                    }
+                    if (b.itemsRecyclerView.adapter !== adapter) {
+                        b.itemsRecyclerView.adapter = adapter
+                    }
                     adapter.submitList(row.inputs)
                 }
             }

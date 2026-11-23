@@ -25,4 +25,10 @@
     <string name="hub_title">地域カタログ</string>
     <string name="support_title">VeloTV を支援</string>
     <string name="onboarding_start">はじめる</string>
+    <string name="nav_wallpapers">壁紙</string>
+    <string name="wp_drawer_title">壁紙ギャラリー</string>
+    <string name="wp_tab_gallery">ギャラリー</string>
+    <string name="wp_tab_settings">ソースと動き</string>
+    <string name="wp_next_now">今すぐ次の壁紙へ</string>
+    <string name="wp_resume_auto">自動切替を再開</string>
 </resources>

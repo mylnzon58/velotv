@@ -5,6 +5,7 @@
     <string name="brand_wordmark">VELOTV</string>
 
     <string name="nav_search">Buscar</string>
+    <string name="nav_wallpapers">Fondos</string>
     <string name="nav_app_hub">Catálogo</string>
     <string name="nav_system">Sistema</string>
     <string name="nav_settings">Ajustes</string>
@@ -84,7 +85,7 @@
     <string name="diag_network">Red local</string>
     <string name="diag_uptime">Tiempo encendido</string>
     <string name="diag_privacy">Privacidad VeloTV</string>
-    <string name="privacy_zero_net_short">Sin permiso INTERNET</string>
+    <string name="privacy_zero_net_short">Cero telemetría · Allowlist HTTPS</string>
 
     <string name="dev_native_options">Opciones para desarrolladores</string>
     <string name="dev_native_options_sub">ADB, animaciones, render GPU y límites de procesos</string>
@@ -135,8 +136,8 @@
 
     <string name="tool_calibration">Patrones de calibración 4K / HDR</string>
     <string name="tool_calibration_sub">Grises PLUGE, SMPTE, overscan y prueba de píxeles</string>
-    <string name="tool_ambient_clock">Reloj ambiente OLED</string>
-    <string name="tool_ambient_clock_sub">Salvapantallas minimalista con desplazamiento anti-quemado</string>
+    <string name="tool_ambient_clock">Galería ambiente y reloj OLED</string>
+    <string name="tool_ambient_clock_sub">Fondos libres rotativos o modo negro puro anti-quemado</string>
     <string name="health_clear_cache">Liberar memoria de íconos</string>
     <string name="health_clear_cache_sub">Vaciar la caché local de miniaturas en RAM</string>
 
@@ -181,8 +182,8 @@
     <string name="theme_graphite">Grafito · Monocromo</string>
 
     <string name="corner_sharp">Recto (0 dp)</string>
-    <string name="corner_editorial">Editorial (6 dp)</string>
-    <string name="corner_soft">Suave (12 dp)</string>
+    <string name="corner_editorial">Editorial (10 dp)</string>
+    <string name="corner_soft">Suave (16 dp)</string>
 
     <string name="density_compact">Compacto</string>
     <string name="density_normal">Normal</string>
@@ -218,9 +219,44 @@
     <string name="support_repo_sub">Código fuente abierto (MIT)</string>
 
     <string name="onboarding_title">VELOTV</string>
-    <string name="onboarding_body">Interfaz nativa a 60 fps diseñada para televisores de 1 a 2 GB de RAM.\n\nSin anuncios, sin telemetría y sin permiso de red. Incluye entradas HDMI, calibración 4K, opciones de desarrollador y catálogo regional.</string>
+    <string name="onboarding_body">Interfaz nativa a 60 fps diseñada para televisores de 1 a 2 GB de RAM.\n\nSin anuncios ni telemetría. Incluye fondos de bancos libres con cambio automático, brillo ambiental, entradas HDMI, calibración 4K y opciones de desarrollador.</string>
     <string name="onboarding_start">Comenzar</string>
     <string name="onboarding_qr_caption">Aporte voluntario opcional</string>
+
+    <string name="wp_drawer_title">Fondos de pantalla</string>
+    <string name="wp_drawer_subtitle">Bancos abiertos sin licencia paga · Cambio automático o manual</string>
+    <string name="wp_tab_gallery">Galería</string>
+    <string name="wp_tab_settings">Fuentes y movimiento</string>
+    <string name="wp_next_now">Cambiar al siguiente fondo ahora</string>
+    <string name="wp_resume_auto">Volver a cambio automático</string>
+    <string name="wp_manual_active">Fondo fijado manualmente · Pulsa OK para rotar</string>
+    <string name="wp_auto_badge">AUTO</string>
+    <string name="wp_pin_badge">FIJO</string>
+    <string name="wp_section_pick">Elegir fondo manualmente (vista previa en vivo)</string>
+    <string name="wp_pinned_toast">Fondo fijado: %1$s</string>
+    <string name="wp_setting_source">Fuente de fondos</string>
+    <string name="wp_setting_interval">Frecuencia de cambio</string>
+    <string name="wp_setting_dim">Oscurecimiento del velo</string>
+    <string name="wp_setting_kenburns">Movimiento suave de cámara</string>
+    <string name="wp_setting_ambient_glow">Brillo ambiental según app</string>
+    <string name="wp_setting_offline">Modo 100% sin conexión</string>
+    <string name="wp_refresh_online">Actualizar bancos libres ahora</string>
+    <string name="wp_refresh_online_sub">Wikimedia Commons (CC) y Unsplash / Picsum por HTTPS</string>
+    <string name="wp_refreshing_toast">Actualizando fondos de bancos libres…</string>
+    <string name="wp_src_automix">Mix libre (Wikimedia + Unsplash + Local)</string>
+    <string name="wp_src_wikimedia">Wikimedia Commons (CC / Dominio Público)</string>
+    <string name="wp_src_picsum">Unsplash libre (Picsum)</string>
+    <string name="wp_src_bundled">Galería local integrada (Sin red)</string>
+    <string name="wp_src_dynamic">Color dinámico según app (0 MB)</string>
+    <string name="wp_src_solid">Superficie sólida minimalista</string>
+    <string name="wp_int_1m">Cada 1 minuto</string>
+    <string name="wp_int_5m">Cada 5 minutos</string>
+    <string name="wp_int_15m">Cada 15 minutos</string>
+    <string name="wp_int_30m">Cada 30 minutos</string>
+    <string name="wp_int_resume">Al volver al inicio</string>
+    <string name="wp_int_manual">Manual (fijo)</string>
+    <string name="ambient_photo_hint">◀▶ Foto · OK Negro OLED · Atrás Salir</string>
+    <string name="ambient_oled_hint">Modo negro puro OLED · OK Volver a fotos · Atrás Salir</string>
 
     <string name="pin_enter_title">Ingresa el PIN</string>
     <string name="pin_create_title">Crea un PIN de 4 dígitos</string>

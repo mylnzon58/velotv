@@ -4,22 +4,25 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import io.github.mylnzon58.velotv.R
+import io.github.mylnzon58.velotv.VeloTvApplication
 
 /**
  * Full-screen 4K / HDR display calibration test suite rendered natively in Canvas (0 KB assets).
- * Controls: Left/Right switch pattern, OK toggles HUD overlay, Back exits.
+ * Controls: Left/Right switch pattern, OK toggles floating HUD card, Back exits smoothly.
  */
 class CalibrationActivity : AppCompatActivity() {
 
     private lateinit var patternView: CalibrationPatternView
     private var currentPattern = 0
     private var showHud = true
+    private var accentColor = 0xFFDF9D3E.toInt()
 
     private val patternNames = listOf(
         "01 / Escala de grises 11 pasos + PLUGE",
@@ -36,8 +39,11 @@ class CalibrationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        accentColor = (application as VeloTvApplication).container.preferencesRepository.loadSettings().theme.accent
         patternView = CalibrationPatternView(this)
         setContentView(patternView)
+        patternView.alpha = 0f
+        patternView.animate().alpha(1f).setDuration(220L).start()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -59,6 +65,8 @@ class CalibrationActivity : AppCompatActivity() {
             }
             KeyEvent.KEYCODE_BACK -> {
                 finish()
+                @Suppress("DEPRECATION")
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 true
             }
             else -> super.onKeyDown(keyCode, event)
@@ -74,12 +82,14 @@ class CalibrationActivity : AppCompatActivity() {
         private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             typeface = ResourcesCompat.getFont(context, R.font.barlow_medium)
             color = 0xFFEDE8E1.toInt()
-            textSize = 26f
+            textSize = 24f
         }
         private val displayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
             color = 0xFFEDE8E1.toInt()
         }
+        private val hudRect = RectF()
+        private val progressRect = RectF()
 
         override fun onDraw(canvas: Canvas) {
             val w = width.toFloat()
@@ -108,7 +118,6 @@ class CalibrationActivity : AppCompatActivity() {
                 fillPaint.color = Color.rgb(v, v, v)
                 c.drawRect(i * bw, 0f, (i + 1) * bw + 1f, topH, fillPaint)
             }
-            // Bottom PLUGE near-black reference bars (0%, 2%, 4%, 6%, 8%)
             fillPaint.color = Color.BLACK
             c.drawRect(0f, topH, w, h, fillPaint)
             val nearBlacks = intArrayOf(0, 5, 10, 16, 22, 32)
@@ -163,16 +172,14 @@ class CalibrationActivity : AppCompatActivity() {
                 c.drawLine(0f, y, w, y, strokePaint)
                 y += step
             }
-            // Outer 0% edge (Amber), 5% safe zone (Ivory), 10% title safe (Muted)
             strokePaint.strokeWidth = 3f
-            strokePaint.color = 0xFFDF9D3E.toInt()
+            strokePaint.color = accentColor
             c.drawRect(2f, 2f, w - 2f, h - 2f, strokePaint)
             strokePaint.color = 0xFFEDE8E1.toInt()
             c.drawRect(w * 0.05f, h * 0.05f, w * 0.95f, h * 0.95f, strokePaint)
             strokePaint.color = 0xFF8F867C.toInt()
             c.drawRect(w * 0.10f, h * 0.10f, w * 0.90f, h * 0.90f, strokePaint)
-            // Center circle (verifies 1:1 aspect ratio)
-            strokePaint.color = 0xFFDF9D3E.toInt()
+            strokePaint.color = accentColor
             c.drawCircle(w / 2f, h / 2f, h * 0.34f, strokePaint)
         }
 
@@ -185,7 +192,6 @@ class CalibrationActivity : AppCompatActivity() {
                 c.drawText("VELOTV · 1234567890 · Nitidez ${sz.toInt()}px", 96f, y, displayPaint)
                 y += sz + 40f
             }
-            // Fine 1px alternating lines box on right
             strokePaint.strokeWidth = 1f
             strokePaint.color = 0xFFEDE8E1.toInt()
             var x = w * 0.68f
@@ -196,19 +202,27 @@ class CalibrationActivity : AppCompatActivity() {
         }
 
         private fun drawHud(c: Canvas, w: Float, h: Float) {
-            fillPaint.color = 0xFF12100E.toInt()
-            c.drawRect(48f, h - 106f, w - 48f, h - 36f, fillPaint)
-            strokePaint.color = 0xFF332E29.toInt()
-            strokePaint.strokeWidth = 2f
-            c.drawRect(48f, h - 106f, w - 48f, h - 36f, strokePaint)
+            hudRect.set(48f, h - 110f, w - 48f, h - 34f)
+            fillPaint.color = 0xE6141210.toInt()
+            c.drawRoundRect(hudRect, 14f, 14f, fillPaint)
+            strokePaint.color = 0x44EDE8E1.toInt()
+            strokePaint.strokeWidth = 1.5f
+            c.drawRoundRect(hudRect, 14f, 14f, strokePaint)
+
+            // Progress rail along bottom inside floating HUD
+            val fraction = (currentPattern + 1f) / patternNames.size.toFloat()
+            progressRect.set(hudRect.left + 20f, hudRect.bottom - 6f, hudRect.left + 20f + (hudRect.width() - 40f) * fraction, hudRect.bottom - 2f)
+            fillPaint.color = accentColor
+            c.drawRoundRect(progressRect, 2f, 2f, fillPaint)
+
             textPaint.color = 0xFFEDE8E1.toInt()
-            textPaint.textSize = 24f
-            c.drawText(patternNames[currentPattern], 76f, h - 63f, textPaint)
-            textPaint.color = 0xFFDF9D3E.toInt()
-            val hint = "◀▶ Cambiar patrón   ·   OK Ocultar barra   ·   Atrás Salir"
+            textPaint.textSize = 23f
+            c.drawText(patternNames[currentPattern], 76f, h - 66f, textPaint)
+            textPaint.color = accentColor
+            textPaint.textSize = 20f
+            val hint = "◀▶ Patrón   ·   OK Ocultar barra   ·   Atrás Salir"
             val hw = textPaint.measureText(hint)
-            c.drawText(hint, w - 76f - hw, h - 63f, textPaint)
+            c.drawText(hint, w - 76f - hw, h - 66f, textPaint)
         }
     }
 }
-

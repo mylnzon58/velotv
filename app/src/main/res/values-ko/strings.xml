@@ -25,4 +25,10 @@
     <string name="hub_title">지역 카탈로그</string>
     <string name="support_title">VeloTV 후원</string>
     <string name="onboarding_start">시작</string>
+    <string name="nav_wallpapers">배경화면</string>
+    <string name="wp_drawer_title">배경화면</string>
+    <string name="wp_tab_gallery">갤러리</string>
+    <string name="wp_tab_settings">소스 및 모션</string>
+    <string name="wp_next_now">지금 다음 배경으로 변경</string>
+    <string name="wp_resume_auto">자동 전환 다시 시작</string>
 </resources>

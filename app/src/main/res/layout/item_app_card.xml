@@ -3,12 +3,12 @@
     android:id="@+id/cardRoot"
     android:layout_width="196dp"
     android:layout_height="112dp"
-    android:layout_marginEnd="16dp"
+    android:layout_marginEnd="18dp"
     android:clickable="true"
-    android:focusable="true"
-    android:padding="2.5dp">
+    android:elevation="2dp"
+    android:focusable="true">
 
-    <!-- Clean Full-Bleed TV Banner -->
+    <!-- Full-bleed edge-to-edge TV banner clipped cleanly to rounded card outline -->
     <ImageView
         android:id="@+id/ivBanner"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="12dp">
 
         <ImageView
             android:id="@+id/ivIcon"
@@ -46,7 +46,7 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- Optional solid banner footer label (only when enabled by user) -->
+    <!-- Optional bottom banner label (only when enabled by user) -->
     <TextView
         android:id="@+id/tvBannerLabel"
         android:layout_width="match_parent"
@@ -55,20 +55,20 @@
         android:ellipsize="end"
         android:fontFamily="@font/barlow_medium"
         android:maxLines="1"
-        android:paddingStart="8dp"
-        android:paddingTop="3dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="4dp"
-        android:textSize="11sp"
+        android:paddingStart="10dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:textSize="11.5sp"
         android:visibility="gone" />
 
-    <!-- Subtle solid editorial corner indicator (no emojis) -->
+    <!-- Subtle editorial corner status pill -->
     <TextView
         android:id="@+id/tvBadge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:layout_margin="5dp"
+        android:layout_margin="6dp"
         android:fontFamily="@font/barlow_condensed_semibold"
         android:letterSpacing="0.06"
         android:paddingStart="6dp"

@@ -17,6 +17,9 @@ import io.github.mylnzon58.velotv.domain.model.SystemDiagnostics
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
 import io.github.mylnzon58.velotv.domain.model.VisualTheme
+import io.github.mylnzon58.velotv.domain.model.WallpaperInterval
+import io.github.mylnzon58.velotv.domain.model.WallpaperItem
+import io.github.mylnzon58.velotv.domain.model.WallpaperSource
 import io.github.mylnzon58.velotv.domain.model.WorldRegion
 import io.github.mylnzon58.velotv.domain.usecase.SearchLauncherUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +42,9 @@ data class HomeUiState(
     val settings: LauncherSettings = LauncherSettings(),
     val diagnostics: SystemDiagnostics? = null,
     val detectedCountry: String = "AR",
-    val detectedRegion: WorldRegion = WorldRegion.ARGENTINA
+    val detectedRegion: WorldRegion = WorldRegion.ARGENTINA,
+    val activeWallpaper: WallpaperItem? = null,
+    val wallpaperPool: List<WallpaperItem> = emptyList()
 )
 
 class HomeViewModel(private val container: AppContainer) {
@@ -47,6 +52,8 @@ class HomeViewModel(private val container: AppContainer) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var cachedApps: List<TvApp> = emptyList()
     private var cachedInputs: List<TvInputSource> = emptyList()
+    private var cachedOnlineWallpapers: List<WallpaperItem> = emptyList()
+    private var onlineFetchAttempted = false
 
     private val _state = MutableStateFlow(
         HomeUiState(
@@ -92,8 +99,135 @@ class HomeViewModel(private val container: AppContainer) {
             } else settings
 
             emitState(effectiveSettings, diag)
+            ensureWallpapersInitialized(effectiveSettings)
         }
     }
+
+    private fun ensureWallpapersInitialized(settings: LauncherSettings) {
+        if (cachedOnlineWallpapers.isEmpty()) {
+            cachedOnlineWallpapers = container.wallpaperRepository.getCachedOnlineWallpapers()
+        }
+        val pool = container.wallpaperRepository.buildPool(
+            settings.wallpaperSource,
+            settings.wallpaperOfflineOnly,
+            cachedOnlineWallpapers
+        )
+        val current = _state.value.activeWallpaper
+        val resolved = if (current != null && pool.any { it.id == current.id } &&
+            (settings.pinnedWallpaperId == null || settings.pinnedWallpaperId == current.id)
+        ) {
+            current
+        } else {
+            container.wallpaperPolicyUseCase.selectNextWallpaper(pool, null, settings.pinnedWallpaperId)
+        }
+        _state.value = _state.value.copy(wallpaperPool = pool, activeWallpaper = resolved)
+
+        if (!onlineFetchAttempted && !settings.wallpaperOfflineOnly && usesOnlineSource(settings.wallpaperSource)) {
+            onlineFetchAttempted = true
+            refreshOnlineWallpapers()
+        }
+    }
+
+    fun refreshOnlineWallpapers() {
+        val s = _state.value.settings
+        if (s.wallpaperOfflineOnly || !usesOnlineSource(s.wallpaperSource)) return
+        scope.launch {
+            val fetched = container.wallpaperRepository.refreshOnlineWallpapers(s.wallpaperSource, s.wallpaperOfflineOnly)
+            if (fetched.isNotEmpty()) {
+                cachedOnlineWallpapers = fetched
+                val newPool = container.wallpaperRepository.buildPool(s.wallpaperSource, s.wallpaperOfflineOnly, fetched)
+                val active = _state.value.activeWallpaper
+                    ?.takeIf { cur -> newPool.any { it.id == cur.id } }
+                    ?: container.wallpaperPolicyUseCase.selectNextWallpaper(newPool, null, s.pinnedWallpaperId)
+                _state.value = _state.value.copy(wallpaperPool = newPool, activeWallpaper = active)
+            }
+        }
+    }
+
+    fun advanceWallpaper(forceUnpin: Boolean = false) {
+        val s = if (forceUnpin && _state.value.settings.pinnedWallpaperId != null) {
+            _state.value.settings.copy(pinnedWallpaperId = null).also {
+                container.preferencesRepository.saveSettings(it)
+            }
+        } else {
+            _state.value.settings
+        }
+        val pool = container.wallpaperRepository.buildPool(
+            s.wallpaperSource,
+            s.wallpaperOfflineOnly,
+            cachedOnlineWallpapers
+        )
+        val next = container.wallpaperPolicyUseCase.selectNextWallpaper(
+            pool = pool,
+            currentId = _state.value.activeWallpaper?.id,
+            pinnedId = if (forceUnpin) null else s.pinnedWallpaperId
+        )
+        _state.value = _state.value.copy(settings = s, wallpaperPool = pool, activeWallpaper = next)
+    }
+
+    fun pinWallpaper(item: WallpaperItem) {
+        updateSettings {
+            val nextSource = if (it.wallpaperSource == WallpaperSource.SOLID_MINIMAL ||
+                it.wallpaperSource == WallpaperSource.DYNAMIC_AMBIENT
+            ) WallpaperSource.AUTO_MIX else it.wallpaperSource
+            it.copy(
+                wallpaperSource = nextSource,
+                pinnedWallpaperId = item.id
+            )
+        }
+        _state.value = _state.value.copy(activeWallpaper = item)
+    }
+
+    fun enableAutoRotateWallpaper() {
+        updateSettings {
+            val nextInterval = if (it.wallpaperInterval == WallpaperInterval.MANUAL) {
+                WallpaperInterval.FIVE_MIN
+            } else it.wallpaperInterval
+            val nextSource = if (it.wallpaperSource == WallpaperSource.SOLID_MINIMAL ||
+                it.wallpaperSource == WallpaperSource.DYNAMIC_AMBIENT
+            ) WallpaperSource.AUTO_MIX else it.wallpaperSource
+            it.copy(
+                wallpaperSource = nextSource,
+                wallpaperInterval = nextInterval,
+                pinnedWallpaperId = null
+            )
+        }
+        advanceWallpaper(forceUnpin = true)
+    }
+
+    fun cycleWallpaperSource() {
+        val entries = WallpaperSource.entries
+        val next = entries[(entries.indexOf(_state.value.settings.wallpaperSource) + 1) % entries.size]
+        updateSettings { it.copy(wallpaperSource = next, pinnedWallpaperId = null) }
+        val s = _state.value.settings
+        val pool = container.wallpaperRepository.buildPool(next, s.wallpaperOfflineOnly, cachedOnlineWallpapers)
+        val active = container.wallpaperPolicyUseCase.selectNextWallpaper(pool, null, null)
+        _state.value = _state.value.copy(wallpaperPool = pool, activeWallpaper = active)
+        if (!s.wallpaperOfflineOnly && usesOnlineSource(next)) {
+            refreshOnlineWallpapers()
+        }
+    }
+
+    fun cycleWallpaperInterval() {
+        val entries = WallpaperInterval.entries
+        val next = entries[(entries.indexOf(_state.value.settings.wallpaperInterval) + 1) % entries.size]
+        updateSettings {
+            it.copy(
+                wallpaperInterval = next,
+                pinnedWallpaperId = if (next == WallpaperInterval.MANUAL) _state.value.activeWallpaper?.id else null
+            )
+        }
+    }
+
+    fun cycleWallpaperDim() {
+        val steps = listOf(30, 52, 68, 82)
+        val current = _state.value.settings.wallpaperDimPercent
+        val next = steps.firstOrNull { it > current } ?: steps.first()
+        updateSettings { it.copy(wallpaperDimPercent = next) }
+    }
+
+    private fun usesOnlineSource(source: WallpaperSource): Boolean =
+        source == WallpaperSource.AUTO_MIX || source == WallpaperSource.WIKIMEDIA || source == WallpaperSource.PICSUM_UNSPLASH
 
     fun refreshDiagnostics() {
         val diag = container.systemDiagnosticsRepository.readDiagnostics()
@@ -352,12 +486,14 @@ class HomeViewModel(private val container: AppContainer) {
             val raw = file.readText(Charsets.UTF_8)
             container.preferencesRepository.importJson(raw).onSuccess {
                 emitState(it, _state.value.diagnostics)
+                ensureWallpapersInitialized(it)
             }.isSuccess
         }.getOrDefault(false)
     }
 
     fun clearIconCache() {
         container.iconCache.clear()
+        container.wallpaperRepository.trimMemory()
         refreshDiagnostics()
     }
 

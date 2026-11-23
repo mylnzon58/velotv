@@ -6,4 +6,8 @@
     <string name="hub_qr_instruction">Escaneá el código QR con tu celular para bajar el paquete oficial desde el repositorio del autor.</string>
     <string name="pin_enter_title">Ingresá el PIN</string>
     <string name="pin_create_title">Creá un PIN de 4 dígitos</string>
+    <string name="nav_wallpapers">Fondos</string>
+    <string name="wp_drawer_title">Fondos de pantalla</string>
+    <string name="wp_resume_auto">Volver a cambio automático</string>
+    <string name="wp_manual_active">Fondo fijado manualmente · Tocá OK para rotar</string>
 </resources>

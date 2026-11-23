@@ -25,4 +25,10 @@
     <string name="hub_title">区域应用目录</string>
     <string name="support_title">支持 VeloTV</string>
     <string name="onboarding_start">开始</string>
+    <string name="nav_wallpapers">壁纸</string>
+    <string name="wp_drawer_title">壁纸图库</string>
+    <string name="wp_tab_gallery">图库</string>
+    <string name="wp_tab_settings">来源与动效</string>
+    <string name="wp_next_now">立即切换下一张</string>
+    <string name="wp_resume_auto">恢复自动轮换</string>
 </resources>

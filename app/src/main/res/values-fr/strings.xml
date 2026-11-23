@@ -25,4 +25,10 @@
     <string name="hub_title">Catalogue régional</string>
     <string name="support_title">Soutenir VeloTV</string>
     <string name="onboarding_start">Démarrer</string>
+    <string name="nav_wallpapers">Fonds</string>
+    <string name="wp_drawer_title">Fonds d\'écran</string>
+    <string name="wp_tab_gallery">Galerie</string>
+    <string name="wp_tab_settings">Sources et mouvement</string>
+    <string name="wp_next_now">Changer de fond maintenant</string>
+    <string name="wp_resume_auto">Reprendre la rotation auto</string>
 </resources>

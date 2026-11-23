@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="16dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="vertical">
@@ -10,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="6dp"
         android:gravity="bottom"
         android:orientation="horizontal">
 
@@ -19,10 +19,14 @@
             android:id="@+id/tvCategoryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/barlow_condensed_medium"
-            android:letterSpacing="0.06"
+            android:fontFamily="@font/barlow_condensed_semibold"
+            android:letterSpacing="0.08"
+            android:shadowColor="#99000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="4"
             android:textAllCaps="true"
-            android:textColor="@color/hm_ink_2"
+            android:textColor="@color/hm_ink"
             android:textSize="15sp" />
 
         <TextView
@@ -31,6 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/barlow_regular"
+            android:shadowColor="#99000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:textColor="@color/hm_muted"
             android:textSize="12sp" />
     </LinearLayout>
@@ -41,9 +49,9 @@
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:paddingStart="4dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="18dp"
-        android:paddingBottom="10dp" />
+        android:paddingStart="6dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="32dp"
+        android:paddingBottom="14dp" />
 
 </LinearLayout>

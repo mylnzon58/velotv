@@ -2,19 +2,16 @@
 <resources>
     <string name="app_name">VeloTV</string>
     <string name="brand_wordmark">VELOTV</string>
-
     <string name="nav_search">Search</string>
     <string name="nav_app_hub">Catalog</string>
     <string name="nav_system">System</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_support_short">Support</string>
-
     <string name="hint_context_cue">OK Open  ·  Hold OK Options</string>
     <string name="hint_controls">OK Open · Menu Options · Back Home</string>
     <string name="creator_subtle_footer">VeloTV · Juan José Monzón</string>
     <string name="creator_settings_footer">VeloTV 1.0 · Open Source by Juan José Monzón (@mylnzon58)</string>
     <string name="creator_full_credit">Built in Argentina by Juan José Monzón (@mylnzon58) · MIT License</string>
-
     <string name="cat_favorites">Favorites</string>
     <string name="cat_tv_inputs">TV &amp; HDMI</string>
     <string name="cat_streaming">Streaming</string>
@@ -22,15 +19,12 @@
     <string name="cat_games">Games</string>
     <string name="cat_tools">Utilities</string>
     <string name="cat_all_apps">All Apps</string>
-
     <string name="input_connected">Connected</string>
     <string name="input_ready">Standby</string>
-
     <string name="search_title">Search</string>
     <string name="search_subtitle">Installed apps and HDMI inputs</string>
     <string name="search_hint">Type an app or input name</string>
     <string name="search_empty">No matches</string>
-
     <string name="action_open">Open</string>
     <string name="action_open_short">Open</string>
     <string name="action_close">Close</string>
@@ -50,7 +44,6 @@
     <string name="action_app_info">App info &amp; cache</string>
     <string name="action_app_info_sub">Force stop, permissions and storage</string>
     <string name="action_uninstall">Uninstall</string>
-
     <string name="section_category">Category</string>
     <string name="section_control">Control</string>
     <string name="section_dev_live">Live status</string>
@@ -61,13 +54,11 @@
     <string name="section_hw_profile">Hardware &amp; firmware</string>
     <string name="section_resources">Resources &amp; network</string>
     <string name="section_row_order">Order &amp; visibility</string>
-
     <string name="sys_drawer_title">System &amp; Developer</string>
     <string name="sys_drawer_subtitle">Native shortcuts, diagnostics and hardware profile</string>
     <string name="tab_developer">Developer</string>
     <string name="tab_system_tools">System</string>
     <string name="tab_engineering">Engineering</string>
-
     <string name="diag_adb">ADB Debugging</string>
     <string name="diag_dev_mode">Developer mode</string>
     <string name="diag_unknown_sources">Unknown sources</string>
@@ -83,8 +74,7 @@
     <string name="diag_network">Local network</string>
     <string name="diag_uptime">Uptime</string>
     <string name="diag_privacy">VeloTV privacy</string>
-    <string name="privacy_zero_net_short">Zero INTERNET permission</string>
-
+    <string name="privacy_zero_net_short">Zero telemetry · HTTPS allowlist</string>
     <string name="dev_native_options">Developer options</string>
     <string name="dev_native_options_sub">ADB, animation scales, GPU render and process limits</string>
     <string name="dev_unknown_sources">Unknown app sources</string>
@@ -103,7 +93,6 @@
     <string name="dev_security_sub">Restricted profiles and app verification</string>
     <string name="dev_location">Location</string>
     <string name="dev_location_sub">Wi-Fi scanning and geolocation services</string>
-
     <string name="sys_network">Network &amp; Wi-Fi</string>
     <string name="sys_network_sub">Wireless, Ethernet, DNS and IP settings</string>
     <string name="sys_bluetooth">Bluetooth &amp; remotes</string>
@@ -126,26 +115,22 @@
     <string name="sys_device_name_sub">Visible name for Cast and local network</string>
     <string name="sys_all_settings">All Android TV settings</string>
     <string name="sys_all_settings_sub">Full native system preferences</string>
-
     <string name="hw_live_tv_settings">Live TV &amp; tuner settings</string>
     <string name="hw_live_tv_settings_sub">Digital channels, antenna and tuner picture</string>
     <string name="hw_factory_menu">Factory service menu</string>
     <string name="hw_factory_menu_sub">Technical use only. Do not alter panel parameters.</string>
-
     <string name="tool_calibration">4K / HDR Calibration patterns</string>
     <string name="tool_calibration_sub">PLUGE grayscale, SMPTE bars, overscan and dead pixels</string>
-    <string name="tool_ambient_clock">OLED ambient clock</string>
-    <string name="tool_ambient_clock_sub">Minimal screensaver with anti-burn-in pixel shift</string>
+    <string name="tool_ambient_clock">Ambient gallery &amp; OLED clock</string>
+    <string name="tool_ambient_clock_sub">Rotating open photography or pure OLED anti-burn-in mode</string>
     <string name="health_clear_cache">Clear icon cache</string>
     <string name="health_clear_cache_sub">Release local thumbnail cache from RAM</string>
-
     <string name="settings_title">VeloTV Settings</string>
     <string name="settings_subtitle">Full customization without locked features</string>
     <string name="tab_appearance">Appearance</string>
     <string name="tab_rows">Rows</string>
     <string name="tab_parental">Parental</string>
     <string name="tab_general">General</string>
-
     <string name="setting_theme">Visual palette</string>
     <string name="setting_corners">Card corners</string>
     <string name="setting_density">Card size</string>
@@ -171,22 +156,18 @@
     <string name="setting_backup_export">Export local backup</string>
     <string name="setting_backup_restore">Restore local backup</string>
     <string name="setting_support">Support creator (QR)</string>
-
     <string name="theme_darkroom_amber">Darkroom · Amber</string>
     <string name="theme_darkroom_red">Darkroom · Red</string>
     <string name="theme_midnight">Midnight · Cool Blue</string>
     <string name="theme_studio_light">Studio · Daylight Paper</string>
     <string name="theme_forest">Mineral · Forest</string>
     <string name="theme_graphite">Graphite · Monochrome</string>
-
     <string name="corner_sharp">Sharp (0 dp)</string>
-    <string name="corner_editorial">Editorial (6 dp)</string>
-    <string name="corner_soft">Soft (12 dp)</string>
-
+    <string name="corner_editorial">Editorial (10 dp)</string>
+    <string name="corner_soft">Soft (16 dp)</string>
     <string name="density_compact">Compact</string>
     <string name="density_normal">Normal</string>
     <string name="density_large">Large</string>
-
     <string name="row_create_custom">Create custom category</string>
     <string name="row_create_custom_sub">Group apps into your own row</string>
     <string name="row_actions_hint">Press OK to reorder or hide</string>
@@ -195,13 +176,11 @@
     <string name="row_hide">Hide row</string>
     <string name="row_show">Show row</string>
     <string name="row_delete_custom">Delete category</string>
-
     <string name="state_on">On</string>
     <string name="state_off">Off</string>
     <string name="state_active">Current</string>
     <string name="state_visible">Visible</string>
     <string name="state_hidden">Hidden</string>
-
     <string name="hub_title">Regional Catalog</string>
     <string name="hub_subtitle">Official and open-source apps filtered by region and Android API</string>
     <string name="hub_installed">Installed</string>
@@ -209,18 +188,17 @@
     <string name="hub_open_source_qr">Official QR</string>
     <string name="hub_needs_newer">Requires Android 10+</string>
     <string name="hub_qr_instruction">Scan the QR code with your phone to download the official release from the author repository.</string>
-
     <string name="support_title">Support VeloTV</string>
     <string name="support_body">Independently maintained free software with no ads and no locked features. If VeloTV improved your TV, scan the QR with your phone to make a voluntary contribution.</string>
     <string name="support_scan_qr">Scan with your phone</string>
     <string name="support_repo_title">GitHub Repository</string>
     <string name="support_repo_sub">Open-source code (MIT)</string>
-
     <string name="onboarding_title">VELOTV</string>
-    <string name="onboarding_body">Native 60 fps interface engineered for 1–2 GB RAM televisions.\n\nNo ads, no telemetry, and zero network permission. Includes HDMI inputs, 4K calibration, native developer shortcuts, and regional app catalog.</string>
+    <string name="onboarding_body">Native 60 fps interface engineered for 1–2 GB RAM televisions.
+
+No ads, no telemetry. Includes rotating free-license wallpapers, ambient app glow, HDMI inputs, 4K calibration and native developer options.</string>
     <string name="onboarding_start">Start</string>
     <string name="onboarding_qr_caption">Optional voluntary support</string>
-
     <string name="pin_enter_title">Enter PIN</string>
     <string name="pin_create_title">Create 4-digit PIN</string>
     <string name="pin_wrong">Wrong PIN</string>
@@ -229,5 +207,39 @@
     <string name="toast_restore_ok">Settings restored</string>
     <string name="toast_no_backup">No backup found</string>
     <string name="toast_cache_cleared">Icon cache cleared</string>
+    <string name="nav_wallpapers">Wallpapers</string>
+    <string name="wp_drawer_title">Wallpapers</string>
+    <string name="wp_drawer_subtitle">Free open-license photo banks · Auto-rotate or manual pick</string>
+    <string name="wp_tab_gallery">Gallery</string>
+    <string name="wp_tab_settings">Sources &amp; motion</string>
+    <string name="wp_next_now">Switch to next wallpaper now</string>
+    <string name="wp_resume_auto">Resume auto-rotation</string>
+    <string name="wp_manual_active">Pinned manually · Press OK to rotate automatically</string>
+    <string name="wp_auto_badge">AUTO</string>
+    <string name="wp_pin_badge">PINNED</string>
+    <string name="wp_section_pick">Choose manually (live preview)</string>
+    <string name="wp_pinned_toast">Wallpaper pinned: %1$s</string>
+    <string name="wp_setting_source">Wallpaper source</string>
+    <string name="wp_setting_interval">Rotation interval</string>
+    <string name="wp_setting_dim">Backdrop scrim contrast</string>
+    <string name="wp_setting_kenburns">Subtle camera motion</string>
+    <string name="wp_setting_ambient_glow">Focused app ambient glow</string>
+    <string name="wp_setting_offline">100% offline mode</string>
+    <string name="wp_refresh_online">Refresh open image banks</string>
+    <string name="wp_refresh_online_sub">Wikimedia Commons (CC) &amp; Unsplash / Picsum over HTTPS</string>
+    <string name="wp_refreshing_toast">Refreshing open wallpaper banks…</string>
+    <string name="wp_src_automix">Open Mix (Wikimedia + Unsplash + Local)</string>
+    <string name="wp_src_wikimedia">Wikimedia Commons (CC / Public Domain)</string>
+    <string name="wp_src_picsum">Unsplash Free (Picsum)</string>
+    <string name="wp_src_bundled">Built-in local gallery (Offline)</string>
+    <string name="wp_src_dynamic">Dynamic app color (0 MB)</string>
+    <string name="wp_src_solid">Minimal solid surface</string>
+    <string name="wp_int_1m">Every 1 minute</string>
+    <string name="wp_int_5m">Every 5 minutes</string>
+    <string name="wp_int_15m">Every 15 minutes</string>
+    <string name="wp_int_30m">Every 30 minutes</string>
+    <string name="wp_int_resume">On home return</string>
+    <string name="wp_int_manual">Manual (fixed)</string>
+    <string name="ambient_photo_hint">◀▶ Photo · OK Pure OLED · Back Exit</string>
+    <string name="ambient_oled_hint">Pure OLED Black · OK Back to photos · Back Exit</string>
 </resources>
-

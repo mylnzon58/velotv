@@ -25,4 +25,10 @@
     <string name="hub_title">Regionaler Katalog</string>
     <string name="support_title">VeloTV unterstützen</string>
     <string name="onboarding_start">Starten</string>
+    <string name="nav_wallpapers">Hintergrund</string>
+    <string name="wp_drawer_title">Hintergrundbilder</string>
+    <string name="wp_tab_gallery">Galerie</string>
+    <string name="wp_tab_settings">Quellen &amp; Bewegung</string>
+    <string name="wp_next_now">Nächstes Bild anzeigen</string>
+    <string name="wp_resume_auto">Automatischen Wechsel aktivieren</string>
 </resources>
