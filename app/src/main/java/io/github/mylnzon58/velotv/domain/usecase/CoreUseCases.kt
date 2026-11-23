@@ -7,7 +7,9 @@ import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.RegionalAppEntry
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
+import io.github.mylnzon58.velotv.domain.model.WallpaperItem
 import io.github.mylnzon58.velotv.domain.model.WorldRegion
+import java.net.URI
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -303,5 +305,82 @@ class PinSecurityUseCase {
             diff = diff or (a[i].code xor b[i].code)
         }
         return diff == 0
+    }
+}
+
+class WallpaperPolicyUseCase {
+
+    /**
+     * OWASP SSRF / privacy allowlist: only verified free-license HTTPS image banks are permitted.
+     */
+    fun isAllowedWallpaperUrl(rawUrl: String?): Boolean {
+        if (rawUrl.isNullOrBlank() || rawUrl.length > 1024) return false
+        val uri = runCatching { URI(rawUrl.trim()) }.getOrNull() ?: return false
+        if (!"https".equals(uri.scheme, ignoreCase = true)) return false
+        val host = uri.host?.lowercase()?.trimEnd('.') ?: return false
+        if (uri.userInfo != null) return false
+        return host in ALLOWED_HOSTS
+    }
+
+    /**
+     * Picks the active wallpaper respecting manual pinning first, otherwise advancing round-robin.
+     */
+    fun selectNextWallpaper(
+        pool: List<WallpaperItem>,
+        currentId: String?,
+        pinnedId: String?
+    ): WallpaperItem? {
+        if (pool.isEmpty()) return null
+        if (!pinnedId.isNullOrBlank()) {
+            pool.firstOrNull { it.id == pinnedId }?.let { return it }
+        }
+        if (currentId.isNullOrBlank()) return pool.first()
+        val currentIndex = pool.indexOfFirst { it.id == currentId }
+        return if (currentIndex < 0) pool.first() else pool[(currentIndex + 1) % pool.size]
+    }
+
+    /**
+     * Extracts a restrained cinema accent color from sampled ARGB pixels without external libraries.
+     */
+    fun extractAmbientAccentColor(pixels: IntArray, fallbackColor: Int): Int {
+        var rSum = 0L
+        var gSum = 0L
+        var bSum = 0L
+        var weightSum = 0L
+
+        for (px in pixels) {
+            val a = (px ushr 24) and 0xFF
+            if (a < 180) continue
+            val r = (px ushr 16) and 0xFF
+            val g = (px ushr 8) and 0xFF
+            val b = px and 0xFF
+            val maxC = maxOf(r, g, b)
+            val minC = minOf(r, g, b)
+            val chroma = maxC - minC
+            val luma = (r * 30 + g * 59 + b * 11) / 100
+            if (luma < 24 || luma > 235 || chroma < 24) continue
+            val weight = (chroma.toLong() + 16L)
+            rSum += r * weight
+            gSum += g * weight
+            bSum += b * weight
+            weightSum += weight
+        }
+
+        if (weightSum <= 0L) return fallbackColor
+        val avgR = (rSum / weightSum).toInt().coerceIn(0, 255)
+        val avgG = (gSum / weightSum).toInt().coerceIn(0, 255)
+        val avgB = (bSum / weightSum).toInt().coerceIn(0, 255)
+        return (0xFF shl 24) or (avgR shl 16) or (avgG shl 8) or avgB
+    }
+
+    companion object {
+        val ALLOWED_HOSTS = setOf(
+            "commons.wikimedia.org",
+            "upload.wikimedia.org",
+            "thumb.wikimedia.org",
+            "picsum.photos",
+            "fastly.picsum.photos",
+            "images.unsplash.com"
+        )
     }
 }

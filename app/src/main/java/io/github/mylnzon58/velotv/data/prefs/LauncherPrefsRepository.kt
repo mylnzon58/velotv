@@ -8,6 +8,8 @@ import io.github.mylnzon58.velotv.domain.model.CornerStyle
 import io.github.mylnzon58.velotv.domain.model.CustomCategory
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.VisualTheme
+import io.github.mylnzon58.velotv.domain.model.WallpaperInterval
+import io.github.mylnzon58.velotv.domain.model.WallpaperSource
 import io.github.mylnzon58.velotv.domain.repository.PreferencesRepository
 import org.json.JSONArray
 import org.json.JSONObject
@@ -73,6 +75,13 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
             put("parentalScheduleEnabled", s.parentalScheduleEnabled)
             put("parentalStartHour", s.parentalStartHour)
             put("parentalEndHour", s.parentalEndHour)
+            put("wallpaperSource", s.wallpaperSource.id)
+            put("wallpaperInterval", s.wallpaperInterval.id)
+            if (s.pinnedWallpaperId != null) put("pinnedWallpaperId", s.pinnedWallpaperId)
+            put("wallpaperDimPercent", s.wallpaperDimPercent)
+            put("wallpaperKenBurns", s.wallpaperKenBurns)
+            put("wallpaperOfflineOnly", s.wallpaperOfflineOnly)
+            put("ambientAppColorGlow", s.ambientAppColorGlow)
         }.toString(2)
     }
 
@@ -139,7 +148,14 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
             lockedInputIds = readList("lockedInputs").toSet(),
             parentalScheduleEnabled = o.optBoolean("parentalScheduleEnabled", false),
             parentalStartHour = o.optInt("parentalStartHour", 22),
-            parentalEndHour = o.optInt("parentalEndHour", 7)
+            parentalEndHour = o.optInt("parentalEndHour", 7),
+            wallpaperSource = WallpaperSource.fromId(o.optString("wallpaperSource")),
+            wallpaperInterval = WallpaperInterval.fromId(o.optString("wallpaperInterval")),
+            pinnedWallpaperId = o.optString("pinnedWallpaperId").takeIf { it.isNotBlank() },
+            wallpaperDimPercent = o.optInt("wallpaperDimPercent", 52).coerceIn(25, 90),
+            wallpaperKenBurns = o.optBoolean("wallpaperKenBurns", true),
+            wallpaperOfflineOnly = o.optBoolean("wallpaperOfflineOnly", false),
+            ambientAppColorGlow = o.optBoolean("ambientAppColorGlow", true)
         )
     }
 

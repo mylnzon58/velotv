@@ -1,0 +1,58 @@
+[
+  {
+    "id": "wp_02_aurora",
+    "file": "wallpapers/wp_02_aurora.webp",
+    "title": "Aurora Borealis",
+    "author": "Wikimedia Commons",
+    "license": "CC BY 3.0"
+  },
+  {
+    "id": "wp_08_desert",
+    "file": "wallpapers/wp_08_desert.webp",
+    "title": "Dunas al anochecer",
+    "author": "Tim de Groot · Unsplash",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "wp_01_patagonia",
+    "file": "wallpapers/wp_01_patagonia.webp",
+    "title": "Monte Fitz Roy, Patagonia",
+    "author": "Wikimedia Commons",
+    "license": "CC BY-SA 4.0"
+  },
+  {
+    "id": "wp_07_lake",
+    "file": "wallpapers/wp_07_lake.webp",
+    "title": "Lago de montaña",
+    "author": "Matteo Minelli · Unsplash",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "wp_06_nightsky",
+    "file": "wallpapers/wp_06_nightsky.webp",
+    "title": "Cielo nocturno estrellado",
+    "author": "Guillaume · Unsplash",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "wp_03_forest",
+    "file": "wallpapers/wp_03_forest.webp",
+    "title": "Bosque de pinos en niebla",
+    "author": "Paul Jarvis · Unsplash",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "wp_04_coast",
+    "file": "wallpapers/wp_04_coast.webp",
+    "title": "Costa oceánica al atardecer",
+    "author": "Paul Jarvis · Unsplash",
+    "license": "Unsplash License"
+  },
+  {
+    "id": "wp_05_peaks",
+    "file": "wallpapers/wp_05_peaks.webp",
+    "title": "Cumbre alpina en penumbra",
+    "author": "Go Wild · Unsplash",
+    "license": "Unsplash License"
+  }
+]

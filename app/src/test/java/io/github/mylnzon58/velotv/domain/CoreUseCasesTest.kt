@@ -8,6 +8,8 @@ import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
 import io.github.mylnzon58.velotv.domain.model.TvInputType
+import io.github.mylnzon58.velotv.domain.model.WallpaperItem
+import io.github.mylnzon58.velotv.domain.model.WallpaperSource
 import io.github.mylnzon58.velotv.domain.model.WorldRegion
 import io.github.mylnzon58.velotv.domain.usecase.BuildDonationPlanUseCase
 import io.github.mylnzon58.velotv.domain.usecase.BuildHomeRowsUseCase
@@ -16,6 +18,7 @@ import io.github.mylnzon58.velotv.domain.usecase.FilterRegionalHubUseCase
 import io.github.mylnzon58.velotv.domain.usecase.ParentalScheduleUseCase
 import io.github.mylnzon58.velotv.domain.usecase.PinSecurityUseCase
 import io.github.mylnzon58.velotv.domain.usecase.SearchLauncherUseCase
+import io.github.mylnzon58.velotv.domain.usecase.WallpaperPolicyUseCase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -163,5 +166,32 @@ class CoreUseCasesTest {
         assertTrue(uc.verifyPin("1234", hash, salt1))
         assertFalse(uc.verifyPin("9999", hash, salt1))
         assertFalse(uc.verifyPin("1234", hash, salt2))
+    }
+
+    @Test
+    fun wallpaperPolicy_enforcesHttpsAllowlistAndHandlesRotationAndPinning() {
+        val policy = WallpaperPolicyUseCase()
+
+        assertTrue(policy.isAllowedWallpaperUrl("https://commons.wikimedia.org/w/api.php?action=query"))
+        assertTrue(policy.isAllowedWallpaperUrl("https://thumb.wikimedia.org/wikipedia/commons/a.jpg"))
+        assertTrue(policy.isAllowedWallpaperUrl("https://picsum.photos/id/10/1280/720.webp"))
+        assertFalse(policy.isAllowedWallpaperUrl("http://picsum.photos/id/10/1280/720.webp"))
+        assertFalse(policy.isAllowedWallpaperUrl("https://evil.example.com/tracker.png"))
+        assertFalse(policy.isAllowedWallpaperUrl("https://192.168.1.1/admin"))
+        assertFalse(policy.isAllowedWallpaperUrl("file:///etc/passwd"))
+
+        val pool = listOf(
+            WallpaperItem("a", "A", "Author", "CC0", WallpaperSource.BUNDLED_OFFLINE, assetPath = "a.webp"),
+            WallpaperItem("b", "B", "Author", "CC0", WallpaperSource.BUNDLED_OFFLINE, assetPath = "b.webp"),
+            WallpaperItem("c", "C", "Author", "CC0", WallpaperSource.BUNDLED_OFFLINE, assetPath = "c.webp")
+        )
+        assertEquals("a", policy.selectNextWallpaper(pool, null, null)?.id)
+        assertEquals("b", policy.selectNextWallpaper(pool, "a", null)?.id)
+        assertEquals("a", policy.selectNextWallpaper(pool, "c", null)?.id)
+        assertEquals("b", policy.selectNextWallpaper(pool, "a", "b")?.id)
+
+        val crimson = 0xFFE50914.toInt()
+        val extracted = policy.extractAmbientAccentColor(intArrayOf(crimson, crimson, 0xFF000000.toInt(), 0xFFFFFFFF.toInt()), 0xFF111111.toInt())
+        assertEquals(crimson, extracted)
     }
 }

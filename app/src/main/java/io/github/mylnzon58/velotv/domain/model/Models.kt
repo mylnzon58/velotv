@@ -144,13 +144,49 @@ enum class VisualTheme(
 
 enum class CornerStyle(val id: String, val radiusDp: Int) {
     SHARP("sharp", 0),
-    EDITORIAL("editorial", 6),
-    SOFT("soft", 12);
+    EDITORIAL("editorial", 10),
+    SOFT("soft", 16);
 
     companion object {
         fun fromId(id: String?): CornerStyle = entries.firstOrNull { it.id == id } ?: EDITORIAL
     }
 }
+
+enum class WallpaperSource(val id: String) {
+    AUTO_MIX("auto_mix"),
+    WIKIMEDIA("wikimedia"),
+    PICSUM_UNSPLASH("picsum"),
+    BUNDLED_OFFLINE("bundled"),
+    DYNAMIC_AMBIENT("dynamic"),
+    SOLID_MINIMAL("solid");
+
+    companion object {
+        fun fromId(id: String?): WallpaperSource = entries.firstOrNull { it.id == id } ?: AUTO_MIX
+    }
+}
+
+enum class WallpaperInterval(val id: String, val durationMs: Long) {
+    ONE_MIN("1m", 60_000L),
+    FIVE_MIN("5m", 300_000L),
+    FIFTEEN_MIN("15m", 900_000L),
+    THIRTY_MIN("30m", 1_800_000L),
+    ON_RESUME("resume", -1L),
+    MANUAL("manual", 0L);
+
+    companion object {
+        fun fromId(id: String?): WallpaperInterval = entries.firstOrNull { it.id == id } ?: FIVE_MIN
+    }
+}
+
+data class WallpaperItem(
+    val id: String,
+    val title: String,
+    val author: String,
+    val license: String,
+    val source: WallpaperSource,
+    val assetPath: String? = null,
+    val remoteUrl: String? = null
+)
 
 enum class CardDensity(val id: String, val widthDp: Int, val heightDp: Int) {
     COMPACT("compact", 164, 94),
@@ -214,7 +250,14 @@ data class LauncherSettings(
     val lockedInputIds: Set<String> = emptySet(),
     val parentalScheduleEnabled: Boolean = false,
     val parentalStartHour: Int = 22,
-    val parentalEndHour: Int = 7
+    val parentalEndHour: Int = 7,
+    val wallpaperSource: WallpaperSource = WallpaperSource.AUTO_MIX,
+    val wallpaperInterval: WallpaperInterval = WallpaperInterval.FIVE_MIN,
+    val pinnedWallpaperId: String? = null,
+    val wallpaperDimPercent: Int = 52,
+    val wallpaperKenBurns: Boolean = true,
+    val wallpaperOfflineOnly: Boolean = false,
+    val ambientAppColorGlow: Boolean = true
 ) {
     companion object {
         val DEFAULT_ROW_ORDER = listOf(

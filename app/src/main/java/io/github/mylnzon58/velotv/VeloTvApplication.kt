@@ -16,6 +16,7 @@ class VeloTvApplication : Application() {
         super.onTrimMemory(level)
         if (level >= TRIM_MEMORY_UI_HIDDEN) {
             container.iconCache.clear()
+            container.wallpaperRepository.trimMemory()
         }
     }
 }

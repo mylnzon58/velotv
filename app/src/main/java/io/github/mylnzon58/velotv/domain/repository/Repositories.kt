@@ -6,6 +6,8 @@ import io.github.mylnzon58.velotv.domain.model.RegionalAppEntry
 import io.github.mylnzon58.velotv.domain.model.SystemDiagnostics
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
+import io.github.mylnzon58.velotv.domain.model.WallpaperItem
+import io.github.mylnzon58.velotv.domain.model.WallpaperSource
 
 interface AppRepository {
     suspend fun loadInstalledApps(): List<TvApp>
@@ -38,4 +40,10 @@ interface NativeSettingsRepository {
 
 interface RegionalCatalogRepository {
     fun getCatalog(): List<RegionalAppEntry>
+}
+
+interface WallpaperCatalogRepository {
+    fun getBundledWallpapers(): List<WallpaperItem>
+    fun getCachedOnlineWallpapers(): List<WallpaperItem>
+    suspend fun refreshOnlineWallpapers(source: WallpaperSource, offlineOnly: Boolean): List<WallpaperItem>
 }

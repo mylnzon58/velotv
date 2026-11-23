@@ -4,8 +4,11 @@
 
     <!--
       POLA / OWASP privacy invariant:
-      No android.permission.INTERNET declared. VeloTV is strictly offline.
+      INTERNET is used exclusively by OpenWallpaperRepository against a strict HTTPS
+      host allowlist (Wikimedia Commons + Picsum/Unsplash) and can be disabled via
+      Offline Mode in Settings. Zero telemetry, zero analytics, zero ads.
     -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
