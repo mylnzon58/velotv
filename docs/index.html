@@ -84,7 +84,7 @@
 
         <div class="tv-stage">
           <div class="tv-bezel">
-            <img id="stageImg" src="images/02-home-darkroom.webp" alt="VeloTV en televisor Android TV real" width="1440" height="810" />
+            <img id="stageImg" src="images/02-home-darkroom.webp" alt="VeloTV en televisor Android TV real" decoding="async" />
           </div>
           <div class="tv-caption">
             <span id="stageCaption" data-i18n="cap_home">Inicio con fondo rotativo libre, limpieza rápida y entradas HDMI</span>
@@ -259,28 +259,36 @@
 
         <div class="gallery-grid">
           <figure class="shot-card">
-            <img src="images/08-wallpapers-gallery.webp" alt="Galería de fondos de pantalla libres de VeloTV" loading="lazy" width="1440" height="810" />
+            <div class="shot-media">
+              <img src="images/08-wallpapers-gallery.webp" alt="Galería de fondos de pantalla libres de VeloTV" loading="lazy" decoding="async" />
+            </div>
             <figcaption>
               <span class="shot-title" data-i18n="g1_t">Galería de fondos abiertos</span>
               <span class="shot-meta" data-i18n="g1_m">Wikimedia + Unsplash + Local</span>
             </figcaption>
           </figure>
           <figure class="shot-card">
-            <img src="images/09-ambient-mode.webp" alt="Galería ambiente y reloj OLED de VeloTV" loading="lazy" width="1440" height="810" />
+            <div class="shot-media">
+              <img src="images/09-ambient-mode.webp" alt="Galería ambiente y reloj OLED de VeloTV" loading="lazy" decoding="async" />
+            </div>
             <figcaption>
               <span class="shot-title" data-i18n="g2_t">Galería ambiente y reloj OLED</span>
               <span class="shot-meta" data-i18n="g2_m">Anti-quemado · OK Negro puro</span>
             </figcaption>
           </figure>
           <figure class="shot-card">
-            <img src="images/03-system-developer.webp" alt="Panel de sistema y opciones nativas de desarrollador" loading="lazy" width="1440" height="810" />
+            <div class="shot-media">
+              <img src="images/03-system-developer.webp" alt="Panel de sistema y opciones nativas de desarrollador" loading="lazy" decoding="async" />
+            </div>
             <figcaption>
               <span class="shot-title" data-i18n="g3_t">Sistema y opciones de desarrollador</span>
               <span class="shot-meta" data-i18n="g3_m">Diagnóstico en vivo y accesos nativos</span>
             </figcaption>
           </figure>
           <figure class="shot-card">
-            <img src="images/04-settings-drawer.webp" alt="Panel de ajustes completos sin funciones de pago" loading="lazy" width="1440" height="810" />
+            <div class="shot-media">
+              <img src="images/04-settings-drawer.webp" alt="Panel de ajustes completos sin funciones de pago" loading="lazy" decoding="async" />
+            </div>
             <figcaption>
               <span class="shot-title" data-i18n="g4_t">Ajustes completos por pestañas</span>
               <span class="shot-meta" data-i18n="g4_m">6 paletas · Filas · Parental · Idiomas</span>
@@ -450,6 +458,16 @@ adb install -r VeloTV-v1.0.0-universal.apk
       </div>
     </div>
   </footer>
+
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-inner">
+      <img id="lightboxImg" class="lightbox-img" src="" alt="" />
+      <div class="lightbox-bar">
+        <span id="lightboxCap"></span>
+        <button id="lightboxClose" class="btn btn-secondary btn-compact" type="button">ESC</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

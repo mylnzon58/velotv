@@ -295,16 +295,51 @@
   document.querySelectorAll(".copy-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const text = btn.getAttribute("data-copy");
+      const original = btn.textContent;
       try {
         await navigator.clipboard.writeText(text);
         btn.textContent = I18N[currentLang].copied;
         setTimeout(() => {
-          btn.textContent = I18N[currentLang].copy;
+          btn.textContent = original;
         }, 1600);
       } catch (_) {
         /* ignore clipboard restrictions */
       }
     });
+  });
+
+  // Clean full-screen screenshot lightbox on gallery click
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxCap = document.getElementById("lightboxCap");
+  const lightboxClose = document.getElementById("lightboxClose");
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+  }
+
+  document.querySelectorAll(".shot-media img").forEach((img) => {
+    img.addEventListener("click", () => {
+      if (!lightbox || !lightboxImg) return;
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      const cap = img.closest(".shot-card")?.querySelector(".shot-title")?.textContent || img.alt;
+      if (lightboxCap) lightboxCap.textContent = cap;
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+    });
+  });
+
+  if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+  if (lightbox) {
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeLightbox();
   });
 })();
 
