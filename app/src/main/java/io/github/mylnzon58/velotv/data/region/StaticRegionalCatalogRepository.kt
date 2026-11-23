@@ -41,6 +41,17 @@ class StaticRegionalCatalogRepository : RegionalCatalogRepository {
             lightweight = true
         ),
         RegionalAppEntry(
+            id = "smarttwitch",
+            title = "SmartTwitchTV",
+            packageName = "com.fgl27.twitch",
+            regions = allRegions,
+            category = AppCategory.STREAMING,
+            minSdk = 21,
+            sourceType = AppSourceType.OPEN_SOURCE,
+            openSourceUrl = "https://github.com/fgl27/SmartTwitchTV/releases",
+            lightweight = true
+        ),
+        RegionalAppEntry(
             id = "vlc",
             title = "VLC Media Player",
             packageName = "org.videolan.vlc",

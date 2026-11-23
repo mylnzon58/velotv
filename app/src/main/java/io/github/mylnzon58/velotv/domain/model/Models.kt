@@ -219,8 +219,8 @@ data class LauncherSettings(
     companion object {
         val DEFAULT_ROW_ORDER = listOf(
             AppCategory.FAVORITES.id,
-            AppCategory.STREAMING.id,
             AppCategory.TV_INPUTS.id,
+            AppCategory.STREAMING.id,
             AppCategory.MEDIA_WEB.id,
             AppCategory.GAMES.id,
             AppCategory.TOOLS.id,

@@ -68,10 +68,22 @@ class HomeViewModel(private val container: AppContainer) {
             cachedInputs = inputs
 
             val effectiveSettings = if (!settings.onboardingCompleted && settings.favoritePackages.isEmpty()) {
-                val starterFavs = apps
-                    .filter { it.categoryId == AppCategory.STREAMING.id || it.packageName == "com.phlox.tvwebbrowser" }
-                    .take(6)
-                    .map { it.packageName }
+                val preferredOrder = listOf(
+                    "com.android.vending",
+                    "com.phlox.tvwebbrowser",
+                    "com.brave.browser",
+                    "org.smarttube.stable",
+                    "com.netflix.ninja",
+                    "com.disney.disneyplus",
+                    "com.stremio.one",
+                    "com.spotify.tv.android",
+                    "org.videolan.vlc",
+                    "com.google.android.youtube.tv"
+                )
+                val installedSet = apps.map { it.packageName }.toSet()
+                val starterFavs = preferredOrder.filter { it in installedSet }.ifEmpty {
+                    apps.take(6).map { it.packageName }
+                }
                 if (starterFavs.isNotEmpty()) {
                     settings.copy(favoritePackages = starterFavs).also {
                         container.preferencesRepository.saveSettings(it)

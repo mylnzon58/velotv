@@ -750,7 +750,25 @@ object VeloDialogs {
             b.drawerTopSlot.addView(row)
 
             b.drawerContent.removeAllViews()
-            val items = vm.getRegionalHubApps(region)
+            val allItems = vm.getRegionalHubApps(region)
+            val playStoreEntry = allItems.firstOrNull { it.packageName == "com.android.vending" && it.isInstalled }
+            if (playStoreEntry != null) {
+                b.drawerContent.addView(
+                    HallmarkSurfaceFactory.createDrawerRow(
+                        context = context,
+                        theme = theme,
+                        title = playStoreEntry.title,
+                        subtitle = playStoreEntry.packageName,
+                        trailing = context.getString(R.string.action_open_short),
+                        accentTrailing = true
+                    ) {
+                        container.appRepository.launchApp(playStoreEntry.packageName)
+                        dialog.dismiss()
+                    }
+                )
+            }
+
+            val items = allItems.filterNot { playStoreEntry != null && it.packageName == "com.android.vending" }
             items.forEach { item ->
                 val status = when {
                     item.isInstalled -> context.getString(R.string.hub_installed)

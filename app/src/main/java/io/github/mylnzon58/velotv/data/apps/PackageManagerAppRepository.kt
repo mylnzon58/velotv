@@ -67,7 +67,9 @@ class PackageManagerAppRepository(
         iconCache.get(iconKey)?.let { return@withContext it to false }
 
         try {
-            val bannerDrawable = pm.getApplicationBanner(packageName)
+            val activityBanner = pm.getLeanbackLaunchIntentForPackage(packageName)
+                ?.let { pm.resolveActivity(it, 0)?.activityInfo?.loadBanner(pm) }
+            val bannerDrawable = activityBanner ?: pm.getApplicationBanner(packageName)
             if (bannerDrawable != null) {
                 val bmp = iconCache.drawableToBoundedBitmap(bannerDrawable, 320, 180)
                 iconCache.put(bannerKey, bmp)
@@ -122,6 +124,8 @@ class PackageManagerAppRepository(
         return runCatching {
             context.startActivity(marketIntent)
             true
-        }.getOrDefault(false)
+        }.getOrElse {
+            launchApp("com.android.vending")
+        }
     }
 }
