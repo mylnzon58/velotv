@@ -20,11 +20,14 @@ android {
     signingConfigs {
         create("releaseLocal") {
             val ks = rootProject.file("velotv-release.jks")
-            if (ks.exists()) {
+            val ksPass = System.getenv("VELOTV_KS_PASS")
+            val keyAliasEnv = System.getenv("VELOTV_KEY_ALIAS") ?: "velotv"
+            val keyPass = System.getenv("VELOTV_KEY_PASS") ?: ksPass
+            if (ks.exists() && !ksPass.isNullOrBlank() && !keyPass.isNullOrBlank()) {
                 storeFile = ks
-                storePassword = System.getenv("VELOTV_KS_PASS") ?: ""
-                keyAlias = System.getenv("VELOTV_KEY_ALIAS") ?: "velotv"
-                keyPassword = System.getenv("VELOTV_KEY_PASS") ?: ""
+                storePassword = ksPass
+                keyAlias = keyAliasEnv
+                keyPassword = keyPass
             }
         }
     }
@@ -43,7 +46,8 @@ android {
                 "proguard-rules.pro"
             )
             val ks = rootProject.file("velotv-release.jks")
-            if (ks.exists()) {
+            val ksPass = System.getenv("VELOTV_KS_PASS")
+            if (ks.exists() && !ksPass.isNullOrBlank()) {
                 signingConfig = signingConfigs.getByName("releaseLocal")
             }
         }

@@ -84,9 +84,11 @@ Measured via `adb shell dumpsys meminfo` on the same physical television:
 
 ---
 
-## Author & Support
+## Author, License & Support
 
-Created and maintained by **[Juan José Monzón](https://github.com/mylnzon58)** (`@mylnzon58`) in Argentina under the [MIT License](LICENSE).
+Created and maintained by **[Juan José Monzón](https://github.com/mylnzon58)** (`@mylnzon58`) in Argentina under the **[MIT License](LICENSE)** (see also [NOTICE](NOTICE)).
+
+You are free to use, study, modify, and redistribute this project, provided that the **original copyright and attribution notice are preserved** in all copies and derivative works.
 
 | Region | Platform | Link |
 |---|---|---|

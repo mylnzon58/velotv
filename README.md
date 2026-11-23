@@ -102,9 +102,11 @@ Requiere JDK 17 y Android SDK 35:
 
 ---
 
-## Autor y aportes
+## Autor, licencia y aportes
 
-Creado y mantenido por **[Juan José Monzón](https://github.com/mylnzon58)** (`@mylnzon58`) en Argentina bajo licencia [MIT](LICENSE).
+Creado y mantenido por **[Juan José Monzón](https://github.com/mylnzon58)** (`@mylnzon58`) en Argentina bajo licencia **[MIT](LICENSE)** (ver también [NOTICE](NOTICE)).
+
+Puedes usar, estudiar, modificar y distribuir este proyecto libremente, siempre **conservando los créditos y el aviso de copyright original** en todas las copias o derivados.
 
 | Región | Plataforma | Enlace |
 |---|---|---|
