@@ -15,7 +15,7 @@
     <string name="hint_context_cue">OK Abrir  ·  Mantener OK Opciones</string>
     <string name="hint_controls">OK Abrir · Menú Opciones · Atrás Inicio</string>
     <string name="creator_subtle_footer">VeloTV · Juan José Monzón</string>
-    <string name="creator_settings_footer">VeloTV 1.0 · Software libre por Juan José Monzón (@mylnzon58)</string>
+    <string name="creator_settings_footer">VeloTV 1.1 · Software libre por Juan José Monzón (@mylnzon58)</string>
     <string name="creator_full_credit">Creado en Argentina por Juan José Monzón (@mylnzon58) · Licencia MIT</string>
 
     <string name="cat_favorites">Favoritos</string>
@@ -219,8 +219,8 @@
     <string name="support_repo_title">Repositorio GitHub</string>
     <string name="support_repo_sub">Código fuente abierto (MIT)</string>
 
-    <string name="onboarding_title">VELOTV</string>
-    <string name="onboarding_body">Interfaz nativa a 60 fps diseñada para televisores de 1 a 2 GB de RAM.\n\nSin anuncios ni telemetría. Incluye fondos de bancos libres con cambio automático, brillo ambiental, entradas HDMI, calibración 4K y opciones de desarrollador.</string>
+    <string name="onboarding_title">VeloTV</string>
+    <string name="onboarding_body">Interfaz cinematográfica a 60 fps diseñada para televisores de 1 a 2 GB de RAM, sin anuncios ni telemetría.\n\n• Fila inteligente "Para ahora" 100% offline\n• Multi-Launcher: abre Android TV original o Projectivy en 1 clic\n• Modo Cine Nocturno y Auto-Turbo RAM\n• Atajos reales del control: teclas 1–9 y botones de color</string>
     <string name="onboarding_start">Comenzar</string>
     <string name="onboarding_qr_caption">Aporte voluntario opcional</string>
 
@@ -283,4 +283,59 @@
     <string name="toast_restore_ok">Configuración restaurada</string>
     <string name="toast_no_backup">No existe un respaldo previo</string>
     <string name="toast_cache_cleared">Caché de íconos liberada</string>
+
+    <!-- VeloTV 1.1 Cinema Lounge & USPs -->
+    <string name="nav_launchers">Launchers y TV</string>
+    <string name="nav_night_mode">Modo cine nocturno</string>
+    <string name="cat_smart_shelf">Para ahora</string>
+    <string name="theme_cinema_lounge">Cinema Lounge · Champán</string>
+
+    <string name="hero_meta_alt_launcher">Launcher alternativo</string>
+    <string name="hero_meta_app">Aplicación</string>
+    <string name="hero_meta_keep_default">VeloTV sigue predeterminado</string>
+    <string name="hero_sub_search">Apps, entradas HDMI y launchers</string>
+    <string name="hero_sub_launchers">VeloTV · Android TV original · Projectivy · HDMI</string>
+    <string name="hero_sub_night">Filtro cálido suave para descansar la vista</string>
+    <string name="hero_sub_wallpapers">Galería libre y brillo ambiental</string>
+    <string name="hero_sub_catalog">Apps ligeras compatibles con tu TV</string>
+    <string name="hero_sub_system">Desarrollador, calibración 4K e ingeniería</string>
+    <string name="hero_sub_settings">Aspecto, filas, atajos del control y PIN</string>
+    <string name="hero_sub_ambient">Pulsa OK para modo arte y reloj OLED</string>
+    <string name="clean_hero_sub_short">OK Turbo RAM · Mantener OK Almacenamiento</string>
+
+    <string name="launcher_hub_title">Launchers y TV</string>
+    <string name="launcher_hub_subtitle">Convivencia en 1 clic · El botón Inicio siempre vuelve a VeloTV</string>
+    <string name="launcher_hub_section_launchers">Launchers instalados</string>
+    <string name="launcher_hub_default_sub">Pantalla principal activa</string>
+    <string name="launcher_hub_default_badge">Predeterminado</string>
+    <string name="launcher_hub_stock_sub">Interfaz oficial de fábrica · 1 clic</string>
+    <string name="launcher_hub_alt_sub">Launcher alternativo instalado</string>
+
+    <string name="tab_pro_shortcuts">Pro / Atajos</string>
+    <string name="section_pro_features">Capacidades inteligentes (100% offline)</string>
+    <string name="section_remote_shortcuts">Atajos físicos del control remoto</string>
+    <string name="setting_smart_shelf">Fila inteligente "Para ahora"</string>
+    <string name="setting_night_mode">Modo cine nocturno</string>
+    <string name="setting_night_auto">Nocturno automático (22:00–07:00)</string>
+    <string name="setting_auto_clean">Auto-Turbo RAM al volver (&lt;320 MB)</string>
+    <string name="setting_speed_dial">Marcación rápida con teclas 1–9</string>
+    <string name="setting_alt_launchers">Mostrar otros launchers en apps</string>
+
+    <string name="shortcut_digits">Abre tu Favorito #1 a #9 al instante</string>
+    <string name="shortcut_key_green">Botón Verde</string>
+    <string name="shortcut_green">Liberar RAM al instante (Turbo)</string>
+    <string name="shortcut_key_yellow">Botón Amarillo</string>
+    <string name="shortcut_yellow">Cambiar al siguiente fondo</string>
+    <string name="shortcut_key_blue">Botón Azul</string>
+    <string name="shortcut_blue">Modo Arte y Reloj OLED</string>
+    <string name="shortcut_key_red">Botón Rojo</string>
+    <string name="shortcut_red">Launchers y entradas HDMI</string>
+    <string name="shortcut_resume">Reanudar la última app usada</string>
+
+    <string name="auto_clean_pill">Auto-Turbo · +%1$d MB liberados (%2$d MB libres)</string>
+    <string name="speed_dial_pill">#%1$d · %2$s</string>
+    <string name="wp_switched_pill">Nuevo fondo aplicado</string>
+    <string name="quick_resume_pill">Reanudando %1$s</string>
+    <string name="night_mode_on_pill">Modo cine nocturno activado</string>
+    <string name="night_mode_off_pill">Modo cine nocturno desactivado</string>
 </resources>

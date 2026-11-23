@@ -5,13 +5,13 @@ import android.view.View
 import android.view.animation.PathInterpolator
 
 /**
- * Material 3 Emphasized Decelerate GPU-only motion helper tuned for 60 fps Android TV GPUs.
- * Animates only scale, alpha, translationX/Y/Z — zero layout invalidation during focus moves.
+ * Silky 60 fps GPU-only cinema motion helper tuned for 1-2 GB RAM Android TV GPUs.
+ * Animates exclusively scale, alpha, and translationZ — zero layout passes on D-Pad focus.
  */
 object FocusAnimator {
-    private val emphasizedDecelerate = PathInterpolator(0.05f, 0.7f, 0.1f, 1.0f)
+    private val cinemaGlide = PathInterpolator(0.16f, 1.0f, 0.3f, 1.0f)
 
-    fun apply(view: View, hasFocus: Boolean, scaleFocused: Float = 1.075f, liftDp: Float = 14f) {
+    fun apply(view: View, hasFocus: Boolean, scaleFocused: Float = 1.085f, liftDp: Float = 16f) {
         val density = view.resources.displayMetrics.density
         val targetScale = if (hasFocus) scaleFocused else 1.0f
         val targetZ = if (hasFocus) liftDp * density else 0f
@@ -20,43 +20,54 @@ object FocusAnimator {
             .scaleX(targetScale)
             .scaleY(targetScale)
             .translationZ(targetZ)
-            .setDuration(if (hasFocus) 185L else 140L)
-            .setInterpolator(emphasizedDecelerate)
+            .setDuration(if (hasFocus) 205L else 155L)
+            .setInterpolator(cinemaGlide)
             .start()
     }
 
     fun applyNavFocus(view: View, hasFocus: Boolean) {
-        val targetScale = if (hasFocus) 1.045f else 1.0f
+        val targetScale = if (hasFocus) 1.08f else 1.0f
         view.animate().cancel()
         view.animate()
             .scaleX(targetScale)
             .scaleY(targetScale)
-            .setDuration(150L)
-            .setInterpolator(emphasizedDecelerate)
+            .setDuration(165L)
+            .setInterpolator(cinemaGlide)
+            .start()
+    }
+
+    fun applySubtleRowFocus(view: View, hasFocus: Boolean) {
+        val targetScale = if (hasFocus) 1.015f else 1.0f
+        view.animate().cancel()
+        view.animate()
+            .scaleX(targetScale)
+            .scaleY(targetScale)
+            .setDuration(140L)
+            .setInterpolator(cinemaGlide)
             .start()
     }
 
     fun animateHeroChange(titleView: View, metaView: View) {
-        val shift = 6f * titleView.resources.displayMetrics.density
+        val shift = 5f * titleView.resources.displayMetrics.density
         titleView.animate().cancel()
         metaView.animate().cancel()
 
-        titleView.alpha = 0.35f
+        titleView.alpha = 0.42f
         titleView.translationY = shift
         titleView.animate()
             .alpha(1f)
             .translationY(0f)
-            .setDuration(190L)
-            .setInterpolator(emphasizedDecelerate)
+            .setDuration(210L)
+            .setInterpolator(cinemaGlide)
             .start()
 
-        metaView.alpha = 0.25f
-        metaView.translationY = shift * 0.7f
+        metaView.alpha = 0.30f
+        metaView.translationY = shift * 0.65f
         metaView.animate()
             .alpha(1f)
             .translationY(0f)
-            .setDuration(220L)
-            .setInterpolator(emphasizedDecelerate)
+            .setDuration(235L)
+            .setInterpolator(cinemaGlide)
             .start()
     }
 

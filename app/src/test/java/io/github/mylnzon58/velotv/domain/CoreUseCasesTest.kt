@@ -2,6 +2,7 @@ package io.github.mylnzon58.velotv.domain
 
 import io.github.mylnzon58.velotv.data.region.StaticRegionalCatalogRepository
 import io.github.mylnzon58.velotv.domain.model.AppCategory
+import io.github.mylnzon58.velotv.domain.model.AppUsageStat
 import io.github.mylnzon58.velotv.domain.model.CustomCategory
 import io.github.mylnzon58.velotv.domain.model.HomeRow
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
@@ -15,9 +16,11 @@ import io.github.mylnzon58.velotv.domain.usecase.BuildDonationPlanUseCase
 import io.github.mylnzon58.velotv.domain.usecase.BuildHomeRowsUseCase
 import io.github.mylnzon58.velotv.domain.usecase.ClassifyAppUseCase
 import io.github.mylnzon58.velotv.domain.usecase.FilterRegionalHubUseCase
+import io.github.mylnzon58.velotv.domain.usecase.NightComfortPolicyUseCase
 import io.github.mylnzon58.velotv.domain.usecase.ParentalScheduleUseCase
 import io.github.mylnzon58.velotv.domain.usecase.PinSecurityUseCase
 import io.github.mylnzon58.velotv.domain.usecase.SearchLauncherUseCase
+import io.github.mylnzon58.velotv.domain.usecase.SmartShelfUseCase
 import io.github.mylnzon58.velotv.domain.usecase.SystemCleanPolicyUseCase
 import io.github.mylnzon58.velotv.domain.usecase.WallpaperPolicyUseCase
 import org.junit.Assert.assertEquals
@@ -211,5 +214,54 @@ class CoreUseCasesTest {
 
         val targets = policy.filterSafeKillTargets(apps, "io.github.mylnzon58.velotv")
         assertEquals(listOf("com.netflix.ninja", "com.stremio.one", "com.phlox.tvwebbrowser"), targets)
+    }
+
+    @Test
+    fun smartShelf_ranksByRecencyAndTimeOfDayAffinityOffline() {
+        val uc = SmartShelfUseCase()
+        val now = 1_700_000_000_000L
+        val apps = listOf(
+            TvApp("com.netflix.ninja", "Netflix", "Netflix", AppCategory.STREAMING.id, true, false),
+            TvApp("org.smarttube.stable", "SmartTube", "SmartTube", AppCategory.STREAMING.id, true, false),
+            TvApp("com.spotify.tv.android", "Spotify", "Spotify", AppCategory.STREAMING.id, true, false)
+        )
+        val stats = mapOf(
+            "com.spotify.tv.android" to AppUsageStat("com.spotify.tv.android", now - 3_600_000L, 10, morningLaunches = 9, afternoonLaunches = 1, eveningLaunches = 0),
+            "com.netflix.ninja" to AppUsageStat("com.netflix.ninja", now - 3_600_000L, 10, morningLaunches = 0, afternoonLaunches = 1, eveningLaunches = 9)
+        )
+
+        val morningRanked = uc.buildSmartApps(apps, stats, currentHour24 = 8, nowMs = now)
+        assertEquals("com.spotify.tv.android", morningRanked.first().packageName)
+
+        val eveningRanked = uc.buildSmartApps(apps, stats, currentHour24 = 22, nowMs = now)
+        assertEquals("com.netflix.ninja", eveningRanked.first().packageName)
+        assertEquals(2, eveningRanked.size)
+    }
+
+    @Test
+    fun nightComfortPolicy_supportsManualToggleAndOvernightSchedule() {
+        val uc = NightComfortPolicyUseCase()
+        val autoOnly = LauncherSettings(nightModeEnabled = false, nightModeAutoSchedule = true)
+        assertTrue(uc.isNightComfortActive(autoOnly, 23))
+        assertTrue(uc.isNightComfortActive(autoOnly, 3))
+        assertFalse(uc.isNightComfortActive(autoOnly, 14))
+
+        val manualOn = LauncherSettings(nightModeEnabled = true, nightModeAutoSchedule = false)
+        assertTrue(uc.isNightComfortActive(manualOn, 14))
+
+        val disabled = LauncherSettings(nightModeEnabled = false, nightModeAutoSchedule = false)
+        assertFalse(uc.isNightComfortActive(disabled, 23))
+    }
+
+    @Test
+    fun systemCleanPolicy_neverKillsAlternativeHomeLaunchers() {
+        val policy = SystemCleanPolicyUseCase()
+        val apps = listOf(
+            TvApp("com.spocky.projengmenu", "Projectivy", "Projectivy", AppCategory.TOOLS.id, true, false, isHomeLauncher = true),
+            TvApp("com.google.android.tvlauncher", "Android TV Home", "Android TV Home", AppCategory.TOOLS.id, true, true, isHomeLauncher = true),
+            TvApp("com.stremio.one", "Stremio", "Stremio", AppCategory.MEDIA_WEB.id, true, false)
+        )
+        val targets = policy.filterSafeKillTargets(apps, "io.github.mylnzon58.velotv")
+        assertEquals(listOf("com.stremio.one"), targets)
     }
 }

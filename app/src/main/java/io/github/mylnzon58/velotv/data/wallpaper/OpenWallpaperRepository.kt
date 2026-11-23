@@ -212,30 +212,31 @@ class OpenWallpaperRepository(
     }
 
     private fun fetchPicsumCuratedLandscapes(): List<WallpaperItem> {
-        val pageNum = (Calendar.getInstance().get(Calendar.DAY_OF_YEAR) % 8) + 1
-        val api = "https://picsum.photos/v2/list?page=$pageNum&limit=20"
-        val body = httpGetBytes(api, MAX_JSON_BYTES)?.toString(Charsets.UTF_8) ?: return emptyList()
-        val arr = JSONArray(body)
-        val result = mutableListOf<WallpaperItem>()
-        for (i in 0 until arr.length()) {
-            val o = arr.optJSONObject(i) ?: continue
-            val id = o.optString("id")
-            val w = o.optInt("width", 0)
-            val h = o.optInt("height", 0)
-            if (id.isBlank() || w <= h || w < 1200) continue
-            val author = o.optString("author").ifBlank { "Unsplash" }
+        // Curated atmospheric landscapes (mountains, forests, coasts, night skies) — avoids random distracting photos
+        val curated = listOf(
+            Triple("10", "Bosque de niebla", "Paul Jarvis"),
+            Triple("11", "Valle sereno", "Paul Jarvis"),
+            Triple("15", "Cascada alpina", "Paul Jarvis"),
+            Triple("16", "Horizonte oceánico", "Paul Jarvis"),
+            Triple("28", "Sendero en el bosque", "Jerry Adney"),
+            Triple("29", "Cumbre nevada", "Go Wild"),
+            Triple("54", "Cielo en las montañas", "Nicholas Swanson"),
+            Triple("110", "Atardecer en la pradera", "Kenneth Thewissen"),
+            Triple("120", "Cielo nocturno", "Guillaume"),
+            Triple("128", "Lago al alba", "Matteo Minelli")
+        )
+        return curated.mapNotNull { (id, title, author) ->
             val url = "https://picsum.photos/id/$id/1280/720.webp"
-            if (!policy.isAllowedWallpaperUrl(url)) continue
-            result += WallpaperItem(
+            if (!policy.isAllowedWallpaperUrl(url)) return@mapNotNull null
+            WallpaperItem(
                 id = "picsum_$id",
-                title = "Paisaje #$id",
+                title = title,
                 author = "$author · Unsplash",
                 license = "Unsplash License",
                 source = WallpaperSource.PICSUM_UNSPLASH,
                 remoteUrl = url
             )
         }
-        return result.take(10)
     }
 
     private fun ensureDownloaded(id: String, url: String): File? {

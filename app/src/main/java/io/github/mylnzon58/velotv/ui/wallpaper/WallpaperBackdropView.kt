@@ -241,31 +241,31 @@ class WallpaperBackdropView @JvmOverloads constructor(
         private fun rebuildShaders(w: Int, h: Int) {
             if (w <= 0 || h <= 0) return
             val dim = dimPercent / 100f
-            val topAlpha = ((dim * 0.88f).coerceIn(0.22f, 0.92f) * 255).toInt()
-            val midAlpha = ((dim * 0.42f).coerceIn(0.10f, 0.78f) * 255).toInt()
-            val botAlpha = ((dim * 1.38f).coerceIn(0.55f, 0.96f) * 255).toInt()
+            val topAlpha = ((dim * 0.96f).coerceIn(0.30f, 0.94f) * 255).toInt()
+            val midAlpha = ((dim * 0.56f).coerceIn(0.18f, 0.82f) * 255).toInt()
+            val botAlpha = ((dim * 1.46f).coerceIn(0.64f, 0.97f) * 255).toInt()
 
             verticalPaint.shader = LinearGradient(
                 0f, 0f, 0f, h.toFloat(),
                 intArrayOf(
                     withAlpha(baseColor, topAlpha),
                     withAlpha(baseColor, midAlpha),
-                    withAlpha(baseColor, (botAlpha * 0.88f).toInt()),
+                    withAlpha(baseColor, (botAlpha * 0.90f).toInt()),
                     withAlpha(baseColor, botAlpha)
                 ),
-                floatArrayOf(0f, 0.24f, 0.68f, 1f),
+                floatArrayOf(0f, 0.28f, 0.68f, 1f),
                 Shader.TileMode.CLAMP
             )
 
-            val leftAlpha = ((dim * 0.72f).coerceIn(0.16f, 0.85f) * 255).toInt()
+            val leftAlpha = ((dim * 0.82f).coerceIn(0.24f, 0.88f) * 255).toInt()
             horizontalPaint.shader = LinearGradient(
                 0f, 0f, w.toFloat(), 0f,
                 intArrayOf(
                     withAlpha(baseColor, leftAlpha),
-                    withAlpha(baseColor, (leftAlpha * 0.25f).toInt()),
+                    withAlpha(baseColor, (leftAlpha * 0.34f).toInt()),
                     Color.TRANSPARENT
                 ),
-                floatArrayOf(0f, 0.45f, 1f),
+                floatArrayOf(0f, 0.48f, 1f),
                 Shader.TileMode.CLAMP
             )
 

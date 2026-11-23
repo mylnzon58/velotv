@@ -3,6 +3,7 @@ package io.github.mylnzon58.velotv.ui.home
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import io.github.mylnzon58.velotv.R
 import io.github.mylnzon58.velotv.databinding.ItemTvInputCardBinding
 import io.github.mylnzon58.velotv.domain.model.CornerStyle
 import io.github.mylnzon58.velotv.domain.model.TvInputSource
+import io.github.mylnzon58.velotv.domain.model.TvInputType
 import io.github.mylnzon58.velotv.domain.model.VisualTheme
 import io.github.mylnzon58.velotv.ui.common.FocusAnimator
 import io.github.mylnzon58.velotv.ui.common.HallmarkSurfaceFactory
@@ -57,10 +59,21 @@ class TvInputCardAdapter(
             b.tvInputTitle.text = input.label
             val statusText = ctx.getString(if (input.isConnected) R.string.input_connected else R.string.input_ready)
             b.tvInputSub.text = if (input.isLocked) "$statusText · PIN" else statusText
-            b.statusBar.setBackgroundColor(if (input.isConnected) 0xFF7CB68A.toInt() else theme.rule)
+
+            val iconRes = if (input.type == TvInputType.HDMI) R.drawable.ic_input_hdmi else R.drawable.ic_input_tv
+            b.ivInputIcon.setImageResource(iconRes)
+            b.ivInputIcon.setColorFilter(if (input.isConnected) theme.accent else theme.ink2)
+            b.inputIconWrap.background = HallmarkSurfaceFactory.inputIconCircle(ctx, theme, input.isConnected)
+
+            val dotColor = if (input.isConnected) {
+                ContextCompat.getColor(ctx, R.color.hm_signal_ok)
+            } else {
+                HallmarkSurfaceFactory.withAlpha(theme.muted, 150)
+            }
+            b.statusBar.background = HallmarkSurfaceFactory.dotDrawable(dotColor)
 
             b.inputRoot.setOnFocusChangeListener { v, hasFocus ->
-                FocusAnimator.apply(v, hasFocus, 1.065f, 12f)
+                FocusAnimator.apply(v, hasFocus, 1.07f, 14f)
                 if (hasFocus) onInputFocused(input)
             }
             b.inputRoot.setOnClickListener { onInputClick(input) }

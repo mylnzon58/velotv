@@ -80,12 +80,12 @@ class CalibrationActivity : AppCompatActivity() {
             strokeWidth = 2f
         }
         private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            typeface = ResourcesCompat.getFont(context, R.font.barlow_medium)
+            typeface = ResourcesCompat.getFont(context, R.font.outfit_medium)
             color = 0xFFEDE8E1.toInt()
             textSize = 24f
         }
         private val displayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
+            typeface = ResourcesCompat.getFont(context, R.font.outfit_semibold)
             color = 0xFFEDE8E1.toInt()
         }
         private val hudRect = RectF()

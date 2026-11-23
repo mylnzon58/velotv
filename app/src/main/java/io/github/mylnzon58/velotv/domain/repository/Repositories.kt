@@ -1,5 +1,6 @@
 package io.github.mylnzon58.velotv.domain.repository
 
+import io.github.mylnzon58.velotv.domain.model.AppUsageStat
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
 import io.github.mylnzon58.velotv.domain.model.NativeSettingShortcut
 import io.github.mylnzon58.velotv.domain.model.QuickCleanResult
@@ -11,8 +12,10 @@ import io.github.mylnzon58.velotv.domain.model.WallpaperItem
 import io.github.mylnzon58.velotv.domain.model.WallpaperSource
 
 interface AppRepository {
-    suspend fun loadInstalledApps(): List<TvApp>
+    suspend fun loadInstalledApps(includeAlternativeLaunchers: Boolean = true): List<TvApp>
+    suspend fun loadAlternativeLaunchers(): List<TvApp>
     fun launchApp(packageName: String): Boolean
+    fun launchHomeLauncher(packageName: String): Boolean
     fun openAppInfo(packageName: String): Boolean
     fun requestUninstall(packageName: String): Boolean
     fun openPlayStoreListing(packageName: String): Boolean
@@ -26,6 +29,8 @@ interface TvInputRepository {
 interface PreferencesRepository {
     fun loadSettings(): LauncherSettings
     fun saveSettings(settings: LauncherSettings)
+    fun loadUsageStats(): Map<String, AppUsageStat>
+    fun recordAppLaunch(packageName: String, hour24: Int, nowMs: Long)
     fun exportJson(): String
     fun importJson(rawJson: String): Result<LauncherSettings>
 }

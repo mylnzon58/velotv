@@ -111,23 +111,23 @@ class AmbientClockActivity : AppCompatActivity() {
         }
 
         tvClock = TextView(this).apply {
-            typeface = ResourcesCompat.getFont(this@AmbientClockActivity, R.font.barlow_condensed_light)
+            typeface = ResourcesCompat.getFont(this@AmbientClockActivity, R.font.outfit_light)
             textSize = 104f
             setTextColor(0xFFF3EFE9.toInt())
-            letterSpacing = 0.02f
+            letterSpacing = 0.01f
             setShadowLayer(12f, 0f, 3f, 0xBB000000.toInt())
         }
 
         tvDate = TextView(this).apply {
-            typeface = ResourcesCompat.getFont(this@AmbientClockActivity, R.font.barlow_regular)
+            typeface = ResourcesCompat.getFont(this@AmbientClockActivity, R.font.outfit_regular)
             textSize = 20f
             setTextColor(0xFFDCD6CD.toInt())
-            letterSpacing = 0.04f
+            letterSpacing = 0.02f
             setShadowLayer(8f, 0f, 2f, 0xBB000000.toInt())
         }
 
         tvPhotoCredit = TextView(this).apply {
-            typeface = ResourcesCompat.getFont(this@AmbientClockActivity, R.font.barlow_regular)
+            typeface = ResourcesCompat.getFont(this@AmbientClockActivity, R.font.outfit_regular)
             textSize = 12f
             setTextColor(0xFFB5AEA5.toInt())
             setPadding(0, HallmarkSurfaceFactory.dp(this@AmbientClockActivity, 10), 0, 0)

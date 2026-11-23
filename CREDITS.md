@@ -3,7 +3,7 @@
 VeloTV is built exclusively with open-source software, open fonts, and free-license photography.
 
 ## Typography
-- **Barlow** & **Barlow Condensed** by Jeremy Tribby — [SIL Open Font License 1.1](https://scripts.sil.org/OFL)
+- **Outfit** by Rodrigo Fuenzalida — [SIL Open Font License 1.1](https://scripts.sil.org/OFL)
 
 ## Bundled Landscape Wallpapers (`app/src/main/assets/wallpapers/`)
 1. **Aurora Borealis** — Wikimedia Commons (`CC BY 3.0`)

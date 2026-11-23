@@ -85,8 +85,8 @@ class AppCardAdapter(
             b.cardRoot.clipToOutline = true
             b.tvIconLabel.setTextColor(theme.ink)
             b.tvBannerLabel.setTextColor(theme.ink)
-            b.tvBannerLabel.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.paper, 224))
-            b.tvBadge.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.paper, 232))
+            b.tvBannerLabel.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.paper, 214))
+            b.tvBadge.background = HallmarkSurfaceFactory.badgePillBackground(ctx, theme)
             b.tvBadge.setTextColor(theme.accent)
         }
 
@@ -101,6 +101,7 @@ class AppCardAdapter(
             val badge = when {
                 app.isLocked -> "PIN"
                 app.isHidden -> "OCULTA"
+                app.isHomeLauncher -> "HOME"
                 else -> ""
             }
             if (badge.isNotEmpty()) {
@@ -110,7 +111,6 @@ class AppCardAdapter(
                 b.tvBadge.visibility = View.GONE
             }
 
-            // Synchronous cache fast-path: zero flicker, zero coroutine allocation on cached bitmaps
             val cached = appRepository.getCachedBannerOrIcon(app.packageName)
             if (cached != null) {
                 renderGraphic(cached.first, cached.second)
@@ -126,7 +126,7 @@ class AppCardAdapter(
             }
 
             b.cardRoot.setOnFocusChangeListener { v, hasFocus ->
-                FocusAnimator.apply(v, hasFocus, 1.08f, 14f)
+                FocusAnimator.apply(v, hasFocus, 1.09f, 16f)
                 if (hasFocus) onAppFocused(app)
             }
             b.cardRoot.setOnClickListener { onAppClick(app) }

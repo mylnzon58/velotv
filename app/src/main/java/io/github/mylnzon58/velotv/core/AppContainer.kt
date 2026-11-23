@@ -20,9 +20,11 @@ import io.github.mylnzon58.velotv.domain.usecase.BuildDonationPlanUseCase
 import io.github.mylnzon58.velotv.domain.usecase.BuildHomeRowsUseCase
 import io.github.mylnzon58.velotv.domain.usecase.ClassifyAppUseCase
 import io.github.mylnzon58.velotv.domain.usecase.FilterRegionalHubUseCase
+import io.github.mylnzon58.velotv.domain.usecase.NightComfortPolicyUseCase
 import io.github.mylnzon58.velotv.domain.usecase.ParentalScheduleUseCase
 import io.github.mylnzon58.velotv.domain.usecase.PinSecurityUseCase
 import io.github.mylnzon58.velotv.domain.usecase.SearchLauncherUseCase
+import io.github.mylnzon58.velotv.domain.usecase.SmartShelfUseCase
 import io.github.mylnzon58.velotv.domain.usecase.SystemCleanPolicyUseCase
 import io.github.mylnzon58.velotv.domain.usecase.WallpaperPolicyUseCase
 
@@ -30,7 +32,9 @@ class AppContainer(context: Context) {
     private val appContext = context.applicationContext
 
     val classifyAppUseCase = ClassifyAppUseCase()
-    val buildHomeRowsUseCase = BuildHomeRowsUseCase()
+    val smartShelfUseCase = SmartShelfUseCase()
+    val nightComfortPolicyUseCase = NightComfortPolicyUseCase()
+    val buildHomeRowsUseCase = BuildHomeRowsUseCase(smartShelfUseCase)
     val searchLauncherUseCase = SearchLauncherUseCase()
     val parentalScheduleUseCase = ParentalScheduleUseCase()
     val filterRegionalHubUseCase = FilterRegionalHubUseCase()

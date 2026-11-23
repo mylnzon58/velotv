@@ -5,6 +5,7 @@ import android.os.Build
 import io.github.mylnzon58.velotv.core.AppContainer
 import io.github.mylnzon58.velotv.domain.model.AppCategory
 import io.github.mylnzon58.velotv.domain.model.AppLanguage
+import io.github.mylnzon58.velotv.domain.model.AppUsageStat
 import io.github.mylnzon58.velotv.domain.model.CardDensity
 import io.github.mylnzon58.velotv.domain.model.CornerStyle
 import io.github.mylnzon58.velotv.domain.model.CustomCategory
@@ -40,6 +41,8 @@ data class HomeUiState(
     val rows: List<HomeRow> = emptyList(),
     val allApps: List<TvApp> = emptyList(),
     val allInputs: List<TvInputSource> = emptyList(),
+    val alternativeLaunchers: List<TvApp> = emptyList(),
+    val usageStats: Map<String, AppUsageStat> = emptyMap(),
     val settings: LauncherSettings = LauncherSettings(),
     val diagnostics: SystemDiagnostics? = null,
     val detectedCountry: String = "AR",
@@ -53,12 +56,16 @@ class HomeViewModel(private val container: AppContainer) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var cachedApps: List<TvApp> = emptyList()
     private var cachedInputs: List<TvInputSource> = emptyList()
+    private var cachedAltLaunchers: List<TvApp> = emptyList()
+    private var cachedUsage: Map<String, AppUsageStat> = emptyMap()
     private var cachedOnlineWallpapers: List<WallpaperItem> = emptyList()
     private var onlineFetchAttempted = false
+    private var lastAutoCleanEpochMs = 0L
 
     private val _state = MutableStateFlow(
         HomeUiState(
             settings = container.preferencesRepository.loadSettings(),
+            usageStats = container.preferencesRepository.loadUsageStats(),
             detectedCountry = detectCountryCode(),
             detectedRegion = WorldRegion.fromIsoCountry(detectCountryCode())
         )
@@ -67,13 +74,17 @@ class HomeViewModel(private val container: AppContainer) {
 
     fun refreshAll() {
         scope.launch {
-            val apps = container.appRepository.loadInstalledApps()
+            val settings = container.preferencesRepository.loadSettings()
+            val apps = container.appRepository.loadInstalledApps(settings.includeAlternativeLaunchers)
+            val altLaunchers = container.appRepository.loadAlternativeLaunchers()
             val inputs = container.tvInputRepository.loadTvInputs()
             val diag = container.systemDiagnosticsRepository.readDiagnostics()
-            val settings = container.preferencesRepository.loadSettings()
+            val usage = container.preferencesRepository.loadUsageStats()
 
             cachedApps = apps
+            cachedAltLaunchers = altLaunchers
             cachedInputs = inputs
+            cachedUsage = usage
 
             val effectiveSettings = if (!settings.onboardingCompleted && settings.favoritePackages.isEmpty()) {
                 val preferredOrder = listOf(
@@ -102,6 +113,59 @@ class HomeViewModel(private val container: AppContainer) {
             emitState(effectiveSettings, diag)
             ensureWallpapersInitialized(effectiveSettings)
         }
+    }
+
+    fun recordAppLaunch(packageName: String) {
+        val now = System.currentTimeMillis()
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        container.preferencesRepository.recordAppLaunch(packageName, hour, now)
+        cachedUsage = container.preferencesRepository.loadUsageStats()
+        emitState(_state.value.settings, _state.value.diagnostics)
+    }
+
+    fun getAppLaunchCount(packageName: String): Int = cachedUsage[packageName]?.totalLaunches ?: 0
+
+    fun getMostRecentApp(): TvApp? {
+        val pkg = container.smartShelfUseCase.mostRecentPackage(cachedUsage) ?: return null
+        return cachedApps.firstOrNull { it.packageName == pkg }
+    }
+
+    fun getFavoriteAtSlot(slotOneBased: Int): TvApp? {
+        val favRow = _state.value.rows
+            .filterIsInstance<HomeRow.AppsRow>()
+            .firstOrNull { it.rowId == AppCategory.FAVORITES.id }
+            ?: return null
+        return favRow.apps.getOrNull(slotOneBased - 1)
+    }
+
+    fun isNightComfortActiveNow(): Boolean {
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        return container.nightComfortPolicyUseCase.isNightComfortActive(_state.value.settings, hour)
+    }
+
+    fun toggleNightMode(): Boolean {
+        val currentlyActive = isNightComfortActiveNow()
+        val nextManual = !currentlyActive
+        updateSettings {
+            it.copy(
+                nightModeEnabled = nextManual,
+                nightModeAutoSchedule = if (!nextManual && it.nightModeAutoSchedule) false else it.nightModeAutoSchedule
+            )
+        }
+        return nextManual
+    }
+
+    suspend fun runAutoCleanIfNeeded(): QuickCleanResult? {
+        val s = _state.value.settings
+        if (!s.autoCleanLowRam || cachedApps.isEmpty()) return null
+        val now = System.currentTimeMillis()
+        if (now - lastAutoCleanEpochMs < AUTO_CLEAN_COOLDOWN_MS) return null
+        val diag = container.systemDiagnosticsRepository.readDiagnostics()
+        if (diag.availableRamMb >= AUTO_CLEAN_THRESHOLD_MB) return null
+        lastAutoCleanEpochMs = now
+        val res = container.systemCleanerRepository.runQuickClean(cachedApps)
+        refreshDiagnostics()
+        return res
     }
 
     private fun ensureWallpapersInitialized(settings: LauncherSettings) {
@@ -221,7 +285,7 @@ class HomeViewModel(private val container: AppContainer) {
     }
 
     fun cycleWallpaperDim() {
-        val steps = listOf(30, 52, 68, 82)
+        val steps = listOf(34, 56, 70, 84)
         val current = _state.value.settings.wallpaperDimPercent
         val next = steps.firstOrNull { it > current } ?: steps.first()
         updateSettings { it.copy(wallpaperDimPercent = next) }
@@ -505,11 +569,22 @@ class HomeViewModel(private val container: AppContainer) {
     }
 
     private fun emitState(settings: LauncherSettings, diag: SystemDiagnostics?) {
-        val rows = container.buildHomeRowsUseCase.build(cachedApps, cachedInputs, settings)
+        val now = System.currentTimeMillis()
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        val rows = container.buildHomeRowsUseCase.build(
+            rawApps = cachedApps,
+            rawInputs = cachedInputs,
+            settings = settings,
+            usageStats = cachedUsage,
+            currentHour24 = hour,
+            nowMs = now
+        )
         _state.value = _state.value.copy(
             rows = rows,
             allApps = cachedApps,
             allInputs = cachedInputs,
+            alternativeLaunchers = cachedAltLaunchers,
+            usageStats = cachedUsage,
             settings = settings,
             diagnostics = diag
         )
@@ -535,6 +610,8 @@ class HomeViewModel(private val container: AppContainer) {
     fun onDestroy() = scope.cancel()
 
     companion object {
-        private const val BACKUP_FILENAME = "velotv_backup_v2.json"
+        private const val BACKUP_FILENAME = "velotv_backup_v3.json"
+        private const val AUTO_CLEAN_THRESHOLD_MB = 320L
+        private const val AUTO_CLEAN_COOLDOWN_MS = 180_000L
     }
 }

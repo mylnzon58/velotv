@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/inputRoot"
-    android:layout_width="180dp"
-    android:layout_height="76dp"
-    android:layout_marginEnd="16dp"
+    android:layout_width="196dp"
+    android:layout_height="82dp"
+    android:layout_marginEnd="18dp"
     android:clickable="true"
-    android:elevation="2dp"
+    android:elevation="3dp"
     android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="0dp"
-    android:paddingEnd="14dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
-    <View
-        android:id="@+id/statusBar"
-        android:layout_width="4dp"
-        android:layout_height="match_parent"
-        android:background="@color/hm_signal_ok" />
+    <FrameLayout
+        android:id="@+id/inputIconWrap"
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/ivInputIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_input_hdmi" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginStart="12dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -30,19 +38,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:fontFamily="@font/barlow_condensed_semibold"
+            android:fontFamily="@font/outfit_medium"
             android:maxLines="1"
             android:textColor="@color/hm_ink"
-            android:textSize="19sp" />
+            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tvInputSub"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:fontFamily="@font/barlow_regular"
-            android:textColor="@color/hm_muted"
-            android:textSize="11.5sp" />
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/statusBar"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/tvInputSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/outfit_regular"
+                android:maxLines="1"
+                android:textColor="@color/hm_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

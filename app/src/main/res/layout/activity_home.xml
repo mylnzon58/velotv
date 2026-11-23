@@ -7,13 +7,13 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- Layer 0: Cinema full-bleed wallpaper + multi-stop scrim + dynamic ambient color bloom -->
+    <!-- Layer 0: Cinema full-bleed wallpaper + velvet scrim + dynamic ambient color bloom -->
     <io.github.mylnzon58.velotv.ui.wallpaper.WallpaperBackdropView
         android:id="@+id/wallpaperBackdrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Layer 1: Overscan-safe foreground TV canvas -->
+    <!-- Layer 1: Clean edge-to-edge living room TV canvas -->
     <LinearLayout
         android:id="@+id/foregroundCanvas"
         android:layout_width="match_parent"
@@ -21,26 +21,26 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingStart="48dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="48dp"
-        android:paddingBottom="16dp">
+        android:paddingTop="22dp"
+        android:paddingBottom="14dp">
 
-        <!-- Floating Cinema Top Navigation Bar -->
+        <!-- Floating Minimal Icon-First Top Navigation Bar -->
         <LinearLayout
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
+            android:minHeight="52dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="48dp"
+            android:paddingEnd="48dp">
 
             <ImageView
                 android:id="@+id/ivBrandMark"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_velo_mark" />
 
@@ -48,202 +48,170 @@
                 android:id="@+id/tvWordmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fontFamily="@font/barlow_condensed_semibold"
-                android:letterSpacing="0.10"
+                android:layout_marginStart="9dp"
+                android:fontFamily="@font/outfit_semibold"
+                android:letterSpacing="0.03"
                 android:shadowColor="#99000000"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="4"
-                android:text="@string/brand_wordmark"
+                android:text="@string/app_name"
                 android:textColor="@color/hm_ink"
-                android:textSize="22sp" />
+                android:textSize="19sp" />
 
-            <View
-                android:id="@+id/brandDivider"
-                android:layout_width="1dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp"
-                android:background="@color/hm_rule" />
-
-            <TextView
-                android:id="@+id/tvStatsBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/barlow_regular"
-                android:shadowColor="#99000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:textColor="@color/hm_ink_2"
-                android:textSize="12.5sp" />
-
-            <TextView
+            <!-- Live RAM Turbo Pill (1-tap Clean · Long-press Full Cleaner) -->
+            <LinearLayout
                 android:id="@+id/btnClean"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="16dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_clean"
-                android:textSize="12sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
+
+                <View
+                    android:id="@+id/ramHealthDot"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:layout_marginEnd="7dp" />
+
+                <ImageView
+                    android:id="@+id/ivBoostIcon"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@string/nav_clean"
+                    android:src="@drawable/ic_nav_boost" />
+
+                <TextView
+                    android:id="@+id/tvStatsBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/outfit_medium"
+                    android:textColor="@color/hm_ink_2"
+                    android:textSize="12.5sp" />
+            </LinearLayout>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <TextView
+            <!-- Quiet Minimal Vector Action Rail (Zero toolbar word clutter) -->
+            <ImageButton
                 android:id="@+id/btnSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginEnd="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_search"
-                android:textSize="13sp" />
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/nav_search"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_search" />
 
-            <TextView
+            <ImageButton
+                android:id="@+id/btnLaunchers"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/nav_launchers"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_launchers" />
+
+            <ImageButton
+                android:id="@+id/btnNightMode"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/nav_night_mode"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_night" />
+
+            <ImageButton
                 android:id="@+id/btnWallpapers"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginEnd="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_wallpapers"
-                android:textSize="13sp" />
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/nav_wallpapers"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_wallpaper" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/btnAppHub"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginEnd="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_app_hub"
-                android:textSize="13sp" />
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/nav_app_hub"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_catalog" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/btnSystem"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginEnd="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_system"
-                android:textSize="13sp" />
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/nav_system"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_system" />
 
-            <TextView
+            <ImageButton
                 android:id="@+id/btnSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_marginEnd="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_settings"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/btnSupport"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/barlow_medium"
-                android:gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:shadowColor="#80000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/nav_support_short"
-                android:textSize="13sp" />
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:contentDescription="@string/nav_settings"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_settings" />
 
             <View
                 android:id="@+id/clockDivider"
                 android:layout_width="1dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="12dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="14dp"
                 android:background="@color/hm_rule" />
 
+            <!-- Clickable Clock → Opens Ambient Gallery & OLED Clock -->
             <LinearLayout
                 android:id="@+id/clockGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:gravity="end"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:id="@+id/tvClock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/barlow_condensed_light"
+                    android:fontFamily="@font/outfit_light"
                     android:includeFontPadding="false"
-                    android:letterSpacing="0.02"
+                    android:letterSpacing="0.01"
                     android:shadowColor="#AA000000"
                     android:shadowDx="0"
                     android:shadowDy="1"
                     android:shadowRadius="5"
                     android:textColor="@color/hm_ink"
-                    android:textSize="31sp" />
+                    android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
-                    android:fontFamily="@font/barlow_regular"
+                    android:fontFamily="@font/outfit_regular"
                     android:shadowColor="#99000000"
                     android:shadowDx="0"
                     android:shadowDy="1"
@@ -253,91 +221,71 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Cinema Hero Focus Strip (Breathing space lets landscape wallpaper shine) -->
+        <!-- Minimal Cinema Hero Focus Strip (Clean human context, zero raw package names) -->
         <LinearLayout
             android:id="@+id/heroFocusBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingTop="32dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="16dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvFocusTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/barlow_condensed_semibold"
-                    android:includeFontPadding="false"
-                    android:maxLines="1"
-                    android:shadowColor="#CC000000"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="8"
-                    android:text="@string/app_name"
-                    android:textColor="@color/hm_ink"
-                    android:textSize="36sp" />
-
-                <TextView
-                    android:id="@+id/tvFocusMeta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/barlow_regular"
-                    android:maxLines="1"
-                    android:shadowColor="#B3000000"
-                    android:shadowDx="0"
-                    android:shadowDy="1"
-                    android:shadowRadius="5"
-                    android:textColor="@color/hm_ink_2"
-                    android:textSize="13sp" />
-            </LinearLayout>
+            android:orientation="vertical"
+            android:paddingStart="52dp"
+            android:paddingTop="34dp"
+            android:paddingEnd="52dp"
+            android:paddingBottom="12dp">
 
             <TextView
-                android:id="@+id/tvFocusCue"
+                android:id="@+id/tvFocusTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/barlow_regular"
+                android:ellipsize="end"
+                android:fontFamily="@font/outfit_semibold"
+                android:includeFontPadding="false"
+                android:maxLines="1"
                 android:shadowColor="#B3000000"
                 android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="10"
+                android:text="@string/app_name"
+                android:textColor="@color/hm_ink"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/tvFocusMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/outfit_regular"
+                android:maxLines="1"
+                android:shadowColor="#A6000000"
+                android:shadowDx="0"
                 android:shadowDy="1"
-                android:shadowRadius="4"
-                android:text="@string/hint_context_cue"
+                android:shadowRadius="5"
                 android:textColor="@color/hm_ink_2"
-                android:textSize="12sp" />
+                android:textSize="13.5sp" />
         </LinearLayout>
 
-        <!-- Main Horizontal Category Rows -->
+        <!-- Full-Width Edge-to-Edge Category Rows (Zero left/right cutoff during smooth scroll) -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rowsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:clipChildren="true"
-            android:clipToPadding="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:descendantFocusability="afterDescendants"
             android:paddingTop="4dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="8dp" />
 
-        <!-- Subtle Cinema Footer -->
+        <!-- Ultra-Quiet Footer (Optional hints off by default; whisper wallpaper credit only) -->
         <LinearLayout
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
-            android:layout_height="22dp"
+            android:layout_height="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
+            android:paddingStart="52dp"
+            android:paddingEnd="52dp">
 
             <TextView
                 android:id="@+id/tvBottomHint"
@@ -345,45 +293,58 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:fontFamily="@font/barlow_regular"
+                android:fontFamily="@font/outfit_regular"
                 android:maxLines="1"
-                android:shadowColor="#99000000"
+                android:shadowColor="#80000000"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="3"
                 android:text="@string/hint_controls"
                 android:textColor="@color/hm_muted"
-                android:textSize="11sp" />
+                android:textSize="11.5sp" />
 
             <TextView
                 android:id="@+id/tvWallpaperCredit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
+                android:alpha="0.65"
                 android:ellipsize="end"
-                android:fontFamily="@font/barlow_regular"
+                android:fontFamily="@font/outfit_regular"
                 android:maxLines="1"
-                android:shadowColor="#99000000"
+                android:shadowColor="#80000000"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="3"
-                android:textColor="@color/hm_muted"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/tvCreatorFooter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/barlow_regular"
-                android:shadowColor="#99000000"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="3"
-                android:text="@string/creator_subtle_footer"
                 android:textColor="@color/hm_muted"
                 android:textSize="11sp" />
         </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Layer 2: Floating Cinema Feedback Pill (replaces raw Android 8 system toasts) -->
+    <TextView
+        android:id="@+id/tvFeedbackPill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="34dp"
+        android:elevation="18dp"
+        android:fontFamily="@font/outfit_medium"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        android:textSize="13.5sp"
+        android:visibility="gone" />
+
+    <!-- Layer 3: Night Eye-Comfort Warm Cinema Veil (Non-interactive GPU overlay) -->
+    <View
+        android:id="@+id/nightComfortOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/hm_night_veil"
+        android:clickable="false"
+        android:focusable="false" />
 
 </FrameLayout>

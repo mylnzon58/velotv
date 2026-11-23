@@ -30,13 +30,12 @@ class CategoryRowAdapter(
     private val onInputLongClick: (TvInputSource) -> Unit
 ) : ListAdapter<HomeRow, CategoryRowAdapter.RowVH>(DIFF) {
 
-    // Shared RecycledViewPool across all horizontal app rows minimizes GC & inflation lag on 2 GB TVs
     private val sharedAppPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(0, 24)
     }
 
-    private var theme: VisualTheme = VisualTheme.DARKROOM_AMBER
-    private var corner: CornerStyle = CornerStyle.EDITORIAL
+    private var theme: VisualTheme = VisualTheme.CINEMA_LOUNGE
+    private var corner: CornerStyle = CornerStyle.SOFT
     private var density: CardDensity = CardDensity.NORMAL
     private var showBannerLabels: Boolean = false
 
@@ -58,7 +57,7 @@ class CategoryRowAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RowVH {
         val binding = ItemCategoryRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.itemsRecyclerView.layoutManager =
-            SmoothTvLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, 88)
+            SmoothTvLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, 96)
         binding.itemsRecyclerView.itemAnimator = null
         binding.itemsRecyclerView.setHasFixedSize(true)
         binding.itemsRecyclerView.setItemViewCacheSize(6)
@@ -74,7 +73,7 @@ class CategoryRowAdapter(
         fun bind(row: HomeRow) {
             val ctx = b.root.context
             b.tvCategoryTitle.setTextColor(theme.ink)
-            b.tvCategoryCount.setTextColor(theme.muted)
+            b.tvCategoryCount.setTextColor(theme.ink2)
             b.tvCategoryTitle.text = row.customTitle ?: ctx.getString(categoryTitleRes(row.rowId))
 
             when (row) {
@@ -130,6 +129,7 @@ class CategoryRowAdapter(
 
     private fun categoryTitleRes(rowId: String): Int = when (rowId) {
         AppCategory.FAVORITES.id -> R.string.cat_favorites
+        AppCategory.SMART_SHELF.id -> R.string.cat_smart_shelf
         AppCategory.TV_INPUTS.id -> R.string.cat_tv_inputs
         AppCategory.STREAMING.id -> R.string.cat_streaming
         AppCategory.MEDIA_WEB.id -> R.string.cat_media_web

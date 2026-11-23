@@ -6,7 +6,7 @@
   <a href="https://mylnzon58.github.io/velotv/"><img src="https://img.shields.io/badge/Website-GitHub_Pages-DF9D3E?style=flat-square&labelColor=1B1815" alt="Official Website" /></a>
   <a href="README.md"><img src="https://img.shields.io/badge/Espa%C3%B1ol-Documentaci%C3%B3n-C9C1B7?style=flat-square&labelColor=1B1815" alt="Documentación en Español" /></a>
   <img src="https://img.shields.io/badge/Release_APK-2.1_MB-EDE8E1?style=flat-square&labelColor=1B1815" alt="APK 2.1 MB" />
-  <img src="https://img.shields.io/badge/Live_RAM-27.3_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 27.3 MB with HD wallpaper" />
+  <img src="https://img.shields.io/badge/Live_RAM-23.7_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 23.7 MB with HD wallpaper" />
   <img src="https://img.shields.io/badge/Telemetry-Zero-DF9D3E?style=flat-square&labelColor=1B1815" alt="Zero Telemetry" />
   <img src="https://img.shields.io/badge/Android_TV-7.0_%E2%80%93_15-C9C1B7?style=flat-square&labelColor=1B1815" alt="Android TV 7 to 15" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-DF9D3E?style=flat-square&labelColor=1B1815" alt="MIT License" /></a>
@@ -24,15 +24,27 @@ Benchmarked on real hardware (**Skyworth G6 / `9K02B` board / MediaTek MT5891 / 
 
 Measured via `adb shell dumpsys meminfo` on the same physical television:
 
-| Metric | Google TV Launcher + Recs | Projectivy Launcher 4.74 | **VeloTV 1.0** |
+| Metric | Google TV Launcher + Recs | Projectivy Launcher 4.74 | **VeloTV 1.1 (Cinema Lounge)** |
 |---|---:|---:|---:|
-| **Release APK Size** | ~82 MB | 11.0 MB | **2.1 MB** *(5 OFL Barlow fonts + 8 HD WebP landscapes)* |
-| **Live RAM (PSS)** | 92.6 MB | 36.8 MB | **27.3 MB** *(with live HD wallpaper · 21.1 MB solid mode)* |
+| **Release APK Size** | ~82 MB | 11.0 MB | **2.1 MB** *(4 Outfit OFL weights + 8 HD WebP landscapes)* |
+| **Live RAM (PSS)** | 92.6 MB | 36.8 MB | **23.7 MB** *(with live HD wallpaper · ~4× less than Google)* |
+| **Offline Smart Shelf ("Up Next")** | Cloud (tracked) | No | **Yes, 100% on-device (recency + time-of-day, zero telemetry)** |
+| **1-Click Multi-Launcher Hub** | No | No | **Yes (VeloTV + Stock Android TV + Projectivy coexistence)** |
+| **Physical Remote Shortcuts (`1–9` + color keys)** | No | Partial | **Yes (Speed Dial `1–9`, Green/Yellow/Blue/Red, Play Resume)** |
+| **Cinema Night Mode + Auto-RAM Guard** | No | No | **Yes (warm 22:00–07:00 veil + auto-reclaim `<320 MB`)** |
 | **Rotating Open Wallpapers** | No | Partial (Pro paywall) | **Yes, 100% free (Wikimedia + Unsplash + Bundled)** |
-| **Ads & Sponsored Rows** | Yes | No | **No** |
-| **Paywalls** | N/A | Freemium | **None (MIT)** |
-| **Telemetry / Analytics** | Yes | Yes | **Zero (HTTPS wallpaper allowlist + 100% offline toggle)** |
-| **Open Source** | No | No | **Yes (Native Kotlin)** |
+| **Ads / Paywalls / Telemetry** | Yes / N/A / Yes | No / Freemium / Yes | **Zero · MIT Open Source · Zero Telemetry** |
+
+---
+
+## What Makes VeloTV Distinct? (Clear USPs)
+
+1. **Cinema Lounge UI with 70% Less Text Clutter:** Minimal vector icon bar, soft **Outfit** typography, edge-to-edge gliding cards, floating rounded Control Center drawers, and native cinema feedback pills.
+2. **100% Offline "Up Next" Smart Shelf:** Learns locally which apps you use in the morning, afternoon, or night and surfaces them automatically — zero cloud, zero tracking.
+3. **1-Click Multi-Launcher Hub:** Launch **Stock Android TV Home** or **Projectivy** in 1 tap (or Red key) while keeping **VeloTV** locked as your default Home button target.
+4. **Physical TV Remote Superpowers:** Keys **`1`–`9`** speed-dial Favorites #1–#9; **Green** runs Turbo RAM Clean; **Yellow** switches wallpaper; **Blue** opens Ambient OLED Clock; **Red** opens Launchers & HDMI; **Play/Pause** resumes your last app.
+5. **Cinema Night Mode + Auto-RAM Guard:** Automatic warm eye-comfort veil (`22:00–07:00` or 1-click toggle) plus silent background RAM recovery whenever free memory drops below `320 MB` on 1–2 GB RAM TVs.
+6. **23.7 MB Live RAM PSS & 2.1 MB APK (MIT):** Includes 4K/HDR calibration patterns, OLED anti-burn-in screensaver, salted SHA-256 parental PIN + schedule, and regional catalog with zero paywalls.
 
 ---
 
@@ -92,7 +104,7 @@ Run [tools/installer/velotv_installer.py](tools/installer/velotv_installer.py) (
 ./gradlew testDebugUnitTest assembleRelease
 
 # Optional ADB optimization & reversible rollback toolkit
-./tools/tv-toolkit/optimize_tv.sh <TV_IP>:5555 release/VeloTV-v1.0.0-universal.apk
+./tools/tv-toolkit/optimize_tv.sh <TV_IP>:5555 release/VeloTV-v1.1.0-universal.apk
 ./tools/tv-toolkit/restore_tv.sh <TV_IP>:5555
 ./tools/tv-toolkit/harden_close_adb.sh <TV_IP>:5555
 ```

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pinRoot"
-    android:layout_width="360dp"
+    android:layout_width="368dp"
     android:layout_height="wrap_content"
     android:background="@color/hm_paper_2"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="28dp">
+    android:padding="30dp">
 
     <TextView
         android:id="@+id/tvPinTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/barlow_condensed_semibold"
+        android:fontFamily="@font/outfit_semibold"
         android:text="@string/pin_enter_title"
         android:textColor="@color/hm_ink"
-        android:textSize="24sp" />
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/tvPinDots"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="18dp"
-        android:fontFamily="@font/barlow_medium"
+        android:fontFamily="@font/outfit_medium"
         android:letterSpacing="0.35"
         android:text="○ ○ ○ ○"
         android:textColor="@color/hm_accent"

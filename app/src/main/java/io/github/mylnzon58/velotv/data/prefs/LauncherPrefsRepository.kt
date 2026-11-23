@@ -3,6 +3,7 @@ package io.github.mylnzon58.velotv.data.prefs
 import android.content.Context
 import android.content.SharedPreferences
 import io.github.mylnzon58.velotv.domain.model.AppLanguage
+import io.github.mylnzon58.velotv.domain.model.AppUsageStat
 import io.github.mylnzon58.velotv.domain.model.CardDensity
 import io.github.mylnzon58.velotv.domain.model.CornerStyle
 import io.github.mylnzon58.velotv.domain.model.CustomCategory
@@ -28,6 +29,61 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
         prefs.edit().putString(KEY_SETTINGS_JSON, serializeJson(settings)).apply()
     }
 
+    override fun loadUsageStats(): Map<String, AppUsageStat> {
+        val raw = prefs.getString(KEY_USAGE_JSON, null) ?: return emptyMap()
+        return runCatching {
+            val root = JSONObject(raw)
+            buildMap {
+                val keys = root.keys()
+                while (keys.hasNext()) {
+                    val pkg = keys.next()
+                    val o = root.optJSONObject(pkg) ?: continue
+                    put(
+                        pkg,
+                        AppUsageStat(
+                            packageName = pkg,
+                            lastUsedMs = o.optLong("last", 0L),
+                            totalLaunches = o.optInt("total", 0),
+                            morningLaunches = o.optInt("am", 0),
+                            afternoonLaunches = o.optInt("pm", 0),
+                            eveningLaunches = o.optInt("eve", 0)
+                        )
+                    )
+                }
+            }
+        }.getOrDefault(emptyMap())
+    }
+
+    override fun recordAppLaunch(packageName: String, hour24: Int, nowMs: Long) {
+        val current = loadUsageStats().toMutableMap()
+        val prev = current[packageName] ?: AppUsageStat(packageName)
+        val h = hour24.coerceIn(0, 23)
+        current[packageName] = prev.copy(
+            lastUsedMs = nowMs,
+            totalLaunches = prev.totalLaunches + 1,
+            morningLaunches = prev.morningLaunches + if (h in 5..11) 1 else 0,
+            afternoonLaunches = prev.afternoonLaunches + if (h in 12..18) 1 else 0,
+            eveningLaunches = prev.eveningLaunches + if (h !in 5..18) 1 else 0
+        )
+        val root = JSONObject()
+        current.values
+            .sortedByDescending { it.lastUsedMs }
+            .take(40)
+            .forEach { st ->
+                root.put(
+                    st.packageName,
+                    JSONObject().apply {
+                        put("last", st.lastUsedMs)
+                        put("total", st.totalLaunches)
+                        put("am", st.morningLaunches)
+                        put("pm", st.afternoonLaunches)
+                        put("eve", st.eveningLaunches)
+                    }
+                )
+            }
+        prefs.edit().putString(KEY_USAGE_JSON, root.toString()).apply()
+    }
+
     override fun exportJson(): String = serializeJson(loadSettings())
 
     override fun importJson(rawJson: String): Result<LauncherSettings> {
@@ -36,7 +92,7 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
 
     private fun serializeJson(s: LauncherSettings): String {
         return JSONObject().apply {
-            put("version", 2)
+            put("version", 3)
             put("theme", s.theme.id)
             put("cornerStyle", s.cornerStyle.id)
             put("cardDensity", s.cardDensity.id)
@@ -51,6 +107,12 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
             put("showTvInputsRow", s.showTvInputsRow)
             put("showBottomHints", s.showBottomHints)
             put("showHiddenApps", s.showHiddenApps)
+            put("showSmartShelf", s.showSmartShelf)
+            put("nightModeEnabled", s.nightModeEnabled)
+            put("nightModeAutoSchedule", s.nightModeAutoSchedule)
+            put("autoCleanLowRam", s.autoCleanLowRam)
+            put("remoteSpeedDialEnabled", s.remoteSpeedDialEnabled)
+            put("includeAlternativeLaunchers", s.includeAlternativeLaunchers)
             put("onboardingCompleted", s.onboardingCompleted)
             put("favorites", JSONArray(s.favoritePackages))
             put("hidden", JSONArray(s.hiddenPackages.toList()))
@@ -87,6 +149,7 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
 
     private fun parseJson(raw: String): Result<LauncherSettings> = runCatching {
         val o = JSONObject(raw)
+        val storedVersion = o.optInt("version", 2)
 
         fun readList(key: String): List<String> = buildList {
             val arr = o.optJSONArray(key) ?: return@buildList
@@ -114,9 +177,22 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
 
         val order = readList("rowOrder").ifEmpty { LauncherSettings.DEFAULT_ROW_ORDER }
 
+        // Smooth one-time visual upgrade from v2 (harsh darkroom/hints) to v3 Cinema Lounge aesthetic
+        val resolvedTheme = if (storedVersion < 3 && o.optString("theme") == "darkroom_amber") {
+            VisualTheme.CINEMA_LOUNGE
+        } else {
+            VisualTheme.fromId(o.optString("theme"))
+        }
+        val resolvedCorner = if (storedVersion < 3 && o.optString("cornerStyle") == "editorial") {
+            CornerStyle.SOFT
+        } else {
+            CornerStyle.fromId(o.optString("cornerStyle"))
+        }
+        val resolvedBottomHints = if (storedVersion < 3) false else o.optBoolean("showBottomHints", false)
+
         LauncherSettings(
-            theme = VisualTheme.fromId(o.optString("theme")),
-            cornerStyle = CornerStyle.fromId(o.optString("cornerStyle")),
+            theme = resolvedTheme,
+            cornerStyle = resolvedCorner,
             cardDensity = CardDensity.fromId(o.optString("cardDensity")),
             language = AppLanguage.fromCode(o.optString("language")),
             use24HourClock = o.optBoolean("use24HourClock", true),
@@ -127,8 +203,14 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
             showSystemStats = o.optBoolean("showSystemStats", true),
             showBannerLabels = o.optBoolean("showBannerLabels", false),
             showTvInputsRow = o.optBoolean("showTvInputsRow", true),
-            showBottomHints = o.optBoolean("showBottomHints", true),
+            showBottomHints = resolvedBottomHints,
             showHiddenApps = o.optBoolean("showHiddenApps", false),
+            showSmartShelf = o.optBoolean("showSmartShelf", true),
+            nightModeEnabled = o.optBoolean("nightModeEnabled", false),
+            nightModeAutoSchedule = o.optBoolean("nightModeAutoSchedule", true),
+            autoCleanLowRam = o.optBoolean("autoCleanLowRam", true),
+            remoteSpeedDialEnabled = o.optBoolean("remoteSpeedDialEnabled", true),
+            includeAlternativeLaunchers = o.optBoolean("includeAlternativeLaunchers", true),
             onboardingCompleted = o.optBoolean("onboardingCompleted", false),
             favoritePackages = readList("favorites"),
             hiddenPackages = readList("hidden").toSet(),
@@ -152,7 +234,7 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
             wallpaperSource = WallpaperSource.fromId(o.optString("wallpaperSource")),
             wallpaperInterval = WallpaperInterval.fromId(o.optString("wallpaperInterval")),
             pinnedWallpaperId = o.optString("pinnedWallpaperId").takeIf { it.isNotBlank() },
-            wallpaperDimPercent = o.optInt("wallpaperDimPercent", 52).coerceIn(25, 90),
+            wallpaperDimPercent = o.optInt("wallpaperDimPercent", 56).coerceIn(25, 90),
             wallpaperKenBurns = o.optBoolean("wallpaperKenBurns", true),
             wallpaperOfflineOnly = o.optBoolean("wallpaperOfflineOnly", false),
             ambientAppColorGlow = o.optBoolean("ambientAppColorGlow", true)
@@ -162,5 +244,6 @@ class LauncherPrefsRepository(context: Context) : PreferencesRepository {
     companion object {
         private const val PREFS_NAME = "velotv_prefs_v2"
         private const val KEY_SETTINGS_JSON = "settings_json"
+        private const val KEY_USAGE_JSON = "usage_stats_json"
     }
 }

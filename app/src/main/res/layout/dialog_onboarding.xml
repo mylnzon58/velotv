@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/onboardingRoot"
-    android:layout_width="700dp"
+    android:layout_width="720dp"
     android:layout_height="wrap_content"
     android:background="@color/hm_paper_2"
     android:orientation="horizontal"
-    android:padding="32dp">
+    android:padding="34dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -31,11 +31,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/barlow_condensed_semibold"
-                android:letterSpacing="0.04"
+                android:fontFamily="@font/outfit_semibold"
                 android:text="@string/onboarding_title"
                 android:textColor="@color/hm_ink"
-                android:textSize="30sp" />
+                android:textSize="28sp" />
         </LinearLayout>
 
         <TextView
@@ -43,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:fontFamily="@font/barlow_regular"
+            android:fontFamily="@font/outfit_regular"
             android:lineSpacingExtra="5dp"
             android:text="@string/onboarding_body"
             android:textColor="@color/hm_ink_2"
@@ -54,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:fontFamily="@font/barlow_medium"
+            android:fontFamily="@font/outfit_medium"
             android:text="@string/creator_full_credit"
             android:textColor="@color/hm_muted"
             android:textSize="12sp" />
@@ -66,14 +65,12 @@
             android:layout_marginTop="22dp"
             android:clickable="true"
             android:focusable="true"
-            android:fontFamily="@font/barlow_condensed_semibold"
+            android:fontFamily="@font/outfit_semibold"
             android:gravity="center"
-            android:letterSpacing="0.06"
-            android:paddingStart="28dp"
-            android:paddingEnd="28dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
             android:text="@string/onboarding_start"
-            android:textAllCaps="true"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <View
@@ -108,10 +105,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/barlow_regular"
+            android:fontFamily="@font/outfit_regular"
             android:gravity="center"
             android:textColor="@color/hm_muted"
-            android:textSize="11sp" />
+            android:textSize="11.5sp" />
     </LinearLayout>
 
 </LinearLayout>

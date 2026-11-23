@@ -6,7 +6,7 @@
   <a href="https://mylnzon58.github.io/velotv/"><img src="https://img.shields.io/badge/Sitio_Web-GitHub_Pages-DF9D3E?style=flat-square&labelColor=1B1815" alt="Sitio Web oficial" /></a>
   <a href="README.en.md"><img src="https://img.shields.io/badge/English-Documentation-C9C1B7?style=flat-square&labelColor=1B1815" alt="English Documentation" /></a>
   <img src="https://img.shields.io/badge/APK_Release-2.1_MB-EDE8E1?style=flat-square&labelColor=1B1815" alt="APK 2.1 MB" />
-  <img src="https://img.shields.io/badge/RAM_en_vivo-27.3_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 27.3 MB con fondo HD" />
+  <img src="https://img.shields.io/badge/RAM_en_vivo-23.7_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 23.7 MB con fondo HD" />
   <img src="https://img.shields.io/badge/Telemetr%C3%ADa-Cero-DF9D3E?style=flat-square&labelColor=1B1815" alt="Cero telemetría" />
   <img src="https://img.shields.io/badge/Android_TV-7.0_%E2%80%93_15-C9C1B7?style=flat-square&labelColor=1B1815" alt="Android TV 7 a 15" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-DF9D3E?style=flat-square&labelColor=1B1815" alt="Licencia MIT" /></a>
@@ -24,35 +24,48 @@ Probado y medido en hardware real (**Skyworth G6 / placa `9K02B` / MediaTek MT58
 
 Valores obtenidos con `adb shell dumpsys meminfo` en el mismo televisor físico:
 
-| Métrica | Google TV Launcher + Recs | Projectivy Launcher 4.74 | **VeloTV 1.0** |
+| Métrica | Google TV Launcher + Recs | Projectivy Launcher 4.74 | **VeloTV 1.1 (Cinema Lounge)** |
 |---|---:|---:|---:|
-| **Tamaño del APK** | ~82 MB | 11.0 MB | **2.1 MB** *(5 fuentes Barlow OFL + 8 fondos HD WebP)* |
-| **Memoria RAM (PSS)** | 92.6 MB | 36.8 MB | **27.3 MB** *(con fondo HD + brillo ambiental · 21.1 MB modo sólido)* |
+| **Tamaño del APK** | ~82 MB | 11.0 MB | **2.1 MB** *(4 pesos Outfit OFL + 8 fondos HD WebP)* |
+| **Memoria RAM (PSS)** | 92.6 MB | 36.8 MB | **23.7 MB** *(con fondo HD + brillo ambiental · ~4× menos que Google)* |
+| **Fila inteligente offline ("Para ahora")** | Nube (rastreo) | No | **Sí, 100% local (recencia + horario, 0 telemetría)** |
+| **Multi-Launcher Hub (1 clic)** | No | No | **Sí (VeloTV + Android TV original + Projectivy)** |
+| **Atajos físicos del control (`1–9` + colores)** | No | Parcial | **Sí (Speed Dial `1–9`, Verde/Amarillo/Azul/Rojo, Play Resume)** |
+| **Modo Cine Nocturno + Auto-Turbo RAM** | No | No | **Sí (filtro cálido 22h–7h + auto-limpieza `<320 MB`)** |
 | **Fondos libres rotativos** | No | Parcial (Pro pago) | **Sí, 100% gratis (Wikimedia + Unsplash + Local)** |
 | **Publicidad / Filas patrocinadas** | Sí | No | **No** |
-| **Funciones de pago** | N/A | Freemium | **Ninguna (MIT)** |
-| **Telemetría / Analítica** | Sí | Sí | **Cero (allowlist HTTPS solo para fondos + modo offline)** |
-| **Código abierto** | No | No | **Sí (Kotlin nativo)** |
+| **Funciones de pago / Telemetría** | Sí / Sí | Freemium / Sí | **Ninguna · MIT · Cero telemetría** |
+
+---
+
+## ¿Qué distingue a VeloTV de cualquier otro launcher? (USPs reales)
+
+1. **Estética Cinema Lounge con 70% menos texto:** barra superior flotante basada en íconos vectoriales, tipografía suave **Outfit**, tarjetas con deslizamiento de borde a borde, paneles flotantes redondeados y píldora de feedback nativa (sin textos técnicos ni nombres de paquete en el living).
+2. **Fila inteligente "Para ahora" 100% offline:** aprende localmente en tu TV qué apps usás a la mañana, tarde o noche y las acerca automáticamente sin enviar un solo byte a la nube.
+3. **Multi-Launcher Hub (convivencia real en 1 clic):** abrís **Android TV Home original** o **Projectivy** con un clic (o botón **Rojo**) mientras el botón `HOME` siempre regresa a **VeloTV**.
+4. **Control Remoto Pro (cero menús):** teclas **`1`–`9`** lanzan tus Favoritos #1–#9; **Verde** libera RAM; **Amarillo** cambia el fondo; **Azul** activa Modo Arte/Reloj OLED; **Rojo** abre Launchers y HDMI; **Play/Pause** reanuda la última app usada.
+5. **Auto-Turbo RAM + Modo Cine Nocturno:** filtro cálido automático de `22:00` a `07:00` (o 1 clic en la luna) y recuperación automática de RAM si baja de `320 MB` en TVs de 1–2 GB.
+6. **23.7 MB de RAM PSS y 2.1 MB APK con 100% open source (MIT):** incluye calibración 4K/HDR, reloj anti-quemado OLED, control parental PIN + horario y catálogo regional sin muros de pago.
 
 ---
 
 ## Capturas reales del televisor
 
-| Inicio con fondo libre rotativo y brillo ambiental | Galería de fondos libres con vista previa en vivo |
+| Inicio Cinema Lounge (Outfit + barra de íconos) | Multi-Launcher Hub en 1 clic (Botón Rojo) |
 |---|---|
-| ![Inicio VeloTV](assets/screenshots/02-home-darkroom.png) | ![Galería de fondos](assets/screenshots/08-wallpapers-gallery.png) |
+| ![Inicio VeloTV](assets/screenshots/02-home-darkroom.png) | ![Multi-Launcher Hub](assets/screenshots/10-multi-launcher-hub.png) |
 
-| Galería ambiente y reloj OLED anti-quemado | Panel de Sistema y Desarrollador |
+| Turbo RAM con píldora flotante (Botón Verde) | Ajustes flotantes + pestaña Pro / Atajos |
 |---|---|
-| ![Modo ambiente OLED](assets/screenshots/09-ambient-mode.png) | ![Sistema y Desarrollador](assets/screenshots/03-system-developer.png) |
+| ![Turbo RAM](assets/screenshots/11-turbo-ram-pill.png) | ![Ajustes VeloTV](assets/screenshots/04-settings-drawer.png) |
 
-| Ajustes completos por pestañas | Catálogo regional (AR · LATAM · US · EU · ASIA) |
+| Galería de fondos libres con vista previa en vivo | Galería ambiente y reloj OLED anti-quemado |
 |---|---|
-| ![Ajustes VeloTV](assets/screenshots/04-settings-drawer.png) | ![Catálogo regional](assets/screenshots/07-catalog-ar.png) |
+| ![Galería de fondos](assets/screenshots/08-wallpapers-gallery.png) | ![Modo ambiente OLED](assets/screenshots/09-ambient-mode.png) |
 
-| Patrones de calibración 4K / HDR | Aportes voluntarios por QR offline |
+| Patrones de calibración 4K / HDR | Panel de Sistema y Desarrollador |
 |---|---|
-| ![Calibración 4K](assets/screenshots/05-calibration-4k.png) | ![Soporte QR](assets/screenshots/06-support-qr.png) |
+| ![Calibración 4K](assets/screenshots/05-calibration-4k.png) | ![Sistema y Desarrollador](assets/screenshots/03-system-developer.png) |
 
 ---
 
@@ -87,17 +100,17 @@ Conéctate a mi Android TV en mi red Wi-Fi (escanea puerto 5555), descarga la ú
 Sin usar consola: ejecutá [tools/installer/velotv_installer.py](tools/installer/velotv_installer.py) (o doble clic en `install-windows.bat` / `install-linux.sh` / `install-macos.command`). Escanea tu Wi-Fi, descarga ADB oficial si falta, verifica el SHA-256, instala VeloTV, optimiza o restaura todo en 1 clic.
 
 ### Opción 3 — Manual (USB, LocalSend o ADB)
-Descarga `release/VeloTV-v1.0.0-universal.apk` (verifica su hash en `release/SHA256SUMS.txt`) e instálalo por USB, LocalSend o ADB:
+Descarga `release/VeloTV-v1.1.0-universal.apk` (verifica su hash en `release/SHA256SUMS.txt`) e instálalo por USB, LocalSend o ADB:
 
 ```bash
 adb connect <IP_DEL_TV>:5555
-adb install -r release/VeloTV-v1.0.0-universal.apk
+adb install -r release/VeloTV-v1.1.0-universal.apk
 ```
 
 Toolkit opcional de optimización 100% reversible (`tools/tv-toolkit/`):
 
 ```bash
-./tools/tv-toolkit/optimize_tv.sh <IP_DEL_TV>:5555 release/VeloTV-v1.0.0-universal.apk
+./tools/tv-toolkit/optimize_tv.sh <IP_DEL_TV>:5555 release/VeloTV-v1.1.0-universal.apk
 ./tools/tv-toolkit/restore_tv.sh <IP_DEL_TV>:5555
 ./tools/tv-toolkit/harden_close_adb.sh <IP_DEL_TV>:5555
 ```

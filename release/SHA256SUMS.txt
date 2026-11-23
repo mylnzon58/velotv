@@ -1,1 +1,1 @@
-906312ff50c3f9e2612c8b0cf85cd602a08476e5c07d8b835004ebbbfad72ab9  VeloTV-v1.0.0-universal.apk
+37172b81fb1df7a3a08dd7cca3778d324056f291f302dd917208692b18b76f41  VeloTV-v1.1.0-universal.apk

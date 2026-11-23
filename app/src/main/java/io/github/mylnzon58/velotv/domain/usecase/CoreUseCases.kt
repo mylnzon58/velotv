@@ -1,6 +1,7 @@
 package io.github.mylnzon58.velotv.domain.usecase
 
 import io.github.mylnzon58.velotv.domain.model.AppCategory
+import io.github.mylnzon58.velotv.domain.model.AppUsageStat
 import io.github.mylnzon58.velotv.domain.model.DonationChannel
 import io.github.mylnzon58.velotv.domain.model.HomeRow
 import io.github.mylnzon58.velotv.domain.model.LauncherSettings
@@ -48,17 +49,80 @@ class ClassifyAppUseCase {
         private val TOOLS_KEYWORDS = listOf(
             "settings", "vending", "downloader", "localsend", "sendfilestotv", "explorer",
             "filemanager", "xplore", "fx", "speedtest", "aida64", "buttonmapper", "vpn",
-            "wireguard", "tailscale", "adb", "terminal"
+            "wireguard", "tailscale", "adb", "terminal", "launcher", "projengmenu"
         )
     }
 }
 
-class BuildHomeRowsUseCase {
+/**
+ * 100% offline on-device intelligence: ranks apps by recency and current time-of-day affinity
+ * (Morning 05-11, Afternoon 12-18, Evening/Night 19-04) with zero cloud or tracking.
+ */
+class SmartShelfUseCase {
+
+    fun buildSmartApps(
+        visibleApps: List<TvApp>,
+        usageStats: Map<String, AppUsageStat>,
+        currentHour24: Int,
+        nowMs: Long,
+        maxItems: Int = 6
+    ): List<TvApp> {
+        if (usageStats.isEmpty() || visibleApps.isEmpty()) return emptyList()
+        val hour = currentHour24.coerceIn(0, 23)
+
+        return visibleApps
+            .mapNotNull { app ->
+                val stat = usageStats[app.packageName] ?: return@mapNotNull null
+                if (stat.totalLaunches <= 0) return@mapNotNull null
+                val bucketCount = when (hour) {
+                    in 5..11 -> stat.morningLaunches
+                    in 12..18 -> stat.afternoonLaunches
+                    else -> stat.eveningLaunches
+                }
+                val ageHours = if (nowMs > stat.lastUsedMs && stat.lastUsedMs > 0L) {
+                    ((nowMs - stat.lastUsedMs) / 3_600_000L).coerceAtMost(720L)
+                } else 0L
+                val recencyScore = 100.0 / (1.0 + ageHours / 12.0)
+                val score = recencyScore + (bucketCount * 18.0) + (stat.totalLaunches * 3.0)
+                app to score
+            }
+            .sortedByDescending { it.second }
+            .take(maxItems)
+            .map { it.first }
+    }
+
+    fun mostRecentPackage(usageStats: Map<String, AppUsageStat>): String? {
+        return usageStats.values
+            .filter { it.lastUsedMs > 0L && it.totalLaunches > 0 }
+            .maxByOrNull { it.lastUsedMs }
+            ?.packageName
+    }
+}
+
+/**
+ * Evaluates warm eye-comfort cinema mode: either manually toggled or auto-active during night hours.
+ */
+class NightComfortPolicyUseCase {
+
+    fun isNightComfortActive(settings: LauncherSettings, currentHour24: Int): Boolean {
+        if (settings.nightModeEnabled) return true
+        if (!settings.nightModeAutoSchedule) return false
+        val hour = currentHour24.coerceIn(0, 23)
+        return hour >= 22 || hour < 7
+    }
+}
+
+class BuildHomeRowsUseCase(
+    private val smartShelfUseCase: SmartShelfUseCase = SmartShelfUseCase()
+) {
 
     fun build(
         rawApps: List<TvApp>,
         rawInputs: List<TvInputSource>,
-        settings: LauncherSettings
+        settings: LauncherSettings,
+        usageStats: Map<String, AppUsageStat> = emptyMap(),
+        currentHour24: Int = 20,
+        nowMs: Long = 0L
     ): List<HomeRow> {
         val favoriteIndex = settings.favoritePackages
             .withIndex()
@@ -120,6 +184,18 @@ class BuildHomeRowsUseCase {
                         .filter { it.isFavorite }
                         .sortedWith(compareBy<TvApp> { it.customOrder }.thenBy { it.label.lowercase() })
                     if (favs.isNotEmpty()) rows += HomeRow.AppsRow(rowId, null, favs)
+                }
+
+                AppCategory.SMART_SHELF.id -> {
+                    if (settings.showSmartShelf) {
+                        val smart = smartShelfUseCase.buildSmartApps(
+                            visibleApps = visibleApps,
+                            usageStats = usageStats,
+                            currentHour24 = currentHour24,
+                            nowMs = nowMs
+                        )
+                        if (smart.isNotEmpty()) rows += HomeRow.AppsRow(rowId, null, smart)
+                    }
                 }
 
                 AppCategory.TV_INPUTS.id -> {
@@ -310,9 +386,6 @@ class PinSecurityUseCase {
 
 class WallpaperPolicyUseCase {
 
-    /**
-     * OWASP SSRF / privacy allowlist: only verified free-license HTTPS image banks are permitted.
-     */
     fun isAllowedWallpaperUrl(rawUrl: String?): Boolean {
         if (rawUrl.isNullOrBlank() || rawUrl.length > 1024) return false
         val uri = runCatching { URI(rawUrl.trim()) }.getOrNull() ?: return false
@@ -322,9 +395,6 @@ class WallpaperPolicyUseCase {
         return host in ALLOWED_HOSTS
     }
 
-    /**
-     * Picks the active wallpaper respecting manual pinning first, otherwise advancing round-robin.
-     */
     fun selectNextWallpaper(
         pool: List<WallpaperItem>,
         currentId: String?,
@@ -339,9 +409,6 @@ class WallpaperPolicyUseCase {
         return if (currentIndex < 0) pool.first() else pool[(currentIndex + 1) % pool.size]
     }
 
-    /**
-     * Extracts a restrained cinema accent color from sampled ARGB pixels without external libraries.
-     */
     fun extractAmbientAccentColor(pixels: IntArray, fallbackColor: Int): Int {
         var rSum = 0L
         var gSum = 0L
@@ -387,14 +454,10 @@ class WallpaperPolicyUseCase {
 
 class SystemCleanPolicyUseCase {
 
-    /**
-     * Filters safe background kill targets, strictly excluding OS, TV tuner/HDMI, DRM, input,
-     * and launcher self packages so cleanup never disrupts live TV or system stability.
-     */
     fun filterSafeKillTargets(apps: List<TvApp>, selfPackage: String): List<String> {
         return apps.mapNotNull { app ->
             val pkg = app.packageName
-            if (pkg == selfPackage) return@mapNotNull null
+            if (pkg == selfPackage || app.isHomeLauncher) return@mapNotNull null
             if (PROTECTED_PREFIXES.any { pkg == it || pkg.startsWith("$it.") }) return@mapNotNull null
             if (!app.isSystemApp || pkg in HEAVY_PREINSTALLED_MEDIA) pkg else null
         }.distinct()
@@ -412,6 +475,7 @@ class SystemCleanPolicyUseCase {
             "com.google.android.gms",
             "com.google.android.gsf",
             "com.google.android.inputmethod",
+            "com.google.android.tvlauncher",
             "com.mediatek",
             "com.mtk",
             "com.skyworth"

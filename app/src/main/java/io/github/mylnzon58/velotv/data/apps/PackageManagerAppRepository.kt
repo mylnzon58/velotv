@@ -1,5 +1,6 @@
 package io.github.mylnzon58.velotv.data.apps
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -7,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.Settings
+import io.github.mylnzon58.velotv.domain.model.AppCategory
 import io.github.mylnzon58.velotv.domain.model.TvApp
 import io.github.mylnzon58.velotv.domain.repository.AppRepository
 import io.github.mylnzon58.velotv.domain.usecase.ClassifyAppUseCase
@@ -52,43 +54,93 @@ class PackageManagerAppRepository(
         return color
     }
 
-    override suspend fun loadInstalledApps(): List<TvApp> = withContext(Dispatchers.IO) {
+    override suspend fun loadInstalledApps(includeAlternativeLaunchers: Boolean): List<TvApp> =
+        withContext(Dispatchers.IO) {
+            val selfPkg = context.packageName
+            val discovered = LinkedHashMap<String, TvApp>()
+            val homePackages = queryAlternativeHomePackages(selfPkg)
+
+            val tvIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
+            for (info in pm.queryIntentActivities(tvIntent, 0)) {
+                val pkg = info.activityInfo?.packageName ?: continue
+                if (pkg == selfPkg || pkg in discovered) continue
+                val label = info.loadLabel(pm)?.toString()?.trim().takeUnless { it.isNullOrEmpty() } ?: pkg
+                val isSystem = (info.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                discovered[pkg] = TvApp(
+                    packageName = pkg,
+                    label = label,
+                    defaultLabel = label,
+                    categoryId = classifier.classify(pkg, label, isSystem).id,
+                    isLeanback = true,
+                    isSystemApp = isSystem,
+                    isHomeLauncher = pkg in homePackages
+                )
+            }
+
+            val mobileIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+            for (info in pm.queryIntentActivities(mobileIntent, 0)) {
+                val pkg = info.activityInfo?.packageName ?: continue
+                if (pkg == selfPkg || pkg in discovered) continue
+                val label = info.loadLabel(pm)?.toString()?.trim().takeUnless { it.isNullOrEmpty() } ?: pkg
+                val isSystem = (info.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                discovered[pkg] = TvApp(
+                    packageName = pkg,
+                    label = label,
+                    defaultLabel = label,
+                    categoryId = classifier.classify(pkg, label, isSystem).id,
+                    isLeanback = false,
+                    isSystemApp = isSystem,
+                    isHomeLauncher = pkg in homePackages
+                )
+            }
+
+            if (includeAlternativeLaunchers) {
+                for (launcher in loadAlternativeLaunchers()) {
+                    if (launcher.packageName !in discovered) {
+                        discovered[launcher.packageName] = launcher
+                    }
+                }
+            }
+
+            discovered.values.sortedBy { it.label.lowercase() }
+        }
+
+    override suspend fun loadAlternativeLaunchers(): List<TvApp> = withContext(Dispatchers.IO) {
         val selfPkg = context.packageName
-        val discovered = LinkedHashMap<String, TvApp>()
+        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        val seen = LinkedHashSet<String>()
+        val result = mutableListOf<TvApp>()
 
-        val tvIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
-        for (info in pm.queryIntentActivities(tvIntent, 0)) {
-            val pkg = info.activityInfo?.packageName ?: continue
-            if (pkg == selfPkg || pkg in discovered) continue
-            val label = info.loadLabel(pm)?.toString()?.trim().takeUnless { it.isNullOrEmpty() } ?: pkg
-            val isSystem = (info.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-            discovered[pkg] = TvApp(
+        for (info in pm.queryIntentActivities(homeIntent, 0)) {
+            val ai = info.activityInfo ?: continue
+            val pkg = ai.packageName ?: continue
+            if (pkg == selfPkg || pkg in IGNORED_HOME_PACKAGES || !seen.add(pkg)) continue
+            val isSystem = (ai.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+            val rawLabel = info.loadLabel(pm)?.toString()?.trim().orEmpty()
+            val friendlyLabel = when {
+                pkg == "com.google.android.tvlauncher" && rawLabel.isBlank() -> "Android TV Home"
+                rawLabel.isNotBlank() -> rawLabel
+                else -> pkg
+            }
+            result += TvApp(
                 packageName = pkg,
-                label = label,
-                defaultLabel = label,
-                categoryId = classifier.classify(pkg, label, isSystem).id,
+                label = friendlyLabel,
+                defaultLabel = friendlyLabel,
+                categoryId = AppCategory.TOOLS.id,
                 isLeanback = true,
-                isSystemApp = isSystem
+                isSystemApp = isSystem,
+                isHomeLauncher = true
             )
         }
+        result.sortedBy { it.label.lowercase() }
+    }
 
-        val mobileIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        for (info in pm.queryIntentActivities(mobileIntent, 0)) {
-            val pkg = info.activityInfo?.packageName ?: continue
-            if (pkg == selfPkg || pkg in discovered) continue
-            val label = info.loadLabel(pm)?.toString()?.trim().takeUnless { it.isNullOrEmpty() } ?: pkg
-            val isSystem = (info.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-            discovered[pkg] = TvApp(
-                packageName = pkg,
-                label = label,
-                defaultLabel = label,
-                categoryId = classifier.classify(pkg, label, isSystem).id,
-                isLeanback = false,
-                isSystemApp = isSystem
-            )
-        }
-
-        discovered.values.sortedBy { it.label.lowercase() }
+    private fun queryAlternativeHomePackages(selfPkg: String): Set<String> {
+        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        return pm.queryIntentActivities(homeIntent, 0)
+            .mapNotNull { it.activityInfo?.packageName }
+            .filterNot { it == selfPkg || it in IGNORED_HOME_PACKAGES }
+            .toSet()
     }
 
     suspend fun loadBannerOrIcon(packageName: String): Pair<Bitmap?, Boolean> = withContext(Dispatchers.IO) {
@@ -118,10 +170,27 @@ class PackageManagerAppRepository(
     override fun launchApp(packageName: String): Boolean {
         val intent = pm.getLeanbackLaunchIntentForPackage(packageName)
             ?: pm.getLaunchIntentForPackage(packageName)
-            ?: return false
+            ?: return launchHomeLauncher(packageName)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return runCatching {
             context.startActivity(intent)
+            true
+        }.getOrDefault(false)
+    }
+
+    override fun launchHomeLauncher(packageName: String): Boolean {
+        val query = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            setPackage(packageName)
+        }
+        val resolved = pm.queryIntentActivities(query, 0).firstOrNull()?.activityInfo ?: return false
+        val launch = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            component = ComponentName(resolved.packageName, resolved.name)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+        }
+        return runCatching {
+            context.startActivity(launch)
             true
         }.getOrDefault(false)
     }
@@ -158,5 +227,13 @@ class PackageManagerAppRepository(
         }.getOrElse {
             launchApp("com.android.vending")
         }
+    }
+
+    companion object {
+        private val IGNORED_HOME_PACKAGES = setOf(
+            "com.android.tv.settings",
+            "com.android.settings",
+            "com.android.boot.fallbackhome"
+        )
     }
 }

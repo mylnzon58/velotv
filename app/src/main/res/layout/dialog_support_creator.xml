@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/hm_paper_2"
     android:orientation="horizontal"
-    android:padding="32dp">
+    android:padding="34dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -18,23 +18,22 @@
             android:id="@+id/tvSupportTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/barlow_condensed_semibold"
-            android:letterSpacing="0.03"
+            android:fontFamily="@font/outfit_semibold"
             android:text="@string/support_title"
             android:textColor="@color/hm_ink"
-            android:textSize="30sp" />
+            android:textSize="27sp" />
 
         <TextView
             android:id="@+id/tvSupportBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="18dp"
-            android:fontFamily="@font/barlow_regular"
-            android:lineSpacingExtra="3dp"
+            android:fontFamily="@font/outfit_regular"
+            android:lineSpacingExtra="4dp"
             android:text="@string/support_body"
             android:textColor="@color/hm_ink_2"
-            android:textSize="13sp" />
+            android:textSize="13.5sp" />
 
         <LinearLayout
             android:id="@+id/channelsContainer"
@@ -47,10 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:fontFamily="@font/barlow_regular"
+            android:fontFamily="@font/outfit_regular"
             android:text="@string/creator_full_credit"
             android:textColor="@color/hm_muted"
-            android:textSize="11sp" />
+            android:textSize="11.5sp" />
     </LinearLayout>
 
     <View
@@ -85,30 +84,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:fontFamily="@font/barlow_condensed_semibold"
+            android:fontFamily="@font/outfit_semibold"
             android:gravity="center"
             android:textColor="@color/hm_ink"
-            android:textSize="20sp" />
+            android:textSize="19sp" />
 
         <TextView
             android:id="@+id/tvQrSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:fontFamily="@font/barlow_medium"
+            android:fontFamily="@font/outfit_medium"
             android:gravity="center"
             android:textColor="@color/hm_accent"
-            android:textSize="12sp" />
+            android:textSize="12.5sp" />
 
         <TextView
             android:id="@+id/tvQrUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="@font/barlow_regular"
+            android:fontFamily="@font/outfit_regular"
             android:gravity="center"
             android:textColor="@color/hm_muted"
-            android:textSize="10sp" />
+            android:textSize="10.5sp" />
     </LinearLayout>
 
 </LinearLayout>

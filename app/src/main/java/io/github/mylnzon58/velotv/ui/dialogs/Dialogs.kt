@@ -56,18 +56,19 @@ object VeloDialogs {
     private fun createRightDrawer(
         context: Context,
         theme: VisualTheme,
-        widthDp: Int = 540
+        widthDp: Int = 540,
+        corner: CornerStyle = CornerStyle.SOFT
     ): Pair<Dialog, DrawerSidePanelBinding> {
         val dialog = Dialog(context, R.style.VeloDrawerDialog)
         val b = DrawerSidePanelBinding.inflate(LayoutInflater.from(context))
-        b.drawerRoot.layoutParams = LinearLayout.LayoutParams(
+        b.drawerRoot.layoutParams = FrameLayout.LayoutParams(
             HallmarkSurfaceFactory.dp(context, widthDp),
-            LinearLayout.LayoutParams.MATCH_PARENT
+            FrameLayout.LayoutParams.MATCH_PARENT
         )
-        b.drawerSurface.setBackgroundColor(HallmarkSurfaceFactory.drawerSurfaceColor(theme))
-        b.drawerLeftRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.ink, 42))
-        b.drawerHeaderRule.setBackgroundColor(theme.rule)
-        b.drawerFooterRule.setBackgroundColor(theme.rule)
+        b.drawerSurface.background = HallmarkSurfaceFactory.floatingDrawerBackground(context, theme, corner)
+        b.drawerSurface.clipToOutline = true
+        b.drawerHeaderRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.rule, 150))
+        b.drawerFooterRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(theme.rule, 150))
         b.tvDrawerTitle.setTextColor(theme.ink)
         b.tvDrawerSubtitle.setTextColor(theme.muted)
         b.tvDrawerFooter.setTextColor(theme.muted)
@@ -82,6 +83,105 @@ object VeloDialogs {
             )
         }
         return dialog to b
+    }
+
+    /**
+     * Multi-Launcher & TV Hub Drawer (USP): switch to Android TV Original, Projectivy, or HDMI
+     * in 1 click while keeping VeloTV locked as the default Home launcher.
+     */
+    fun showLauncherAndInputsDrawer(context: Context, vm: HomeViewModel, container: AppContainer) {
+        val state = vm.state.value
+        val s = state.settings
+        val theme = s.theme
+        val (dialog, b) = createRightDrawer(context, theme, 540, s.cornerStyle)
+        b.tvDrawerTitle.text = context.getString(R.string.launcher_hub_title)
+        b.tvDrawerSubtitle.text = context.getString(R.string.launcher_hub_subtitle)
+
+        b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.launcher_hub_section_launchers)))
+
+        // Current default VeloTV entry
+        b.drawerContent.addView(
+            HallmarkSurfaceFactory.createDrawerRow(
+                context = context,
+                theme = theme,
+                title = context.getString(R.string.app_name),
+                subtitle = context.getString(R.string.launcher_hub_default_sub),
+                trailing = context.getString(R.string.launcher_hub_default_badge),
+                accentTrailing = true
+            ) { dialog.dismiss() }
+        )
+
+        state.alternativeLaunchers.forEach { launcher ->
+            val sub = if (launcher.packageName == "com.google.android.tvlauncher") {
+                context.getString(R.string.launcher_hub_stock_sub)
+            } else {
+                context.getString(R.string.launcher_hub_alt_sub)
+            }
+            b.drawerContent.addView(
+                HallmarkSurfaceFactory.createDrawerRow(
+                    context = context,
+                    theme = theme,
+                    title = launcher.label,
+                    subtitle = sub,
+                    trailing = context.getString(R.string.action_open_short),
+                    accentTrailing = true
+                ) {
+                    dialog.dismiss()
+                    container.appRepository.launchHomeLauncher(launcher.packageName)
+                }
+            )
+        }
+
+        if (state.allInputs.isNotEmpty()) {
+            b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.cat_tv_inputs)))
+            state.allInputs.filterNot { it.isHidden }.forEach { inp ->
+                val status = context.getString(if (inp.isConnected) R.string.input_connected else R.string.input_ready)
+                b.drawerContent.addView(
+                    HallmarkSurfaceFactory.createDrawerRow(
+                        context = context,
+                        theme = theme,
+                        title = inp.label,
+                        subtitle = "${inp.type.name} · $status",
+                        trailing = if (inp.isConnected) "●" else null,
+                        accentTrailing = inp.isConnected
+                    ) {
+                        dialog.dismiss()
+                        container.tvInputRepository.launchTvInput(inp)
+                    }
+                )
+            }
+        }
+
+        b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.section_pro_tools)))
+        b.drawerContent.addView(
+            HallmarkSurfaceFactory.createDrawerRow(
+                context = context,
+                theme = theme,
+                title = context.getString(R.string.tool_ambient_clock),
+                subtitle = context.getString(R.string.tool_ambient_clock_sub),
+                trailing = "OLED",
+                accentTrailing = true
+            ) {
+                dialog.dismiss()
+                context.startActivity(Intent(context, AmbientClockActivity::class.java))
+            }
+        )
+        b.drawerContent.addView(
+            HallmarkSurfaceFactory.createDrawerRow(
+                context = context,
+                theme = theme,
+                title = context.getString(R.string.tool_calibration),
+                subtitle = context.getString(R.string.tool_calibration_sub),
+                trailing = "4K / HDR",
+                accentTrailing = false
+            ) {
+                dialog.dismiss()
+                context.startActivity(Intent(context, CalibrationActivity::class.java))
+            }
+        )
+
+        dialog.show()
+        b.drawerContent.getChildAt(1)?.requestFocus()
     }
 
     /**
@@ -209,15 +309,15 @@ object VeloDialogs {
                         textSize = 12.5f
                         maxLines = 1
                         ellipsize = TextUtils.TruncateAt.END
-                        typeface = ResourcesCompat.getFont(context, R.font.barlow_medium)
+                        typeface = ResourcesCompat.getFont(context, R.font.outfit_medium)
                         setTextColor(theme.ink)
                     })
                     captionBox.addView(TextView(context).apply {
                         text = "${item.author} · ${item.license}"
-                        textSize = 10f
+                        textSize = 10.5f
                         maxLines = 1
                         ellipsize = TextUtils.TruncateAt.END
-                        typeface = ResourcesCompat.getFont(context, R.font.barlow_regular)
+                        typeface = ResourcesCompat.getFont(context, R.font.outfit_regular)
                         setTextColor(theme.muted)
                     })
                     card.addView(captionBox)
@@ -226,7 +326,7 @@ object VeloDialogs {
                         card.addView(TextView(context).apply {
                             text = if (isPinned) context.getString(R.string.wp_pin_badge) else context.getString(R.string.state_active)
                             textSize = 10f
-                            typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
+                            typeface = ResourcesCompat.getFont(context, R.font.outfit_semibold)
                             setTextColor(theme.accentInk)
                             setBackgroundColor(theme.accent)
                             val ph = HallmarkSurfaceFactory.dp(context, 6)
@@ -334,14 +434,14 @@ object VeloDialogs {
             setTextColor(theme.ink)
             textSize = 15f
             isSingleLine = true
-            typeface = ResourcesCompat.getFont(context, R.font.barlow_regular)
+            typeface = ResourcesCompat.getFont(context, R.font.outfit_regular)
             val padH = HallmarkSurfaceFactory.dp(context, 14)
             val padV = HallmarkSurfaceFactory.dp(context, 10)
             setPadding(padH, padV, padH, padV)
             background = GradientDrawable().apply {
                 setColor(theme.paper)
                 setStroke(HallmarkSurfaceFactory.dp(context, 1), theme.rule)
-                cornerRadius = HallmarkSurfaceFactory.dpFloat(context, s.cornerStyle.radiusDp.coerceAtMost(8).toFloat())
+                cornerRadius = HallmarkSurfaceFactory.dpFloat(context, 12f)
             }
         }
         b.drawerTopSlot.addView(input)
@@ -367,12 +467,19 @@ object VeloDialogs {
             if (res.apps.isNotEmpty()) {
                 b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.cat_all_apps)))
                 res.apps.forEach { app ->
+                    val sub = if (app.isHomeLauncher) context.getString(R.string.hero_meta_alt_launcher) else builtInCategoryName(context, app.categoryId)
                     b.drawerContent.addView(
                         HallmarkSurfaceFactory.createDrawerRow(
-                            context, theme, app.label, app.packageName,
-                            if (app.isFavorite) "FAV" else null, app.isFavorite
+                            context, theme, app.label, sub,
+                            if (app.isFavorite) "FAV" else if (app.isHomeLauncher) "HOME" else null,
+                            app.isFavorite || app.isHomeLauncher
                         ) {
-                            container.appRepository.launchApp(app.packageName)
+                            if (app.isHomeLauncher) {
+                                container.appRepository.launchHomeLauncher(app.packageName)
+                            } else {
+                                vm.recordAppLaunch(app.packageName)
+                                container.appRepository.launchApp(app.packageName)
+                            }
                             dialog.dismiss()
                         }
                     )
@@ -782,11 +889,10 @@ object VeloDialogs {
         b.tvDrawerSubtitle.text = context.getString(R.string.settings_subtitle)
         b.drawerTopSlot.visibility = View.VISIBLE
 
-        fun rethemeDrawer(t: VisualTheme) {
-            b.drawerSurface.setBackgroundColor(HallmarkSurfaceFactory.drawerSurfaceColor(t))
-            b.drawerLeftRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(t.ink, 42))
-            b.drawerHeaderRule.setBackgroundColor(t.rule)
-            b.drawerFooterRule.setBackgroundColor(t.rule)
+        fun rethemeDrawer(t: VisualTheme, c: CornerStyle) {
+            b.drawerSurface.background = HallmarkSurfaceFactory.floatingDrawerBackground(context, t, c)
+            b.drawerHeaderRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(t.rule, 150))
+            b.drawerFooterRule.setBackgroundColor(HallmarkSurfaceFactory.withAlpha(t.rule, 150))
             b.tvDrawerTitle.setTextColor(t.ink)
             b.tvDrawerSubtitle.setTextColor(t.muted)
             b.tvDrawerFooter.setTextColor(t.muted)
@@ -796,15 +902,16 @@ object VeloDialogs {
             activeTab = tab
             val s = vm.state.value.settings
             val theme = s.theme
-            rethemeDrawer(theme)
+            rethemeDrawer(theme, s.cornerStyle)
 
             b.drawerTopSlot.removeAllViews()
             val tabRow = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL }
             val tabs = listOf(
                 0 to context.getString(R.string.tab_appearance),
                 1 to context.getString(R.string.tab_rows),
-                2 to context.getString(R.string.tab_parental),
-                3 to context.getString(R.string.tab_general)
+                2 to context.getString(R.string.tab_pro_shortcuts),
+                3 to context.getString(R.string.tab_parental),
+                4 to context.getString(R.string.tab_general)
             )
             tabs.forEach { (idx, label) ->
                 tabRow.addView(HallmarkSurfaceFactory.createTabButton(context, theme, s.cornerStyle, label, idx == activeTab) {
@@ -911,49 +1018,86 @@ object VeloDialogs {
                 }
 
                 2 -> {
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.section_pro_features)))
+                    val proItems = listOf<Triple<String, String, () -> Unit>>(
+                        Triple(context.getString(R.string.setting_smart_shelf), if (s.showSmartShelf) on else off) {
+                            vm.updateSettings { it.copy(showSmartShelf = !it.showSmartShelf) }; render(2, 1)
+                        },
+                        Triple(context.getString(R.string.setting_night_mode), if (s.nightModeEnabled) on else off) {
+                            vm.updateSettings { it.copy(nightModeEnabled = !it.nightModeEnabled) }; render(2, 2)
+                        },
+                        Triple(context.getString(R.string.setting_night_auto), if (s.nightModeAutoSchedule) on else off) {
+                            vm.updateSettings { it.copy(nightModeAutoSchedule = !it.nightModeAutoSchedule) }; render(2, 3)
+                        },
+                        Triple(context.getString(R.string.setting_auto_clean), if (s.autoCleanLowRam) on else off) {
+                            vm.updateSettings { it.copy(autoCleanLowRam = !it.autoCleanLowRam) }; render(2, 4)
+                        },
+                        Triple(context.getString(R.string.setting_speed_dial), if (s.remoteSpeedDialEnabled) on else off) {
+                            vm.updateSettings { it.copy(remoteSpeedDialEnabled = !it.remoteSpeedDialEnabled) }; render(2, 5)
+                        },
+                        Triple(context.getString(R.string.setting_alt_launchers), if (s.includeAlternativeLaunchers) on else off) {
+                            vm.updateSettings { it.copy(includeAlternativeLaunchers = !it.includeAlternativeLaunchers) }
+                            vm.refreshAll()
+                            render(2, 6)
+                        }
+                    )
+                    proItems.forEach { (title, trail, click) ->
+                        b.drawerContent.addView(HallmarkSurfaceFactory.createDrawerRow(context, theme, title, null, trail, true, onClick = click))
+                    }
+
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createSectionLabel(context, theme, context.getString(R.string.section_remote_shortcuts)))
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, "1 – 9", context.getString(R.string.shortcut_digits)))
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, context.getString(R.string.shortcut_key_green), context.getString(R.string.shortcut_green)))
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, context.getString(R.string.shortcut_key_yellow), context.getString(R.string.shortcut_yellow)))
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, context.getString(R.string.shortcut_key_blue), context.getString(R.string.shortcut_blue)))
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, context.getString(R.string.shortcut_key_red), context.getString(R.string.shortcut_red)))
+                    b.drawerContent.addView(HallmarkSurfaceFactory.createKeyValueRow(context, theme, "Play / Pause", context.getString(R.string.shortcut_resume)))
+                }
+
+                3 -> {
                     val items = listOf<Triple<String, String, () -> Unit>>(
                         Triple(context.getString(if (vm.hasPin()) R.string.setting_pin_clear else R.string.setting_pin_set), if (vm.hasPin()) on else off) {
                             if (vm.hasPin()) {
-                                vm.clearParentalPin(); render(2, 0)
+                                vm.clearParentalPin(); render(3, 0)
                             } else {
                                 showPinDialog(context, true, vm) {
                                     Toast.makeText(context, R.string.pin_saved, Toast.LENGTH_SHORT).show()
-                                    render(2, 0)
+                                    render(3, 0)
                                 }
                             }
                         },
                         Triple(context.getString(R.string.setting_lock_settings), if (s.lockSettingsWithPin) on else off) {
                             if (vm.hasPin()) {
-                                vm.updateSettings { it.copy(lockSettingsWithPin = !it.lockSettingsWithPin) }; render(2, 1)
+                                vm.updateSettings { it.copy(lockSettingsWithPin = !it.lockSettingsWithPin) }; render(3, 1)
                             } else {
                                 showPinDialog(context, true, vm) {
-                                    vm.updateSettings { it.copy(lockSettingsWithPin = true) }; render(2, 1)
+                                    vm.updateSettings { it.copy(lockSettingsWithPin = true) }; render(3, 1)
                                 }
                             }
                         },
                         Triple(context.getString(R.string.setting_lock_dev), if (s.lockDeveloperWithPin) on else off) {
                             if (vm.hasPin()) {
-                                vm.updateSettings { it.copy(lockDeveloperWithPin = !it.lockDeveloperWithPin) }; render(2, 2)
+                                vm.updateSettings { it.copy(lockDeveloperWithPin = !it.lockDeveloperWithPin) }; render(3, 2)
                             } else {
                                 showPinDialog(context, true, vm) {
-                                    vm.updateSettings { it.copy(lockDeveloperWithPin = true) }; render(2, 2)
+                                    vm.updateSettings { it.copy(lockDeveloperWithPin = true) }; render(3, 2)
                                 }
                             }
                         },
                         Triple(context.getString(R.string.setting_parental_schedule), if (s.parentalScheduleEnabled) on else off) {
                             if (vm.hasPin()) {
-                                vm.updateSettings { it.copy(parentalScheduleEnabled = !it.parentalScheduleEnabled) }; render(2, 3)
+                                vm.updateSettings { it.copy(parentalScheduleEnabled = !it.parentalScheduleEnabled) }; render(3, 3)
                             } else {
                                 showPinDialog(context, true, vm) {
-                                    vm.updateSettings { it.copy(parentalScheduleEnabled = true) }; render(2, 3)
+                                    vm.updateSettings { it.copy(parentalScheduleEnabled = true) }; render(3, 3)
                                 }
                             }
                         },
                         Triple(context.getString(R.string.setting_parental_start), String.format(Locale.US, "%02d:00", s.parentalStartHour)) {
-                            vm.updateSettings { it.copy(parentalStartHour = (it.parentalStartHour + 1) % 24) }; render(2, 4)
+                            vm.updateSettings { it.copy(parentalStartHour = (it.parentalStartHour + 1) % 24) }; render(3, 4)
                         },
                         Triple(context.getString(R.string.setting_parental_end), String.format(Locale.US, "%02d:00", s.parentalEndHour)) {
-                            vm.updateSettings { it.copy(parentalEndHour = (it.parentalEndHour + 1) % 24) }; render(2, 5)
+                            vm.updateSettings { it.copy(parentalEndHour = (it.parentalEndHour + 1) % 24) }; render(3, 5)
                         }
                     )
                     items.forEach { (title, trail, click) ->
@@ -961,7 +1105,7 @@ object VeloDialogs {
                     }
                 }
 
-                3 -> {
+                4 -> {
                     b.drawerContent.addView(
                         HallmarkSurfaceFactory.createDrawerRow(
                             context, theme,
@@ -980,7 +1124,7 @@ object VeloDialogs {
                             context.getString(R.string.setting_show_hidden),
                             null, if (s.showHiddenApps) on else off, true
                         ) {
-                            vm.updateSettings { it.copy(showHiddenApps = !it.showHiddenApps) }; render(3, 1)
+                            vm.updateSettings { it.copy(showHiddenApps = !it.showHiddenApps) }; render(4, 1)
                         }
                     )
                     b.drawerContent.addView(
@@ -989,7 +1133,7 @@ object VeloDialogs {
                             context.getString(R.string.setting_show_inputs),
                             null, if (s.showTvInputsRow) on else off, true
                         ) {
-                            vm.updateSettings { it.copy(showTvInputsRow = !it.showTvInputsRow) }; render(3, 2)
+                            vm.updateSettings { it.copy(showTvInputsRow = !it.showTvInputsRow) }; render(4, 2)
                         }
                     )
                     if (!s.autoLaunchTarget.isNullOrBlank()) {
@@ -999,7 +1143,7 @@ object VeloDialogs {
                                 context.getString(R.string.setting_clear_autolaunch),
                                 s.autoLaunchTarget, context.getString(R.string.action_clear), true
                             ) {
-                                vm.updateSettings { it.copy(autoLaunchTarget = null) }; render(3, 3)
+                                vm.updateSettings { it.copy(autoLaunchTarget = null) }; render(4, 3)
                             }
                         )
                     }
@@ -1021,7 +1165,7 @@ object VeloDialogs {
                         ) {
                             val ok = vm.restoreBackup(context)
                             Toast.makeText(context, if (ok) R.string.toast_restore_ok else R.string.toast_no_backup, Toast.LENGTH_SHORT).show()
-                            if (ok) render(3, 0)
+                            if (ok) render(4, 0)
                         }
                     )
                     b.drawerContent.addView(
@@ -1348,8 +1492,8 @@ object VeloDialogs {
         }
         root.addView(TextView(context).apply {
             text = title
-            textSize = 22f
-            typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
+            textSize = 21f
+            typeface = ResourcesCompat.getFont(context, R.font.outfit_semibold)
             setTextColor(theme.ink)
         })
         val edit = EditText(context).apply {
@@ -1380,7 +1524,7 @@ object VeloDialogs {
             gravity = Gravity.CENTER
             isFocusable = true
             isClickable = true
-            typeface = ResourcesCompat.getFont(context, R.font.barlow_condensed_semibold)
+            typeface = ResourcesCompat.getFont(context, R.font.outfit_semibold)
             background = HallmarkSurfaceFactory.primaryButtonBackground(context, theme, corner)
             setTextColor(theme.accentInk)
             setPadding(HallmarkSurfaceFactory.dp(context, 24), HallmarkSurfaceFactory.dp(context, 10), HallmarkSurfaceFactory.dp(context, 24), HallmarkSurfaceFactory.dp(context, 10))
@@ -1452,6 +1596,7 @@ object VeloDialogs {
     }
 
     private fun themeDisplayName(ctx: Context, theme: VisualTheme): String = when (theme) {
+        VisualTheme.CINEMA_LOUNGE -> ctx.getString(R.string.theme_cinema_lounge)
         VisualTheme.DARKROOM_AMBER -> ctx.getString(R.string.theme_darkroom_amber)
         VisualTheme.DARKROOM_RED -> ctx.getString(R.string.theme_darkroom_red)
         VisualTheme.MIDNIGHT -> ctx.getString(R.string.theme_midnight)
@@ -1474,6 +1619,7 @@ object VeloDialogs {
 
     private fun builtInCategoryName(ctx: Context, rowId: String): String = when (rowId) {
         AppCategory.FAVORITES.id -> ctx.getString(R.string.cat_favorites)
+        AppCategory.SMART_SHELF.id -> ctx.getString(R.string.cat_smart_shelf)
         AppCategory.TV_INPUTS.id -> ctx.getString(R.string.cat_tv_inputs)
         AppCategory.STREAMING.id -> ctx.getString(R.string.cat_streaming)
         AppCategory.MEDIA_WEB.id -> ctx.getString(R.string.cat_media_web)

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Hallmark Darkroom default fallback tokens (never pure #000/#fff, zero neon cyan) -->
-    <color name="hm_paper">#12100E</color>
-    <color name="hm_paper_2">#1B1815</color>
-    <color name="hm_paper_3">#26221E</color>
-    <color name="hm_ink">#EDE8E1</color>
-    <color name="hm_ink_2">#C9C1B7</color>
-    <color name="hm_muted">#8F867C</color>
-    <color name="hm_rule">#332E29</color>
-    <color name="hm_accent">#DF9D3E</color>
-    <color name="hm_accent_ink">#12100E</color>
-    <color name="hm_signal_ok">#7CB68A</color>
-    <color name="hm_signal_warn">#D64F3C</color>
+    <!-- Cinema Lounge default palette (velvet slate + warm ivory + champagne gold) -->
+    <color name="hm_paper">#0E1014</color>
+    <color name="hm_paper_2">#171A21</color>
+    <color name="hm_paper_3">#232833</color>
+    <color name="hm_ink">#F4F1EC</color>
+    <color name="hm_ink_2">#C5C9D2</color>
+    <color name="hm_muted">#8B919E</color>
+    <color name="hm_rule">#2B303C</color>
+    <color name="hm_accent">#E5B567</color>
+    <color name="hm_accent_ink">#0E1014</color>
+    <color name="hm_signal_ok">#6FD394</color>
+    <color name="hm_signal_warn">#E5A54B</color>
+    <color name="hm_signal_crit">#E2645A</color>
     <color name="hm_qr_paper">#F7F4EF</color>
+    <color name="hm_night_veil">#3D261105</color>
 </resources>

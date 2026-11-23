@@ -258,4 +258,58 @@ No ads, no telemetry. Includes rotating free-license wallpapers, ambient app glo
     <string name="clean_action_sys_cache_sub">Opens native Storage → Cached data</string>
     <string name="clean_action_apps_stop">Manage heavy apps</string>
     <string name="clean_action_apps_stop_sub">Opens Installed Apps to force-stop or clear individual cache</string>
+    <!-- VeloTV 1.1 Cinema Lounge & USPs -->
+    <string name="nav_launchers">Launchers &amp; TV</string>
+    <string name="nav_night_mode">Cinema Night Mode</string>
+    <string name="cat_smart_shelf">Up Next</string>
+    <string name="theme_cinema_lounge">Cinema Lounge · Champagne</string>
+
+    <string name="hero_meta_alt_launcher">Alternative launcher</string>
+    <string name="hero_meta_app">Application</string>
+    <string name="hero_meta_keep_default">VeloTV stays default</string>
+    <string name="hero_sub_search">Apps, HDMI inputs &amp; launchers</string>
+    <string name="hero_sub_launchers">VeloTV · Stock Android TV · Projectivy · HDMI</string>
+    <string name="hero_sub_night">Warm eye-comfort cinema dimmer</string>
+    <string name="hero_sub_wallpapers">Open photo gallery &amp; ambient glow</string>
+    <string name="hero_sub_catalog">Lightweight compatible TV apps</string>
+    <string name="hero_sub_system">Developer, 4K calibration &amp; telemetry</string>
+    <string name="hero_sub_settings">Appearance, rows, remote shortcuts &amp; PIN</string>
+    <string name="hero_sub_ambient">Press OK for Ambient Art &amp; OLED Clock</string>
+    <string name="clean_hero_sub_short">OK Turbo RAM · Hold OK Storage</string>
+
+    <string name="launcher_hub_title">Launchers &amp; TV</string>
+    <string name="launcher_hub_subtitle">1-click switching · Home button always returns to VeloTV</string>
+    <string name="launcher_hub_section_launchers">Installed launchers</string>
+    <string name="launcher_hub_default_sub">Active default home screen</string>
+    <string name="launcher_hub_default_badge">Default</string>
+    <string name="launcher_hub_stock_sub">Factory stock TV interface · 1 click</string>
+    <string name="launcher_hub_alt_sub">Installed alternative launcher</string>
+
+    <string name="tab_pro_shortcuts">Pro / Keys</string>
+    <string name="section_pro_features">Smart capabilities (100% offline)</string>
+    <string name="section_remote_shortcuts">Physical remote shortcuts</string>
+    <string name="setting_smart_shelf">"Up Next" smart shelf</string>
+    <string name="setting_night_mode">Cinema Night Mode</string>
+    <string name="setting_night_auto">Auto Night Mode (22:00–07:00)</string>
+    <string name="setting_auto_clean">Auto-Turbo RAM on resume (&lt;320 MB)</string>
+    <string name="setting_speed_dial">Number keys 1–9 Speed Dial</string>
+    <string name="setting_alt_launchers">Show other launchers in apps</string>
+
+    <string name="shortcut_digits">Instantly launches Favorite #1 to #9</string>
+    <string name="shortcut_key_green">Green Button</string>
+    <string name="shortcut_green">Instant Turbo RAM Clean</string>
+    <string name="shortcut_key_yellow">Yellow Button</string>
+    <string name="shortcut_yellow">Switch to next wallpaper</string>
+    <string name="shortcut_key_blue">Blue Button</string>
+    <string name="shortcut_blue">Ambient Art &amp; OLED Clock</string>
+    <string name="shortcut_key_red">Red Button</string>
+    <string name="shortcut_red">Launchers &amp; HDMI switcher</string>
+    <string name="shortcut_resume">Quick resume last used app</string>
+
+    <string name="auto_clean_pill">Auto-Turbo · +%1$d MB freed (%2$d MB free)</string>
+    <string name="speed_dial_pill">#%1$d · %2$s</string>
+    <string name="wp_switched_pill">Wallpaper updated</string>
+    <string name="quick_resume_pill">Resuming %1$s</string>
+    <string name="night_mode_on_pill">Cinema Night Mode enabled</string>
+    <string name="night_mode_off_pill">Cinema Night Mode disabled</string>
 </resources>

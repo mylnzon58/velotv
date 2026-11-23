@@ -2,6 +2,7 @@ package io.github.mylnzon58.velotv.domain.model
 
 enum class AppCategory(val id: String) {
     FAVORITES("favorites"),
+    SMART_SHELF("smart_shelf"),
     TV_INPUTS("tv_inputs"),
     STREAMING("streaming"),
     MEDIA_WEB("media_web"),
@@ -15,6 +16,15 @@ data class CustomCategory(
     val title: String
 )
 
+data class AppUsageStat(
+    val packageName: String,
+    val lastUsedMs: Long = 0L,
+    val totalLaunches: Int = 0,
+    val morningLaunches: Int = 0,
+    val afternoonLaunches: Int = 0,
+    val eveningLaunches: Int = 0
+)
+
 data class TvApp(
     val packageName: String,
     val label: String,
@@ -22,6 +32,7 @@ data class TvApp(
     val categoryId: String,
     val isLeanback: Boolean,
     val isSystemApp: Boolean,
+    val isHomeLauncher: Boolean = false,
     val isFavorite: Boolean = false,
     val isHidden: Boolean = false,
     val isLocked: Boolean = false,
@@ -47,8 +58,8 @@ data class TvInputSource(
 )
 
 /**
- * Calibrated solid-surface themes derived from Hallmark's OKLCH four-layer ladder.
- * Zero neon cyan-on-dark, zero translucent alpha fills, zero pure #000/#FFF.
+ * Calibrated solid & velvet darkroom palettes tuned for 10-foot cinema legibility.
+ * Zero neon cyan-on-dark, zero harsh pure #000/#FFF glare.
  */
 enum class VisualTheme(
     val id: String,
@@ -63,6 +74,18 @@ enum class VisualTheme(
     val accentInk: Int,
     val isLight: Boolean = false
 ) {
+    CINEMA_LOUNGE(
+        id = "cinema_lounge",
+        paper = 0xFF0E1014.toInt(),
+        paper2 = 0xFF171A21.toInt(),
+        paper3 = 0xFF232833.toInt(),
+        ink = 0xFFF4F1EC.toInt(),
+        ink2 = 0xFFC5C9D2.toInt(),
+        muted = 0xFF8B919E.toInt(),
+        rule = 0xFF2B303C.toInt(),
+        accent = 0xFFE5B567.toInt(),
+        accentInk = 0xFF0E1014.toInt()
+    ),
     DARKROOM_AMBER(
         id = "darkroom_amber",
         paper = 0xFF12100E.toInt(),
@@ -96,7 +119,7 @@ enum class VisualTheme(
         ink2 = 0xFFBAC6D8.toInt(),
         muted = 0xFF7D8DA6.toInt(),
         rule = 0xFF2D3A56.toInt(),
-        accent = 0xFF78B7DC.toInt(),
+        accent = 0xFF8CC4E8.toInt(),
         accentInk = 0xFF111624.toInt()
     ),
     STUDIO_LIGHT(
@@ -138,17 +161,17 @@ enum class VisualTheme(
     );
 
     companion object {
-        fun fromId(id: String?): VisualTheme = entries.firstOrNull { it.id == id } ?: DARKROOM_AMBER
+        fun fromId(id: String?): VisualTheme = entries.firstOrNull { it.id == id } ?: CINEMA_LOUNGE
     }
 }
 
 enum class CornerStyle(val id: String, val radiusDp: Int) {
     SHARP("sharp", 0),
-    EDITORIAL("editorial", 10),
-    SOFT("soft", 16);
+    EDITORIAL("editorial", 12),
+    SOFT("soft", 18);
 
     companion object {
-        fun fromId(id: String?): CornerStyle = entries.firstOrNull { it.id == id } ?: EDITORIAL
+        fun fromId(id: String?): CornerStyle = entries.firstOrNull { it.id == id } ?: SOFT
     }
 }
 
@@ -189,9 +212,9 @@ data class WallpaperItem(
 )
 
 enum class CardDensity(val id: String, val widthDp: Int, val heightDp: Int) {
-    COMPACT("compact", 164, 94),
-    NORMAL("normal", 196, 112),
-    LARGE("large", 232, 132);
+    COMPACT("compact", 168, 96),
+    NORMAL("normal", 202, 114),
+    LARGE("large", 238, 134);
 
     companion object {
         fun fromId(id: String?): CardDensity = entries.firstOrNull { it.id == id } ?: NORMAL
@@ -217,8 +240,8 @@ enum class AppLanguage(val code: String, val displayName: String) {
 }
 
 data class LauncherSettings(
-    val theme: VisualTheme = VisualTheme.DARKROOM_AMBER,
-    val cornerStyle: CornerStyle = CornerStyle.EDITORIAL,
+    val theme: VisualTheme = VisualTheme.CINEMA_LOUNGE,
+    val cornerStyle: CornerStyle = CornerStyle.SOFT,
     val cardDensity: CardDensity = CardDensity.NORMAL,
     val language: AppLanguage = AppLanguage.SYSTEM,
     val use24HourClock: Boolean = true,
@@ -229,8 +252,14 @@ data class LauncherSettings(
     val showSystemStats: Boolean = true,
     val showBannerLabels: Boolean = false,
     val showTvInputsRow: Boolean = true,
-    val showBottomHints: Boolean = true,
+    val showBottomHints: Boolean = false,
     val showHiddenApps: Boolean = false,
+    val showSmartShelf: Boolean = true,
+    val nightModeEnabled: Boolean = false,
+    val nightModeAutoSchedule: Boolean = true,
+    val autoCleanLowRam: Boolean = true,
+    val remoteSpeedDialEnabled: Boolean = true,
+    val includeAlternativeLaunchers: Boolean = true,
     val onboardingCompleted: Boolean = false,
     val favoritePackages: List<String> = emptyList(),
     val hiddenPackages: Set<String> = emptySet(),
@@ -254,7 +283,7 @@ data class LauncherSettings(
     val wallpaperSource: WallpaperSource = WallpaperSource.AUTO_MIX,
     val wallpaperInterval: WallpaperInterval = WallpaperInterval.FIVE_MIN,
     val pinnedWallpaperId: String? = null,
-    val wallpaperDimPercent: Int = 52,
+    val wallpaperDimPercent: Int = 56,
     val wallpaperKenBurns: Boolean = true,
     val wallpaperOfflineOnly: Boolean = false,
     val ambientAppColorGlow: Boolean = true
@@ -262,6 +291,7 @@ data class LauncherSettings(
     companion object {
         val DEFAULT_ROW_ORDER = listOf(
             AppCategory.FAVORITES.id,
+            AppCategory.SMART_SHELF.id,
             AppCategory.TV_INPUTS.id,
             AppCategory.STREAMING.id,
             AppCategory.MEDIA_WEB.id,
