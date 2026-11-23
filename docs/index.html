@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="es" data-theme="darkroom_amber">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VeloTV — Launcher nativo de 60 fps para Android TV y Google TV</title>
+  <meta name="description" content="Launcher open-source en Kotlin para Android TV y Google TV diseñado para televisores de 1 a 2 GB de RAM. Fondos libres en rotación automática, limpieza rápida de RAM, entradas HDMI, calibración 4K y cero telemetría." />
+  <meta property="og:title" content="VeloTV — Launcher nativo de 60 fps para Android TV" />
+  <meta property="og:description" content="2.1 MB APK, 27.3 MB RAM en vivo, fondos libres rotativos, cero anuncios, cero telemetría. Software libre bajo licencia MIT." />
+  <meta property="og:image" content="https://mylnzon58.github.io/velotv/images/og-banner.jpg" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#inicio" aria-label="VeloTV">
+        <svg width="24" height="24" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M10 12H22.5L32 42.5L41.5 12H54L37.8 54H26.2L10 12Z" fill="var(--accent)"/>
+        </svg>
+        <span class="brand-wordmark">VELOTV</span>
+        <span class="brand-version">v1.0.0 · MIT</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#rendimiento" data-i18n="nav_perf">Rendimiento</a>
+        <a href="#funciones" data-i18n="nav_features">Funciones</a>
+        <a href="#capturas" data-i18n="nav_shots">Capturas</a>
+        <a href="#instalacion" data-i18n="nav_install">Instalación</a>
+        <a href="#privacidad" data-i18n="nav_privacy">Privacidad</a>
+        <a href="#apoyar" data-i18n="nav_support">Apoyar</a>
+      </nav>
+
+      <div class="header-controls">
+        <div class="theme-swatches" role="group" aria-label="Paletas visuales de VeloTV">
+          <button class="swatch" data-set-theme="darkroom_amber" aria-pressed="true" title="Cuarto oscuro · Ámbar" style="background:#DF9D3E"></button>
+          <button class="swatch" data-set-theme="midnight" aria-pressed="false" title="Noche · Azul frío" style="background:#78B7DC"></button>
+          <button class="swatch" data-set-theme="darkroom_red" aria-pressed="false" title="Cuarto oscuro · Rojo" style="background:#D64F3C"></button>
+          <button class="swatch" data-set-theme="forest" aria-pressed="false" title="Mineral · Bosque" style="background:#7CB68A"></button>
+          <button class="swatch" data-set-theme="studio_light" aria-pressed="false" title="Estudio · Papel claro" style="background:#F3EFE9; border-color:#8F867C"></button>
+        </div>
+        <button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">EN</button>
+        <a class="btn btn-primary btn-compact" href="https://github.com/mylnzon58/velotv/releases/download/v1.0.0/VeloTV-v1.0.0-universal.apk" data-i18n="cta_apk_short">Descargar APK</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow" data-i18n="hero_eyebrow">ANDROID TV · GOOGLE TV · API 24 – 35</p>
+          <h1 class="hero-title" data-i18n="hero_title">Fluidez real a 60 fps en televisores de 1 y 2 GB de RAM.</h1>
+          <p class="hero-lead" data-i18n="hero_lead">
+            Launcher nativo en Kotlin sin publicidad, sin funciones bloqueadas y sin telemetría. Incluye fondos de bancos abiertos en rotación automática, limpieza de RAM en 1 clic, entradas HDMI, calibración 4K y accesos nativos de desarrollador.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/mylnzon58/velotv/releases/download/v1.0.0/VeloTV-v1.0.0-universal.apk" data-i18n="cta_download">Descargar VeloTV v1.0.0 (2.1 MB)</a>
+            <a class="btn btn-secondary" href="https://github.com/mylnzon58/velotv" target="_blank" rel="noopener noreferrer" data-i18n="cta_github">Ver código en GitHub</a>
+          </div>
+
+          <div class="hero-metrics">
+            <div>
+              <div class="metric-val">2.1 MB</div>
+              <div class="metric-label" data-i18n="m_apk">APK universal firmado</div>
+            </div>
+            <div>
+              <div class="metric-val">27.3 MB</div>
+              <div class="metric-label" data-i18n="m_ram">RAM PSS con fondo HD</div>
+            </div>
+            <div>
+              <div class="metric-val">10</div>
+              <div class="metric-label" data-i18n="m_langs">Idiomas integrados</div>
+            </div>
+            <div>
+              <div class="metric-val">0</div>
+              <div class="metric-label" data-i18n="m_ads">Anuncios o rastreo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tv-stage">
+          <div class="tv-bezel">
+            <img id="stageImg" src="images/02-home-darkroom.webp" alt="VeloTV en televisor Android TV real" width="1440" height="810" />
+          </div>
+          <div class="tv-caption">
+            <span id="stageCaption" data-i18n="cap_home">Inicio con fondo rotativo libre, limpieza rápida y entradas HDMI</span>
+            <span>Skyworth MT5891 · 1080p @ 60 Hz</span>
+          </div>
+          <div class="screen-tabs" role="tablist" aria-label="Pantallas reales de VeloTV">
+            <button class="screen-tab" role="tab" aria-selected="true" data-img="images/02-home-darkroom.webp" data-cap-key="cap_home" data-i18n="tab_home">Inicio</button>
+            <button class="screen-tab" role="tab" aria-selected="false" data-img="images/08-wallpapers-gallery.webp" data-cap-key="cap_wp" data-i18n="tab_wp">Fondos libres</button>
+            <button class="screen-tab" role="tab" aria-selected="false" data-img="images/09-ambient-mode.webp" data-cap-key="cap_ambient" data-i18n="tab_ambient">Modo ambiente</button>
+            <button class="screen-tab" role="tab" aria-selected="false" data-img="images/03-system-developer.webp" data-cap-key="cap_sys" data-i18n="tab_sys">Desarrollador</button>
+            <button class="screen-tab" role="tab" aria-selected="false" data-img="images/04-settings-drawer.webp" data-cap-key="cap_settings" data-i18n="tab_settings">Ajustes</button>
+            <button class="screen-tab" role="tab" aria-selected="false" data-img="images/07-catalog-ar.webp" data-cap-key="cap_catalog" data-i18n="tab_catalog">Catálogo</button>
+            <button class="screen-tab" role="tab" aria-selected="false" data-img="images/05-calibration-4k.webp" data-cap-key="cap_cal" data-i18n="tab_cal">Calibración 4K</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rendimiento" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="bench_eyebrow">MEDICIÓN EN HARDWARE REAL</p>
+            <h2 class="section-title" data-i18n="bench_title">Tres veces menos memoria que el launcher de fábrica.</h2>
+            <p class="section-sub" data-i18n="bench_sub">
+              Medido con <code>adb shell dumpsys meminfo</code> sobre el mismo televisor físico: Skyworth G6 (placa 9K02B, MediaTek MT5891 32-bit, Mali-T860, 2 GB RAM, Android TV 8.0).
+            </p>
+          </div>
+        </div>
+
+        <div class="bench-grid">
+          <div class="bench-bars">
+            <div>
+              <div class="bar-item-head">
+                <span class="bar-item-name">Google TV Launcher + Recs</span>
+                <span class="bar-item-val">92.6 MB PSS</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            </div>
+            <div>
+              <div class="bar-item-head">
+                <span class="bar-item-name">Projectivy Launcher 4.74</span>
+                <span class="bar-item-val">36.8 MB PSS</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
+            </div>
+            <div>
+              <div class="bar-item-head">
+                <span class="bar-item-name" data-i18n="bar_velo_hd">VeloTV 1.0 (con fondo HD + brillo ambiental)</span>
+                <span class="bar-item-val accent">27.3 MB PSS</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill accent" style="width:29.5%"></div></div>
+            </div>
+            <div>
+              <div class="bar-item-head">
+                <span class="bar-item-name" data-i18n="bar_velo_solid">VeloTV 1.0 (modo superficie sólida)</span>
+                <span class="bar-item-val accent">21.1 MB PSS</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill ok" style="width:22.8%"></div></div>
+            </div>
+            <p class="bench-note" data-i18n="bench_note">
+              Todos los fondos se decodifican en RGB_565 a 1280×720 (1.84 MB en RAM) con liberación inmediata de la capa saliente y pool compartido de RecyclerView.
+            </p>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="th_metric">Métrica</th>
+                  <th class="num">Google TV</th>
+                  <th class="num">Projectivy</th>
+                  <th class="num">VeloTV 1.0</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-i18n="row_apk">Tamaño del APK</td>
+                  <td class="num">~82 MB</td>
+                  <td class="num">11.0 MB</td>
+                  <td class="num hl">2.1 MB</td>
+                </tr>
+                <tr>
+                  <td data-i18n="row_ram">Memoria RAM (PSS)</td>
+                  <td class="num">92.6 MB</td>
+                  <td class="num">36.8 MB</td>
+                  <td class="num hl">27.3 MB</td>
+                </tr>
+                <tr>
+                  <td data-i18n="row_wp">Fondos libres rotativos</td>
+                  <td class="num" data-i18n="val_no">No</td>
+                  <td class="num" data-i18n="val_paid">Pro pago</td>
+                  <td class="num hl" data-i18n="val_yes_free">Sí, gratis</td>
+                </tr>
+                <tr>
+                  <td data-i18n="row_paywall">Funciones de pago</td>
+                  <td class="num">—</td>
+                  <td class="num">Freemium</td>
+                  <td class="num hl" data-i18n="val_none">Ninguna</td>
+                </tr>
+                <tr>
+                  <td data-i18n="row_telemetry">Telemetría / anuncios</td>
+                  <td class="num" data-i18n="val_yes">Sí</td>
+                  <td class="num" data-i18n="val_yes">Sí</td>
+                  <td class="num hl" data-i18n="val_zero">Cero</td>
+                </tr>
+                <tr>
+                  <td data-i18n="row_oss">Código abierto</td>
+                  <td class="num" data-i18n="val_no">No</td>
+                  <td class="num" data-i18n="val_no">No</td>
+                  <td class="num hl">MIT</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="funciones" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="feat_eyebrow">INGENIERÍA Y FUNCIONALIDADES</p>
+            <h2 class="section-title" data-i18n="feat_title">Todo lo esencial de un launcher profesional, sin código inflado.</h2>
+          </div>
+        </div>
+
+        <div class="ledger-grid">
+          <article class="ledger-item">
+            <span class="ledger-num">01</span>
+            <h3 data-i18n="f1_t">Fondos de bancos abiertos en rotación automática</h3>
+            <p data-i18n="f1_p">8 paisajes HD integrados para arranque en 0 ms más bancos en vivo de Wikimedia Commons (CC) y Unsplash/Picsum. Vista previa en tiempo real, selección manual, velo cinematográfico regulable y modo 100% sin conexión.</p>
+          </article>
+          <article class="ledger-item">
+            <span class="ledger-num">02</span>
+            <h3 data-i18n="f2_t">Botón rápido Limpiar (RAM y caché)</h3>
+            <p data-i18n="f2_p">Acceso en 1 clic junto al contador de memoria para cerrar apps inactivas en segundo plano con <code>ActivityManager</code> sin afectar TV ni sesiones, más acceso directo al vaciado global de caché nativo.</p>
+          </article>
+          <article class="ledger-item">
+            <span class="ledger-num">03</span>
+            <h3 data-i18n="f3_t">Entradas físicas TV y HDMI</h3>
+            <p data-i18n="f3_p">Detección nativa con <code>TvInputManager</code> para HDMI 1/2/3, sintonizador digital/analógico y AV, con estado conectado/en espera, renombrado libre, bloqueo por PIN e inicio automático al encender.</p>
+          </article>
+          <article class="ledger-item">
+            <span class="ledger-num">04</span>
+            <h3 data-i18n="f4_t">Centro de Sistema y Desarrollador</h3>
+            <p data-i18n="f4_p">Lectura en vivo de ADB, orígenes desconocidos, escalas de animación, SoC, kernel, WebView, IP y RAM, más accesos verificados dinámicamente a Opciones de Desarrollador y menús OEM.</p>
+          </article>
+          <article class="ledger-item">
+            <span class="ledger-num">05</span>
+            <h3 data-i18n="f5_t">Calibración 4K/HDR y Galería Ambiente OLED</h3>
+            <p data-i18n="f5_p">10 patrones nativos en Canvas (PLUGE, SMPTE, overscan, uniformidad y nitidez a 3 m) y modo ambiente rotativo con reloj gigante y desplazamiento anti-quemado cada 60 segundos.</p>
+          </article>
+          <article class="ledger-item">
+            <span class="ledger-num">06</span>
+            <h3 data-i18n="f6_t">Control parental, 6 paletas y 10 idiomas</h3>
+            <p data-i18n="f6_p">PIN de 4 dígitos protegido con SHA-256 y salt en tiempo constante, restricción horaria para juegos, categorías personalizadas, respaldo local en JSON y catálogo regional (AR, LATAM, USA, EU, ASIA).</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="capturas" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="shots_eyebrow">CAPTURAS REALES EN TELEVISOR</p>
+            <h2 class="section-title" data-i18n="shots_title">Sin maquetas artificiales: capturado directo del HDMI.</h2>
+          </div>
+        </div>
+
+        <div class="gallery-grid">
+          <figure class="shot-card">
+            <img src="images/08-wallpapers-gallery.webp" alt="Galería de fondos de pantalla libres de VeloTV" loading="lazy" width="1440" height="810" />
+            <figcaption>
+              <span class="shot-title" data-i18n="g1_t">Galería de fondos abiertos</span>
+              <span class="shot-meta" data-i18n="g1_m">Wikimedia + Unsplash + Local</span>
+            </figcaption>
+          </figure>
+          <figure class="shot-card">
+            <img src="images/09-ambient-mode.webp" alt="Galería ambiente y reloj OLED de VeloTV" loading="lazy" width="1440" height="810" />
+            <figcaption>
+              <span class="shot-title" data-i18n="g2_t">Galería ambiente y reloj OLED</span>
+              <span class="shot-meta" data-i18n="g2_m">Anti-quemado · OK Negro puro</span>
+            </figcaption>
+          </figure>
+          <figure class="shot-card">
+            <img src="images/03-system-developer.webp" alt="Panel de sistema y opciones nativas de desarrollador" loading="lazy" width="1440" height="810" />
+            <figcaption>
+              <span class="shot-title" data-i18n="g3_t">Sistema y opciones de desarrollador</span>
+              <span class="shot-meta" data-i18n="g3_m">Diagnóstico en vivo y accesos nativos</span>
+            </figcaption>
+          </figure>
+          <figure class="shot-card">
+            <img src="images/04-settings-drawer.webp" alt="Panel de ajustes completos sin funciones de pago" loading="lazy" width="1440" height="810" />
+            <figcaption>
+              <span class="shot-title" data-i18n="g4_t">Ajustes completos por pestañas</span>
+              <span class="shot-meta" data-i18n="g4_m">6 paletas · Filas · Parental · Idiomas</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="instalacion" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="inst_eyebrow">INSTALACIÓN Y VERIFICACIÓN</p>
+            <h2 class="section-title" data-i18n="inst_title">Instálalo en menos de un minuto por USB, LocalSend o ADB.</h2>
+            <p class="section-sub" data-i18n="inst_sub">Compatible con Android TV 7.0 a 15 (ARMv7, ARM64 y x86). Incluye scripts modulares reversibles para optimizar televisores con poca RAM.</p>
+          </div>
+        </div>
+
+        <div class="install-grid">
+          <div class="code-panel">
+            <div class="code-panel-head">
+              <h3 data-i18n="c1_t">1. Instalar APK por ADB</h3>
+              <button class="copy-btn" type="button" data-copy="adb connect <IP_DEL_TV>:5555&#10;adb install -r VeloTV-v1.0.0-universal.apk" data-i18n="copy">Copiar</button>
+            </div>
+            <pre><code>adb connect &lt;IP_DEL_TV&gt;:5555
+adb install -r VeloTV-v1.0.0-universal.apk</code></pre>
+            <div class="code-panel-head">
+              <h3 data-i18n="c2_t">2. Verificar integridad SHA-256</h3>
+              <button class="copy-btn" type="button" data-copy="906312ff50c3f9e2612c8b0cf85cd602a08476e5c07d8b835004ebbbfad72ab9" data-i18n="copy">Copiar</button>
+            </div>
+            <pre><code>906312ff50c3f9e2612c8b0cf85cd602a08476e5c07d8b835004ebbbfad72ab9  VeloTV-v1.0.0-universal.apk</code></pre>
+          </div>
+
+          <div class="code-panel">
+            <div class="code-panel-head">
+              <h3 data-i18n="c3_t">3. Toolkit de optimización (100% reversible)</h3>
+              <button class="copy-btn" type="button" data-copy="./tools/tv-toolkit/optimize_tv.sh <IP_DEL_TV>:5555 release/VeloTV-v1.0.0-universal.apk&#10;./tools/tv-toolkit/restore_tv.sh <IP_DEL_TV>:5555&#10;./tools/tv-toolkit/harden_close_adb.sh <IP_DEL_TV>:5555" data-i18n="copy">Copiar</button>
+            </div>
+            <pre><code>./tools/tv-toolkit/optimize_tv.sh &lt;IP_DEL_TV&gt;:5555 release/VeloTV-v1.0.0-universal.apk
+./tools/tv-toolkit/restore_tv.sh &lt;IP_DEL_TV&gt;:5555
+./tools/tv-toolkit/harden_close_adb.sh &lt;IP_DEL_TV&gt;:5555</code></pre>
+            <p class="bench-note" data-i18n="c3_note">
+              Desactiva bloatware únicamente en <code>--user 0</code>, ajusta escalas de animación a 0.5x y compila apps clave con perfil ART. Nunca toca DRM, Play Store ni sintonizador.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacidad" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="priv_eyebrow">SEGURIDAD OWASP · PRIVACIDAD VERIFICABLE</p>
+            <h2 class="section-title" data-i18n="priv_title">Cero analítica. Allowlist HTTPS auditable. Modo 100% offline.</h2>
+            <p class="section-sub" data-i18n="priv_sub">
+              VeloTV no solicita micrófono, cámara, ubicación ni almacenamiento externo. El acceso de red está restringido por código y pruebas unitarias exclusivamente a bancos de fotos abiertos por HTTPS, y puede desactivarse por completo desde el televisor.
+            </p>
+          </div>
+        </div>
+
+        <div class="host-list" aria-label="Dominios HTTPS permitidos únicamente para fondos libres">
+          <span class="host-tag">https://commons.wikimedia.org</span>
+          <span class="host-tag">https://upload.wikimedia.org</span>
+          <span class="host-tag">https://thumb.wikimedia.org</span>
+          <span class="host-tag">https://picsum.photos</span>
+          <span class="host-tag">https://fastly.picsum.photos</span>
+          <span class="host-tag">https://images.unsplash.com</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="apoyar" class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" data-i18n="sup_eyebrow">PROYECTO INDEPENDIENTE · LICENCIA MIT</p>
+            <h2 class="section-title" data-i18n="sup_title">100% gratis para todos. Mantenido por la comunidad.</h2>
+            <p class="section-sub" data-i18n="sup_sub">
+              Creado en Argentina por Juan José Monzón (@mylnzon58). Si VeloTV le devolvió fluidez a tu televisor, podés apoyar su desarrollo de forma voluntaria.
+            </p>
+          </div>
+        </div>
+
+        <div class="support-grid">
+          <a class="support-card primary" href="https://link.mercadopago.com.ar/mylnzon58" target="_blank" rel="noopener noreferrer">
+            <span class="support-badge">ARGENTINA · ARS</span>
+            <span class="support-name">Mercado Pago</span>
+            <span class="support-desc" data-i18n="s_mp">Aporte directo en pesos argentinos (monto libre)</span>
+          </a>
+          <a class="support-card" href="https://tecito.app/juanjoclassic" target="_blank" rel="noopener noreferrer">
+            <span class="support-badge">ARGENTINA · LATAM</span>
+            <span class="support-name">Tecito</span>
+            <span class="support-desc" data-i18n="s_tecito">Invitá un aporte rápido desde Latinoamérica</span>
+          </a>
+          <a class="support-card" href="https://github.com/sponsors/mylnzon58" target="_blank" rel="noopener noreferrer">
+            <span class="support-badge">GLOBAL · US / EU / ASIA</span>
+            <span class="support-name">GitHub Sponsors</span>
+            <span class="support-desc" data-i18n="s_gh">Apoyo internacional directo sin intermediarios</span>
+          </a>
+          <a class="support-card" href="https://www.patreon.com/JuanjoClassic" target="_blank" rel="noopener noreferrer">
+            <span class="support-badge">SPONSOR</span>
+            <span class="support-name">Patreon</span>
+            <span class="support-desc" data-i18n="s_pat">Acompañamiento mensual para nuevas funciones</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div data-i18n="footer_copy">
+        © 2026 Juan José Monzón (@mylnzon58) · Licencia MIT — Libre de usar y modificar conservando los créditos originales.
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/mylnzon58/velotv" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/mylnzon58/velotv/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+        <a href="https://github.com/mylnzon58/velotv/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+        <a href="https://github.com/mylnzon58/velotv/blob/main/NOTICE" target="_blank" rel="noopener noreferrer">NOTICE</a>
+        <a href="https://github.com/mylnzon58/velotv/blob/main/SECURITY.md" target="_blank" rel="noopener noreferrer">Security</a>
+        <a href="https://github.com/mylnzon58/velotv/blob/main/CREDITS.md" target="_blank" rel="noopener noreferrer">Credits</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

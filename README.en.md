@@ -3,7 +3,8 @@
 </p>
 
 <p align="center">
-  <a href="README.md"><img src="https://img.shields.io/badge/Espa%C3%B1ol-Documentaci%C3%B3n-DF9D3E?style=flat-square&labelColor=1B1815" alt="Documentación en Español" /></a>
+  <a href="https://mylnzon58.github.io/velotv/"><img src="https://img.shields.io/badge/Website-GitHub_Pages-DF9D3E?style=flat-square&labelColor=1B1815" alt="Official Website" /></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/Espa%C3%B1ol-Documentaci%C3%B3n-C9C1B7?style=flat-square&labelColor=1B1815" alt="Documentación en Español" /></a>
   <img src="https://img.shields.io/badge/Release_APK-2.1_MB-EDE8E1?style=flat-square&labelColor=1B1815" alt="APK 2.1 MB" />
   <img src="https://img.shields.io/badge/Live_RAM-27.3_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 27.3 MB with HD wallpaper" />
   <img src="https://img.shields.io/badge/Telemetry-Zero-DF9D3E?style=flat-square&labelColor=1B1815" alt="Zero Telemetry" />
