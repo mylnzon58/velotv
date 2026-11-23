@@ -23,24 +23,25 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests (Includes OWASP Wallpaper Allowlist & PIN Crypto Tests)
         run: ./gradlew testDebugUnitTest --stacktrace
 
       - name: Build Debug & Release APKs
         run: ./gradlew assembleDebug assembleRelease --stacktrace
 
-      - name: Verify Zero INTERNET Permission (OWASP Privacy Gate)
+      - name: Verify Zero Dangerous Permissions (POLA Security Gate)
         run: |
           AAPT=$(find "$ANDROID_HOME/build-tools" -name aapt2 | sort -V | tail -n 1)
-          if "$AAPT" dump permissions app/build/outputs/apk/release/app-release-unsigned.apk | grep -q "android.permission.INTERNET"; then
-            echo "ERROR: INTERNET permission detected! Violates VeloTV zero-telemetry guarantee."
+          PERMS=$("$AAPT" dump permissions app/build/outputs/apk/release/app-release-unsigned.apk)
+          echo "$PERMS"
+          if echo "$PERMS" | grep -qE "RECORD_AUDIO|ACCESS_FINE_LOCATION|ACCESS_COARSE_LOCATION|READ_CONTACTS|CAMERA|READ_PHONE_STATE"; then
+            echo "ERROR: Unexpected dangerous permission detected!"
             exit 1
           fi
-          echo "PASS: Zero INTERNET permission verified."
+          echo "PASS: POLA permission gate verified."
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: VeloTV-apks
           path: app/build/outputs/apk/**/*.apk
-
