@@ -3,13 +3,13 @@
 </p>
 
 <p align="center">
-  <a href="https://mylnzon58.github.io/velotv/"><img src="https://img.shields.io/badge/Sitio_Web-GitHub_Pages-DF9D3E?style=flat-square&labelColor=1B1815" alt="Sitio Web oficial" /></a>
-  <a href="README.en.md"><img src="https://img.shields.io/badge/English-Documentation-C9C1B7?style=flat-square&labelColor=1B1815" alt="English Documentation" /></a>
-  <img src="https://img.shields.io/badge/APK_Release-2.1_MB-EDE8E1?style=flat-square&labelColor=1B1815" alt="APK 2.1 MB" />
-  <img src="https://img.shields.io/badge/RAM_en_vivo-23.7_MB-7CB68A?style=flat-square&labelColor=1B1815" alt="RAM 23.7 MB con fondo HD" />
-  <img src="https://img.shields.io/badge/Telemetr%C3%ADa-Cero-DF9D3E?style=flat-square&labelColor=1B1815" alt="Cero telemetría" />
-  <img src="https://img.shields.io/badge/Android_TV-7.0_%E2%80%93_15-C9C1B7?style=flat-square&labelColor=1B1815" alt="Android TV 7 a 15" />
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-DF9D3E?style=flat-square&labelColor=1B1815" alt="Licencia MIT" /></a>
+  <a href="https://mylnzon58.github.io/velotv/"><img src="assets/badges/sitio-web-github-pages-df9d3e-sq-39ff86.svg" alt="Sitio Web oficial" /></a>
+  <a href="README.en.md"><img src="assets/badges/english-documentation-c9c1b7-sq-779e03.svg" alt="English Documentation" /></a>
+  <img src="assets/badges/apk-release-2-1-mb-ede8e1-sq-187dda.svg" alt="APK 2.1 MB" />
+  <img src="assets/badges/ram-en-vivo-23-7-mb-7cb68a-sq-a1c11e.svg" alt="RAM 23.7 MB con fondo HD" />
+  <img src="assets/badges/telemetr-a-cero-df9d3e-sq-7ee4d0.svg" alt="Cero telemetría" />
+  <img src="assets/badges/android-tv-7-0-15-c9c1b7-sq-875df0.svg" alt="Android TV 7 a 15" />
+  <a href="LICENSE"><img src="assets/badges/licencia-mit-df9d3e-sq-080ac5.svg" alt="Licencia MIT" /></a>
 </p>
 
 # VeloTV
